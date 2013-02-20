@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// Antioch - A Gas Dynamics Thermochemistry Library
+// HelloWorld - A Gas Dynamics Thermochemistry Library
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -25,10 +25,10 @@
 //
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
-#include "antioch/antioch_version.h"
+#include "helloworld/helloworld_version.h"
 
 int main()
 {
-  Antioch::antioch_version_stdout();
+  HelloWorld::helloworld_version_stdout();
   return 0;
 }

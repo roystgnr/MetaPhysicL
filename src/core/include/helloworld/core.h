@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// Antioch - A Gas Dynamics Thermochemistry Library
+// HelloWorld - An Autotools library template
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -26,16 +26,21 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-// This function
-#include "antioch/read_reaction_set_data_xml.h"
+#ifndef HELLOWORLD_CORE_H
+#define HELLOWORLD_CORE_H
 
-// Antioch
-#include "antioch/string_utils.h"
-#include "antioch/reaction_set.h"
-
-// XML
-#include "antioch/tinyxml2.h"
-
-namespace Antioch
+namespace HelloWorld
 {
-} // end namespace Antioch
+  /*!
+   * A test class definition
+   */
+  struct Core
+    {
+      Core();
+
+      const static std::string name="HelloWorld";
+    };
+
+} // end namespace HelloWorld
+
+#endif // HELLOWORLD_SPECIES_ENUM_H

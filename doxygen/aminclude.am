@@ -3,7 +3,7 @@
 # dependencies here.
 #-----------------------------------
 
-PECOS_extra_dependencies = doxygen/antioch.page 
+PECOS_extra_dependencies = doxygen/hello.page 
 			   doxygen/txt_common/about.page \
 			   doxygen/txt_common/gpl.page \
                            doxygen/txt_common/lgpl.page \

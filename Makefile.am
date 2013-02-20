@@ -37,7 +37,7 @@ AUX_DIST        += build-aux/ltmain.sh
 
 # Additional files to be deleted by 'make distclean'
 DISTCLEANFILES  = _configs.sed
-DISTCLEANFILES += antioch_config.h
+DISTCLEANFILES += helloworld_config.h
 
 MOSTLYCLEANFILES  =
 MOSTLYCLEANFILES += $(DX_CLEANFILES)
@@ -52,8 +52,8 @@ MAINTAINERCLEANFILES += config.log
 MAINTAINERCLEANFILES += config.status
 MAINTAINERCLEANFILES += config.sub
 MAINTAINERCLEANFILES += configure
-MAINTAINERCLEANFILES += antioch_config.h.tmp.in
-MAINTAINERCLEANFILES += antioch_config.h.tmp.in~
+MAINTAINERCLEANFILES += helloworld_config.h.tmp.in
+MAINTAINERCLEANFILES += helloworld_config.h.tmp.in~
 MAINTAINERCLEANFILES += Makefile.in
 MAINTAINERCLEANFILES += src/Makefile.in
 MAINTAINERCLEANFILES += test/Makefile.in
@@ -83,7 +83,7 @@ lcov-report:
 	$(top_srcdir)/src/common/lcov/lcov -q -r $(lcov_dir)/lcov.info `cat $(lcov_dir)/remove` > $(lcov_dir)/lcov.cleaned.info
 	@rm $(lcov_dir)/remove
 	@mv $(lcov_dir)/lcov.cleaned.info $(lcov_dir)/lcov.info
-	$(top_srcdir)/src/common/lcov/genhtml -t "GRINS" -o $(lcov_dir) $(lcov_dir)/lcov.info
+	$(top_srcdir)/src/common/lcov/genhtml -t "HelloWorld" -o $(lcov_dir) $(lcov_dir)/lcov.info
 
 lcov-reset:
 	@rm -rf $(lcov_dir)

@@ -2,12 +2,12 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(antioch, 0.0.0, pbauman@ices.utexas.edu)
+AC_INIT(helloworld, 0.0.0, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_CONFIG_HEADER(antioch_config.h.tmp)
-dnl Prefixes everything in the temporary file with FINS_
-AX_PREFIX_CONFIG_H(antioch_config.h,ANTIOCH,antioch_config.h.tmp)
+AC_CONFIG_HEADER(helloworld_config.h.tmp)
+dnl Prefixes everything in the temporary file with HELLOWORLD_
+AX_PREFIX_CONFIG_H(helloworld_config.h,HELLOWORLD,helloworld_config.h.tmp)
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CANONICAL_TARGET()
@@ -21,7 +21,7 @@ AX_SPLIT_VERSION
 GENERIC_MAJOR_VERSION=$AX_MAJOR_VERSION
 GENERIC_MINOR_VERSION=$AX_MINOR_VERSION
 GENERIC_MICRO_VERSION=$AX_POINT_VERSION
-GENERIC_LIBRARY_NAME=antioch
+GENERIC_LIBRARY_NAME=helloworld
 
 dnl shared library versioning
 
@@ -79,22 +79,19 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
 
-DX_INIT_DOXYGEN(ANTIOCH, doxygen/antioch.dox, docs/doxygen)
+DX_INIT_DOXYGEN(HELLOWORLD, doxygen/helloworld.dox, docs/doxygen)
 
 AC_CONFIG_FILES(doxygen/txt_common/about.page)
 
 dnl-----------------------------------------------
 dnl Generate files for unit and regression testing
 dnl-----------------------------------------------
-AC_CONFIG_FILES(test/kinetics_unit_air_5sp.sh,           [chmod +x test/kinetics_unit_air_5sp.sh])
-AC_CONFIG_FILES(test/kinetics_vec_unit_air_5sp.sh,       [chmod +x test/kinetics_vec_unit_air_5sp.sh])
-AC_CONFIG_FILES(test/kinetics_regression_air_5sp.sh,     [chmod +x test/kinetics_regression_air_5sp.sh])
-AC_CONFIG_FILES(test/kinetics_regression_vec_air_5sp.sh, [chmod +x test/kinetics_regression_vec_air_5sp.sh])
+dnl AC_CONFIG_FILES(test/kinetics_unit_air_5sp.sh,           [chmod +x test/kinetics_unit_air_5sp.sh])
 
 dnl-----------------------------------------------
 dnl Generate header files
 dnl-----------------------------------------------
-AC_CONFIG_FILES(src/utilities/include/antioch/antioch_version.h)
+AC_CONFIG_FILES(src/utilities/include/helloworld/helloworld_version.h)
             
 dnl-----------------------------------------------
 dnl Generate Makefiles

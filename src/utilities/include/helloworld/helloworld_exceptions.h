@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// Antioch - A Gas Dynamics Thermochemistry Library
+// HelloWorld - An Autotools library template
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -26,29 +26,29 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-#ifndef ANTIOCH_EXCEPTIONS_H
-#define ANTIOCH_EXCEPTIONS_H
+#ifndef HELLOWORLD_EXCEPTIONS_H
+#define HELLOWORLD_EXCEPTIONS_H
 
 // C++
 #include <stdexcept>
 #include <string>
 
-namespace Antioch
+namespace HelloWorld
 {
   /*!
    * A class to represent the internal "this should never happen"
-   * errors, to be thrown by "antioch_error();"
+   * errors, to be thrown by "helloworld_error();"
    */
   class LogicError : public std::logic_error
   {
   public:
-    LogicError() : std::logic_error( "Error in Antioch internal logic" ) {}
+    LogicError() : std::logic_error( "Error in HelloWorld internal logic" ) {}
   };
 
   /*!
-   * A class to stub for features that should be in Antioch, but
+   * A class to stub for features that should be in HelloWorld, but
    * haven't been written yet, to be thrown by
-   * "antioch_not_implemented();"
+   * "helloworld_not_implemented();"
    */
   class NotImplemented : public std::logic_error
   {
@@ -59,7 +59,7 @@ namespace Antioch
   /*!
    * A class representing a failed attempt by the library to open a
    * file (or construct an fstream, etc), to be thrown by
-   * "antioch_file_error(filename);" For ease of debugging, "filename"
+   * "helloworld_file_error(filename);" For ease of debugging, "filename"
    * should include any (absolute or relative or implicit) pathname
    * that was part of the failed open.
    */
@@ -69,8 +69,8 @@ namespace Antioch
     FileError(const std::string& filename) : std::runtime_error( "Error accessing file: " + filename ) {}
   };
 
-} // end namespace Antioch
+} // end namespace HelloWorld
 
-#define ANTIOCH_THROW(e) do { throw e; } while (0)
+#define HELLOWORLD_THROW(e) do { throw e; } while (0)
 
-#endif // ANTIOCH_EXCEPTIONS_H
+#endif // HELLOWORLD_EXCEPTIONS_H

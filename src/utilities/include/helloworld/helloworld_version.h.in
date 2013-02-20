@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// Antioch - A Gas Dynamics Thermochemistry Library
+// HelloWorld - An Autotools library template
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -25,19 +25,32 @@
 //
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
+#ifndef HELLOWORLD_VERSION_H
+#define HELLOWORLD_VERSION_H
 
-#ifndef ANTIOCH_REACTION_ENUM_H
-#define ANTIOCH_REACTION_ENUM_H
+#define HELLOWORLD_MAJOR_VERSION  @GENERIC_MAJOR_VERSION@
+#define HELLOWORLD_MINOR_VERSION  @GENERIC_MINOR_VERSION@
+#define HELLOWORLD_MICRO_VERSION  @GENERIC_MICRO_VERSION@
 
-namespace Antioch
+#define HELLOWORLD_BUILD_USER     "@BUILD_USER@"
+#define HELLOWORLD_BUILD_ARCH     "@BUILD_ARCH@"
+#define HELLOWORLD_BUILD_HOST     "@BUILD_HOST@"
+#define HELLOWORLD_BUILD_DATE     "@BUILD_DATE@"
+#define HELLOWORLD_BUILD_VERSION  "@BUILD_VERSION@"
+
+#define HELLOWORLD_LIB_VERSION    "@VERSION@"
+#define HELLOWORLD_LIB_RELEASE    "@BUILD_DEVSTATUS@"
+
+#define HELLOWORLD_CXX            "@CXX@"
+#define HELLOWORLD_CXXFLAGS       "@CXXFLAGS@"
+
+#include <iostream>
+#include <iomanip>
+
+namespace HelloWorld
 {
-  namespace ReactionType
-  {
+  void helloworld_version_stdout();
+  int  get_helloworld_version();
+} // end namespace HelloWorld
 
-    enum ReactionType { ELEMENTARY = 0,
-			THREE_BODY };
-
-  } // end namespace ReactionType
-} // end namespace Antioch
-
-#endif // ANTIOCH_REACTION_ENUM_H
+#endif //HELLOWORLD_VERISON_H

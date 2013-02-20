@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// Antioch - A Gas Dynamics Thermochemistry Library
+// HelloWorld - An Autotools library template
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -21,14 +21,36 @@
 //
 //-----------------------------------------------------------------------el-
 //
-// $Id$
+// $Id: metaprogramming.h 37170 2013-02-19 21:40:39Z roystgnr $
 //
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-//This class
-#include "antioch/reaction.h"
+#ifndef HELLOWORLD_METAPROGRAMMING_H
+#define HELLOWORLD_METAPROGRAMMING_H
 
-namespace Antioch
+namespace HelloWorld
 {
-} // end namespace Antioch
+  // Helper metafunctions
+  template <bool B, class T = void>
+  struct enable_if_c {
+    typedef T type;
+  };
+
+  template <class T>
+  struct enable_if_c<false, T> {};
+
+  template <typename T>
+  class has_size
+  {
+    typedef char no;
+    typedef char yes[2];
+    template <class C> static yes& test(char (*)[sizeof(&C::size)]);
+    template <class C> static no& test(...);
+  public:
+    const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
+  };
+
+} // end namespace HelloWorld
+
+#endif //HELLOWORLD_METAPROGRAMMING_H

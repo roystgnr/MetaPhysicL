@@ -569,7 +569,7 @@ WARN_LOGFILE           =
 
 INPUT                  = src                  \
                          test                 \
-		       	 doxygen/antioch.page \
+		       	 doxygen/hello.page \
 			 doxygen/txt_common
 
 # This tag can be used to specify the character encoding of the source files 
