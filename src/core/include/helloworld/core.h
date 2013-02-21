@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - An Autotools library template
+// HelloWorld - A template for autotools applications
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -36,9 +36,7 @@ namespace HelloWorld
    */
   struct Core
     {
-      Core();
-
-      const static std::string name="HelloWorld";
+      static const char * const name;
     };
 
 } // end namespace HelloWorld

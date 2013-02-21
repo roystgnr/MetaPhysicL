@@ -1,24 +1,24 @@
 BUILT_SOURCES   = .license.stamp
 
 check_PROGRAMS  =
-check_PROGRAMS += chem_mixture_unit
-check_PROGRAMS += kinetics_unit
+check_PROGRAMS += core_name_unit
+check_PROGRAMS += input_file_unit
 
 AM_CPPFLAGS  = 
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
-AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #antioch_version.h
+AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #helloworld_version.h
 
-AM_LDFLAGS = $(top_builddir)/src/libantioch.la
+AM_LDFLAGS = $(top_builddir)/src/libhelloworld.la
 
 # Sources for these tests
-chem_mixture_unit_SOURCES = chem_mixture_unit.C
-kinetics_unit_SOURCES = kinetics_unit.C
+core_name_unit_SOURCES = core_name_unit.C
+input_file_unit_SOURCES = input_file_unit.C
 
 #Define tests to actually be run
 TESTS  =
-TESTS += chem_mixture_unit
-TESTS += kinetics_unit_air_5sp.sh
+TESTS += core_name_unit
+TESTS += input_file_unit.sh
 
 if CODE_COVERAGE_ENABLED
   CLEANFILES = *.gcda *.gcno

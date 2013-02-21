@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - A Gas Dynamics Thermochemistry Library
+// HelloWorld - A template for autotools applications
 //
 // Copyright (C) 2013 The PECOS Development Team
 //

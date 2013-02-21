@@ -26,11 +26,23 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-#include "helloworld/core.h"
+// C++
+#include <string>
+#include <iostream>
 
-namespace HelloWorld
+// HelloWorld
+#include "helloworld/helloworld_asserts.h"
+
+int main(int argc, char* argv[])
 {
+  // Check command line count.
+  if( argc < 2 )
+    {
+      // TODO: Need more consistent error handling.
+      std::cerr << "Error: Must specify input file." << std::endl;
+      helloworld_error();
+    }
 
-  const char * const Core::name = "HelloWorld";
+  return 0;
+}
 
-} // end namespace HelloWorld

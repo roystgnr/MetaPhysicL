@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - An Autotools library template
+// HelloWorld - A template for autotools applications
 //
 // Copyright (C) 2013 The PECOS Development Team
 //

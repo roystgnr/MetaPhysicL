@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - A template for autotools applications
+// HelloWorld - An Autotools library template
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -26,11 +26,14 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
+// C++
+#include <iostream>
+
+// HelloWorld
 #include "helloworld/core.h"
 
-namespace HelloWorld
+
+int main()
 {
-
-  const char * const Core::name = "HelloWorld";
-
-} // end namespace HelloWorld
+  return 0;
+}

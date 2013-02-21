@@ -86,7 +86,7 @@ AC_CONFIG_FILES(doxygen/txt_common/about.page)
 dnl-----------------------------------------------
 dnl Generate files for unit and regression testing
 dnl-----------------------------------------------
-dnl AC_CONFIG_FILES(test/kinetics_unit_air_5sp.sh,           [chmod +x test/kinetics_unit_air_5sp.sh])
+AC_CONFIG_FILES(test/input_file_unit.sh, [chmod +x test/input_file_unit.sh])
 
 dnl-----------------------------------------------
 dnl Generate header files
