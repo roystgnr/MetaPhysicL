@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - A template for autotools applications
+// MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -26,32 +26,32 @@
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-#include "helloworld/helloworld_version.h"
+#include "metaphysicl/metaphysicl_version.h"
 
-namespace HelloWorld
+namespace MetaPhysicL
 {
 
-  void helloworld_version_stdout()
+  void metaphysicl_version_stdout()
   {
     std::cout << "--------------------------------------------------------" << std::endl;
-    std::cout << "helloworld Package: Version = " << HELLOWORLD_LIB_VERSION;
-    std::cout << " (" << get_helloworld_version() << ")" << std::endl << std::endl;
+    std::cout << "metaphysicl Package: Version = " << METAPHYSICL_LIB_VERSION;
+    std::cout << " (" << get_metaphysicl_version() << ")" << std::endl << std::endl;
   
-    std::cout << HELLOWORLD_LIB_RELEASE << std::endl << std::endl;
+    std::cout << METAPHYSICL_LIB_RELEASE << std::endl << std::endl;
   
-    std::cout << "Build Date   = " << HELLOWORLD_BUILD_DATE     << std::endl;
-    std::cout << "Build Host   = " << HELLOWORLD_BUILD_HOST     << std::endl;
-    std::cout << "Build User   = " << HELLOWORLD_BUILD_USER     << std::endl;
-    std::cout << "Build Arch   = " << HELLOWORLD_BUILD_ARCH     << std::endl;
-    std::cout << "Build Rev    = " << HELLOWORLD_BUILD_VERSION  << std::endl << std::endl;
+    std::cout << "Build Date   = " << METAPHYSICL_BUILD_DATE     << std::endl;
+    std::cout << "Build Host   = " << METAPHYSICL_BUILD_HOST     << std::endl;
+    std::cout << "Build User   = " << METAPHYSICL_BUILD_USER     << std::endl;
+    std::cout << "Build Arch   = " << METAPHYSICL_BUILD_ARCH     << std::endl;
+    std::cout << "Build Rev    = " << METAPHYSICL_BUILD_VERSION  << std::endl << std::endl;
   
-    std::cout << "C++ Config   = " << HELLOWORLD_CXX << " " << HELLOWORLD_CXXFLAGS << std::endl;
+    std::cout << "C++ Config   = " << METAPHYSICL_CXX << " " << METAPHYSICL_CXXFLAGS << std::endl;
     std::cout << "--------------------------------------------------------" << std::endl;
   
     return;
   }
 
-  int get_helloworld_version()
+  int get_metaphysicl_version()
   {
     /* Note: return format follows the versioning convention xx.yy.zz where
    
@@ -68,19 +68,19 @@ namespace HelloWorld
     int minor_version = 0;
     int micro_version = 0;
 
-#ifdef HELLOWORLD_MAJOR_VERSION
-    major_version = HELLOWORLD_MAJOR_VERSION;
+#ifdef METAPHYSICL_MAJOR_VERSION
+    major_version = METAPHYSICL_MAJOR_VERSION;
 #endif
 
-#ifdef HELLOWORLD_MINOR_VERSION
-    minor_version = HELLOWORLD_MINOR_VERSION;
+#ifdef METAPHYSICL_MINOR_VERSION
+    minor_version = METAPHYSICL_MINOR_VERSION;
 #endif
 
-#ifdef HELLOWORLD_MICRO_VERSION
-    micro_version = HELLOWORLD_MICRO_VERSION;
+#ifdef METAPHYSICL_MICRO_VERSION
+    micro_version = METAPHYSICL_MICRO_VERSION;
 #endif
       
     return major_version*10000 + minor_version*100 + micro_version;
   }
 
-} // end namespace HelloWorld
+} // end namespace MetaPhysicL

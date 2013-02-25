@@ -7,9 +7,9 @@ check_PROGRAMS += input_file_unit
 AM_CPPFLAGS  = 
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
-AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #helloworld_version.h
+AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 
-AM_LDFLAGS = $(top_builddir)/src/libhelloworld.la
+AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
 # Sources for these tests
 core_name_unit_SOURCES = core_name_unit.C

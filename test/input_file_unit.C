@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - A template for autotools applications
+// MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -30,8 +30,8 @@
 #include <string>
 #include <iostream>
 
-// HelloWorld
-#include "helloworld/helloworld_asserts.h"
+// MetaPhysicL
+#include "metaphysicl/metaphysicl_asserts.h"
 
 int main(int argc, char* argv[])
 {
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     {
       // TODO: Need more consistent error handling.
       std::cerr << "Error: Must specify input file." << std::endl;
-      helloworld_error();
+      metaphysicl_error();
     }
 
   return 0;

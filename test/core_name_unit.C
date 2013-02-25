@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - An Autotools library template
+// MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -29,8 +29,8 @@
 // C++
 #include <iostream>
 
-// HelloWorld
-#include "helloworld/core.h"
+// MetaPhysicL
+#include "metaphysicl/core.h"
 
 
 int main()

@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - An Autotools library template
+// MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -24,33 +24,31 @@
 // $Id$
 //
 //--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-#ifndef HELLOWORLD_VERSION_H
-#define HELLOWORLD_VERSION_H
 
-#define HELLOWORLD_MAJOR_VERSION  @GENERIC_MAJOR_VERSION@
-#define HELLOWORLD_MINOR_VERSION  @GENERIC_MINOR_VERSION@
-#define HELLOWORLD_MICRO_VERSION  @GENERIC_MICRO_VERSION@
+#ifndef METAPHYSICL_DUALSHADOWVECTOR_H
+#define METAPHYSICL_DUALSHADOWVECTOR_H
 
-#define HELLOWORLD_BUILD_USER     "@BUILD_USER@"
-#define HELLOWORLD_BUILD_ARCH     "@BUILD_ARCH@"
-#define HELLOWORLD_BUILD_HOST     "@BUILD_HOST@"
-#define HELLOWORLD_BUILD_DATE     "@BUILD_DATE@"
-#define HELLOWORLD_BUILD_VERSION  "@BUILD_VERSION@"
 
-#define HELLOWORLD_LIB_VERSION    "@VERSION@"
-#define HELLOWORLD_LIB_RELEASE    "@BUILD_DEVSTATUS@"
+// Order of declarations is important here?
+#include "metaphysicl/dualshadow.h"
+#include "metaphysicl/dualnumbervector.h"
 
-#define HELLOWORLD_CXX            "@CXX@"
-#define HELLOWORLD_CXXFLAGS       "@CXXFLAGS@"
+// ShadowNumber is subordinate to NumberVector:
 
-#include <iostream>
-#include <iomanip>
+#define DualShadowVector_comparisons(templatename) \
+template<std::size_t size, typename T, typename T2, typename S, bool reverseorder> \
+struct templatename<NumberVector<size, T2>, ShadowNumber<T, S>, reverseorder> { \
+  typedef NumberVector<size, typename Symmetric##templatename<T2, ShadowNumber<T, S>, reverseorder>::supertype> supertype; \
+}
 
-namespace HelloWorld
-{
-  void helloworld_version_stdout();
-  int  get_helloworld_version();
-} // end namespace HelloWorld
+namespace MetaPhysicL {
 
-#endif //HELLOWORLD_VERISON_H
+DualShadowVector_comparisons(CompareTypes);
+DualShadowVector_comparisons(PlusType);
+DualShadowVector_comparisons(MinusType);
+DualShadowVector_comparisons(MultipliesType);
+DualShadowVector_comparisons(DividesType);
+
+} // namespace MetaPhysicL
+
+#endif // METAPHYSICL_DUALSHADOWVECTOR_H

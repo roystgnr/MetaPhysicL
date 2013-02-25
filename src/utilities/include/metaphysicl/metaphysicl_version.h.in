@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
 // 
-// HelloWorld - A template for autotools applications
+// MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
 //
@@ -21,36 +21,36 @@
 //
 //-----------------------------------------------------------------------el-
 //
-// $Id: metaprogramming.h 37170 2013-02-19 21:40:39Z roystgnr $
+// $Id$
 //
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
+#ifndef METAPHYSICL_VERSION_H
+#define METAPHYSICL_VERSION_H
 
-#ifndef HELLOWORLD_METAPROGRAMMING_H
-#define HELLOWORLD_METAPROGRAMMING_H
+#define METAPHYSICL_MAJOR_VERSION  @GENERIC_MAJOR_VERSION@
+#define METAPHYSICL_MINOR_VERSION  @GENERIC_MINOR_VERSION@
+#define METAPHYSICL_MICRO_VERSION  @GENERIC_MICRO_VERSION@
 
-namespace HelloWorld
+#define METAPHYSICL_BUILD_USER     "@BUILD_USER@"
+#define METAPHYSICL_BUILD_ARCH     "@BUILD_ARCH@"
+#define METAPHYSICL_BUILD_HOST     "@BUILD_HOST@"
+#define METAPHYSICL_BUILD_DATE     "@BUILD_DATE@"
+#define METAPHYSICL_BUILD_VERSION  "@BUILD_VERSION@"
+
+#define METAPHYSICL_LIB_VERSION    "@VERSION@"
+#define METAPHYSICL_LIB_RELEASE    "@BUILD_DEVSTATUS@"
+
+#define METAPHYSICL_CXX            "@CXX@"
+#define METAPHYSICL_CXXFLAGS       "@CXXFLAGS@"
+
+#include <iostream>
+#include <iomanip>
+
+namespace MetaPhysicL
 {
-  // Helper metafunctions
-  template <bool B, class T = void>
-  struct enable_if_c {
-    typedef T type;
-  };
+  void metaphysicl_version_stdout();
+  int  get_metaphysicl_version();
+} // end namespace MetaPhysicL
 
-  template <class T>
-  struct enable_if_c<false, T> {};
-
-  template <typename T>
-  class has_size
-  {
-    typedef char no;
-    typedef char yes[2];
-    template <class C> static yes& test(char (*)[sizeof(&C::size)]);
-    template <class C> static no& test(...);
-  public:
-    const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
-  };
-
-} // end namespace HelloWorld
-
-#endif //HELLOWORLD_METAPROGRAMMING_H
+#endif // METAPHYSICL_VERISON_H

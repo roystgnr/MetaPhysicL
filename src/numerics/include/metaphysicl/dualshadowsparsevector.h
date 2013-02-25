@@ -21,16 +21,35 @@
 //
 //-----------------------------------------------------------------------el-
 //
-// $Id$
+// $Id: core.h 37197 2013-02-21 05:49:09Z roystgnr $
 //
 //--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
 
-#include "metaphysicl/core.h"
+#ifndef METAPHYSICL_DUALSHADOWSPARSEVECTOR_H
+#define METAPHYSICL_DUALSHADOWSPARSEVECTOR_H
 
-namespace MetaPhysicL
-{
 
-  const char * const Core::name = "MetaPhysicL";
+// Order of declarations is important here?
+#include "metaphysicl/dualshadow.h"
+#include "metaphysicl/dualsparsenumbervector.h"
 
-} // end namespace MetaPhysicL
+// ShadowNumber is subordinate to SparseNumberVector
+// T-vs-ShadowNumber CompareTypes specializations...
+
+#define DualShadowSparseVector_comparisons(templatename) \
+template<typename T, typename T2, typename S, typename IndexSet, bool reverseorder> \
+struct templatename<SparseNumberVector<T2, IndexSet>, ShadowNumber<T, S>, reverseorder> { \
+  typedef SparseNumberVector<typename Symmetric##templatename<T2, ShadowNumber<T, S>, reverseorder>::supertype, IndexSet> supertype; \
+}
+
+namespace MetaPhysicL {
+
+DualShadowSparseVector_comparisons(CompareTypes);
+DualShadowSparseVector_comparisons(PlusType);
+DualShadowSparseVector_comparisons(MinusType);
+DualShadowSparseVector_comparisons(MultipliesType);
+DualShadowSparseVector_comparisons(DividesType);
+
+} // namespace MetaPhysicL
+
+#endif // METAPHYSICL_DUALSHADOWSPARSEVECTOR_H

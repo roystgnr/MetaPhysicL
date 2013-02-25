@@ -21,16 +21,36 @@
 //
 //-----------------------------------------------------------------------el-
 //
-// $Id$
+// $Id: metaprogramming.h 37170 2013-02-19 21:40:39Z roystgnr $
 //
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 
-#include "metaphysicl/core.h"
+#ifndef METAPHYSICL_METAPROGRAMMING_H
+#define METAPHYSICL_METAPROGRAMMING_H
 
 namespace MetaPhysicL
 {
+  // Helper metafunctions
+  template <bool B, class T = void>
+  struct enable_if_c {
+    typedef T type;
+  };
 
-  const char * const Core::name = "MetaPhysicL";
+  template <class T>
+  struct enable_if_c<false, T> {};
+
+  template <typename T>
+  class has_size
+  {
+    typedef char no;
+    typedef char yes[2];
+    template <class C> static yes& test(char (*)[sizeof(&C::size)]);
+    template <class C> static no& test(...);
+  public:
+    const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
+  };
 
 } // end namespace MetaPhysicL
+
+#endif // METAPHYSICL_METAPROGRAMMING_H

@@ -1,4 +1,4 @@
-/*! \mainpage Hello: Hello World autotools example
+/*! \mainpage MetaPhysicL: Metaprogramming Library for Physics calculations
 
 <b>Version \version</b>, Build Date: \builddate
 <br><br>
@@ -7,9 +7,26 @@ Built by: \builduser on \buildhost
 
 \section overview Overview
 
-PUT A DESCRIPTION HERE
+MetaPhysicL is a set of template classes and metaprogramming tools
+useful for the generation of physics codes which are optimized at
+compile-time.
 
-Thanks for your interest in HelloWorld.  To aid in usage, this manual is
+This includes many classes which are designed to be compatible with
+generic codes written for plain numeric data types like float and
+double, but which may provide more featureful output:
+
+DualNumber, for automatic differentiation. 
+
+NumberArray, for vectorization.
+
+SparseNumberArray and SparseNumberStruct, for homogeneous or
+heterogeneous sparse vectors whose structure can be inferred at
+compile time.
+
+EquationSet, for the automatic assembly of physics equations into
+evaluation codes.
+
+Thanks for your interest in MetaPhysicL.  To aid in usage, this manual is
 further divided into the following subsections:
 
 <ul>
@@ -21,13 +38,13 @@ further divided into the following subsections:
 \section bugs Reporting Bugs
 
 Bugs in the code and errors or omissions in the documentation can be
-reported to pbauman@ices.utexas.edu.  Requests and contributions are
+reported to roystgnr@ices.utexas.edu.  Requests and contributions are
 welcome at the same e-mail address.  All bug reports should include:
 <ul>
 
-<li>the version number of HelloWorld (versioning information can
-be obtained by running the <B><code>helloworld_version</code></B> binary located in the
-bin/ directory of a local HelloWorld installation),
+<li>the version number of MetaPhysicL (versioning information can
+be obtained by running the <B><code>metaphysicl_version</code></B> binary located in the
+bin/ directory of a local MetaPhysicL installation),
 <li>the hardware and operating system,
 <li>the local compiler version number,
 <li>a description of the bug behavior, and ideally, 
@@ -48,21 +65,21 @@ Copyright (C) 2013 The PECOS Development Team
 
 /*! \page installation Installation/Linkage
 
-HelloWorld uses the GNU autotools suite (autoconf, automake, and libtool)
+MetaPhysicL uses the GNU autotools suite (autoconf, automake, and libtool)
 for its development build system.  This system is popular among the
 Linux development community and provides a familiar build environment
 for end users.  
 
-To build HelloWorld starting from a release distribution, untar the distribution and
+To build MetaPhysicL starting from a release distribution, untar the distribution and
 enter the top-level directory.
 
 <div class="fragment"><pre class="fragment">
- > tar xvfz helloworld-$(VERSION).tar.gz
- > cd helloworld-$(VERSION)/            
+ > tar xvfz metaphysicl-$(VERSION).tar.gz
+ > cd metaphysicl-$(VERSION)/            
 </pre></div>
 
 <b>Installation Directory</b>: Use the <tt>--prefix</tt> option to
-specify your desired top-level installation directory for HelloWorld.
+specify your desired top-level installation directory for MetaPhysicL.
 
 <h2> Other Configuration Options </h2>
 
@@ -73,7 +90,7 @@ Configure help can also be accessed at the command line:
 <h2> Library Build </h2>
 
 Once configured, issue a <tt>make</tt> to build the software. If successful, this
-will build HelloWorld (static and dynamic libraries and executables).
+will build MetaPhysicL (static and dynamic libraries and executables).
 
 \code > make \endcode
 
@@ -92,7 +109,7 @@ depending upon optimization level and architecture.
 <h2> Installation </h2>
 
 After the build is complete, issue a <tt>make install</tt> to install
-HelloWorld. This will install the header files, libraries, executables,
+MetaPhysicL. This will install the header files, libraries, executables,
 and examples.  
 The installation will consist of four top-level
 directories housing the library, include files, executables, and
@@ -101,10 +118,10 @@ installation is shown below:
 
 \code > make install \endcode
 
-Top-level HelloWorld installation directory:
+Top-level MetaPhysicL installation directory:
 
 \code
- > ls $HOME/bin/helloworld/
+ > ls $HOME/bin/metaphysicl/
  bin  examples  include  lib
 \endcode
 
@@ -114,20 +131,20 @@ To link an external application with the library, the \c include
 directory must be added to the compilers include search path in order
 to access the necessary header files.  The \c lib directory should
 also be added to the linker search path along with a request to link
-against the HelloWorld library.  Several example link steps are
-provided below.  These examples assume that the HelloWorld library has
+against the MetaPhysicL library.  Several example link steps are
+provided below.  These examples assume that the MetaPhysicL library has
 been successfully built and installed previously in the users's
-~/bin/helloworld directory:
+~/bin/metaphysicl directory:
 
-\code > $(CXX) -I$HOME/bin/helloworld/include app.c \
-         -L$HOME/bin/helloworld/lib -lhelloworld \endcode
+\code > $(CXX) -I$HOME/bin/metaphysicl/include app.c \
+         -L$HOME/bin/metaphysicl/lib -lmetaphysicl \endcode
 
-To embed the dynamic library search path for the HelloWorld library
+To embed the dynamic library search path for the MetaPhysicL library
 directly into the application executable, use an additional linker
 option as follows:
 
-\code > $(CXX) -I$HOME/bin/helloworld/include app.c -L$HOME/bin/helloworld/lib \
-         -Wl,-rpath,$HOME/bin/helloworld/lib -lhelloworld \endcode
+\code > $(CXX) -I$HOME/bin/metaphysicl/include app.c -L$HOME/bin/metaphysicl/lib \
+         -Wl,-rpath,$HOME/bin/metaphysicl/lib -lmetaphysicl \endcode
 
 */
 
