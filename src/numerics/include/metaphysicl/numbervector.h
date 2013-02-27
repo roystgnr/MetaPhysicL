@@ -38,11 +38,11 @@
 
 namespace MetaPhysicL {
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 class NumberVector;
 
-template<std::size_t size, typename S, typename T, bool reverseorder>
-struct DotType<NumberVector<size,S>, NumberVector<size,T>, reverseorder> {
+template<std::size_t N, typename S, typename T, bool reverseorder>
+struct DotType<NumberVector<N,S>, NumberVector<N,T>, reverseorder> {
   typedef typename MultipliesType<S,T,reverseorder>::supertype supertype;
 };
 
@@ -53,12 +53,12 @@ struct OuterProductType<NumberVector<size1,S>, NumberVector<size2,T>, reverseord
     typename MultipliesType<S,T,reverseorder>::supertype> > supertype;
 };
 
-template<std::size_t size, typename S>
-struct SumType<NumberVector<size,S> > {
+template<std::size_t N, typename S>
+struct SumType<NumberVector<N,S> > {
   typedef S supertype;
 };
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 class NumberVector
 {
 public:
@@ -71,24 +71,24 @@ public:
 
   template <typename T2>
   struct rebind {
-    typedef NumberVector<size, T2> other;
+    typedef NumberVector<N, T2> other;
   };
 
   NumberVector() {}
 
   NumberVector(const T& val)
-    { std::fill(_data, _data+size, val); }
+    { std::fill(_data, _data+N, val); }
 
   NumberVector(const T* vals)
-    { std::copy(vals, vals+size, _data); }
+    { std::copy(vals, vals+N, _data); }
 
   template <typename T2>
-  NumberVector(NumberVector<size, T2> src)
-    { if (size) std::copy(&src[0], &src[0]+size, _data); }
+  NumberVector(NumberVector<N, T2> src)
+    { if (N) std::copy(&src[0], &src[0]+N, _data); }
 
   template <typename T2>
   NumberVector(const T2& val)
-    { std::fill(_data, _data+size, T(val)); }
+    { std::fill(_data, _data+N, T(val)); }
 
   T& operator[](std::size_t i)
     { return _data[i]; }
@@ -104,72 +104,75 @@ public:
   const typename entry_type<i>::type& get() const
     { return _data[i]; }
 
-  NumberVector<size,T> operator- () const {
-    NumberVector<size,T> returnval;
-    for (std::size_t i=0; i != size; ++i) returnval[i] = -_data[i];
+  std::size_t size() const
+    { return N; }
+
+  NumberVector<N,T> operator- () const {
+    NumberVector<N,T> returnval;
+    for (std::size_t i=0; i != N; ++i) returnval[i] = -_data[i];
     return returnval;
   }
 
   template <typename T2>
-  NumberVector<size,T>& operator+= (const NumberVector<size,T2>& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] += a[i]; return *this; }
+  NumberVector<N,T>& operator+= (const NumberVector<N,T2>& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] += a[i]; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator+= (const T2& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] += a; return *this; }
+  NumberVector<N,T>& operator+= (const T2& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] += a; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator-= (const NumberVector<size,T2>& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] -= a[i]; return *this; }
+  NumberVector<N,T>& operator-= (const NumberVector<N,T2>& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] -= a[i]; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator-= (const T2& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] -= a; return *this; }
+  NumberVector<N,T>& operator-= (const T2& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] -= a; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator*= (const NumberVector<size,T2>& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] *= a[i]; return *this; }
+  NumberVector<N,T>& operator*= (const NumberVector<N,T2>& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] *= a[i]; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator*= (const T2& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] *= a; return *this; }
+  NumberVector<N,T>& operator*= (const T2& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] *= a; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator/= (const NumberVector<size,T2>& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] /= a[i]; return *this; }
+  NumberVector<N,T>& operator/= (const NumberVector<N,T2>& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] /= a[i]; return *this; }
 
   template <typename T2>
-  NumberVector<size,T>& operator/= (const T2& a)
-    { for (std::size_t i=0; i != size; ++i) _data[i] /= a; return *this; }
+  NumberVector<N,T>& operator/= (const T2& a)
+    { for (std::size_t i=0; i != N; ++i) _data[i] /= a; return *this; }
 
   template <typename T2>
   typename SymmetricMultipliesType<T,T2>::supertype
-  dot (const NumberVector<size,T2>& a) const
+  dot (const NumberVector<N,T2>& a) const
   {
     typename SymmetricMultipliesType<T,T2>::supertype returnval = 0;
-    for (std::size_t i=0; i != size; ++i)
+    for (std::size_t i=0; i != N; ++i)
       returnval += _data[i] * a[i];
     return returnval;
   }
 
   template <typename T2>
-  NumberVector<size, NumberVector<size, typename SymmetricMultipliesType<T,T2>::supertype> >
-  outerproduct (const NumberVector<size,T2>& a) const
+  NumberVector<N, NumberVector<N, typename SymmetricMultipliesType<T,T2>::supertype> >
+  outerproduct (const NumberVector<N,T2>& a) const
   {
-    NumberVector<size, NumberVector<size, typename SymmetricMultipliesType<T,T2>::supertype> > returnval;
+    NumberVector<N, NumberVector<N, typename SymmetricMultipliesType<T,T2>::supertype> > returnval;
 
-    for (std::size_t i=0; i != size; ++i)
-      for (std::size_t j=0; j != size; ++j)
+    for (std::size_t i=0; i != N; ++i)
+      for (std::size_t j=0; j != N; ++j)
         returnval[i][j] = _data[i] * a[j];
 
     return returnval;
   }
 
-  static NumberVector<size, NumberVector<size, T> > identity()
+  static NumberVector<N, NumberVector<N, T> > identity()
   {
-    NumberVector<size, NumberVector<size, T> > returnval(0);
+    NumberVector<N, NumberVector<N, T> > returnval(0);
   
-    for (std::size_t i=0; i != size; ++i)
+    for (std::size_t i=0; i != N; ++i)
       returnval[i][i] = 1;
 
     return returnval;
@@ -179,7 +182,7 @@ public:
   {
     T returnval = 0;
     
-    for (std::size_t i=0; i != size; ++i)
+    for (std::size_t i=0; i != N; ++i)
       returnval += _data[i];
 
     return returnval;
@@ -187,7 +190,7 @@ public:
 
 
 private:
-  T _data[size];
+  T _data[N];
 };
 
 
@@ -196,7 +199,7 @@ private:
 // Non-member functions
 //
 
-template <std::size_t size,
+template <std::size_t N,
           unsigned int index1=0, typename Data1=void,
           unsigned int index2=0, typename Data2=void,
           unsigned int index3=0, typename Data3=void,
@@ -222,15 +225,15 @@ struct NumberVectorOf
     >::supertype
   >::supertype supertype;
 
-  typedef NumberVector<size, supertype> type;
+  typedef NumberVector<N, supertype> type;
 };
 
 
 
-template <std::size_t size, std::size_t index, typename T>
+template <std::size_t N, std::size_t index, typename T>
 struct NumberVectorUnitVector
 {
-  typedef NumberVector<size, T> type;
+  typedef NumberVector<N, T> type;
 
   static const type value() {
     type returnval = 0;
@@ -240,14 +243,14 @@ struct NumberVectorUnitVector
 };
 
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 struct NumberVectorFullVector
 {
-  typedef NumberVector<size,T> type;
+  typedef NumberVector<N,T> type;
 
   static const type value() {
     type returnval;
-    for (std::size_t i=0; i != size; ++i)
+    for (std::size_t i=0; i != N; ++i)
       returnval[i] = 1;
     return returnval;
   }
@@ -255,13 +258,13 @@ struct NumberVectorFullVector
 
 
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 inline
-NumberVector<size, NumberVector<size, T> >
-transpose(NumberVector<size, NumberVector<size, T> > a)
+NumberVector<N, NumberVector<N, T> >
+transpose(NumberVector<N, NumberVector<N, T> > a)
 {
-  for (std::size_t i=0; i != size; ++i)
-    for (std::size_t j=i+1; j != size; ++j)
+  for (std::size_t i=0; i != N; ++i)
+    for (std::size_t j=i+1; j != N; ++j)
       std::swap(a[i][j], a[j][i]);
 
   return a;
@@ -270,7 +273,7 @@ transpose(NumberVector<size, NumberVector<size, T> > a)
 
 
 #define NumberVector_op_ab(opname, atype, btype, newtype) \
-template <std::size_t size, typename T, typename T2> \
+template <std::size_t N, typename T, typename T2> \
 inline \
 typename newtype::supertype \
 operator opname (const atype& a, const btype& b) \
@@ -282,12 +285,12 @@ operator opname (const atype& a, const btype& b) \
 }
 
 #define NumberVector_op(opname, typecomparison) \
-NumberVector_op_ab(opname, NumberVector<size MacroComma T>, NumberVector<size MacroComma T2>, \
-                  typecomparison##Type<NumberVector<size MacroComma T> MacroComma NumberVector<size MacroComma T2> >) \
-NumberVector_op_ab(opname,                             T , NumberVector<size MacroComma T2>, \
-                  typecomparison##Type<NumberVector<size MacroComma T2> MacroComma T MacroComma true>) \
-NumberVector_op_ab(opname, NumberVector<size MacroComma T>,                             T2 , \
-                  typecomparison##Type<NumberVector<size MacroComma T> MacroComma T2>)
+NumberVector_op_ab(opname, NumberVector<N MacroComma T>, NumberVector<N MacroComma T2>, \
+                  typecomparison##Type<NumberVector<N MacroComma T> MacroComma NumberVector<N MacroComma T2> >) \
+NumberVector_op_ab(opname,                             T , NumberVector<N MacroComma T2>, \
+                  typecomparison##Type<NumberVector<N MacroComma T2> MacroComma T MacroComma true>) \
+NumberVector_op_ab(opname, NumberVector<N MacroComma T>,                             T2 , \
+                  typecomparison##Type<NumberVector<N MacroComma T> MacroComma T2>)
 
 NumberVector_op(+,Plus)
 NumberVector_op(-,Minus)
@@ -296,23 +299,23 @@ NumberVector_op(/,Divides)
 
 
 #define NumberVector_operator_binary_abab(opname, atype, btype, aarg, barg) \
-template <std::size_t size, typename T, typename T2> \
+template <std::size_t N, typename T, typename T2> \
 inline \
-NumberVector<size, bool> \
+NumberVector<N, bool> \
 operator opname (const atype& a, const btype& b) \
 { \
-  NumberVector<size, bool> returnval; \
+  NumberVector<N, bool> returnval; \
  \
-  for (std::size_t i=0; i != size; ++i) \
+  for (std::size_t i=0; i != N; ++i) \
     returnval[i] = (aarg opname barg); \
  \
   return returnval; \
 }
 
 #define NumberVector_operator_binary(opname) \
-NumberVector_operator_binary_abab(opname, NumberVector<size MacroComma T>, NumberVector<size MacroComma T2>, a[i], b[i]) \
-NumberVector_operator_binary_abab(opname,                             T , NumberVector<size MacroComma T2>, a,    b[i]) \
-NumberVector_operator_binary_abab(opname, NumberVector<size MacroComma T>,                             T2 , a[i], b)
+NumberVector_operator_binary_abab(opname, NumberVector<N MacroComma T>, NumberVector<N MacroComma T2>, a[i], b[i]) \
+NumberVector_operator_binary_abab(opname,                             T , NumberVector<N MacroComma T2>, a,    b[i]) \
+NumberVector_operator_binary_abab(opname, NumberVector<N MacroComma T>,                             T2 , a[i], b)
 
 NumberVector_operator_binary(<)
 NumberVector_operator_binary(<=)
@@ -321,15 +324,15 @@ NumberVector_operator_binary(>=)
 NumberVector_operator_binary(==)
 NumberVector_operator_binary(!=)
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 inline
 std::ostream&      
-operator<< (std::ostream& output, const NumberVector<size,T>& a)
+operator<< (std::ostream& output, const NumberVector<N,T>& a)
 {
   output << '{';
-  if (size)
+  if (N)
     output << a[0];
-  for (std::size_t i=1; i<size; ++i)
+  for (std::size_t i=1; i<N; ++i)
     output << ',' << a[i];
   output << '}';
   return output;
@@ -339,20 +342,20 @@ operator<< (std::ostream& output, const NumberVector<size,T>& a)
 // CompareTypes, RawType specializations
 
 #define NumberVector_comparisons(templatename) \
-template<std::size_t size, typename T, bool reverseorder> \
-struct templatename<NumberVector<size,T>, NumberVector<size,T>, reverseorder> { \
-  typedef NumberVector<size, T> supertype; \
+template<std::size_t N, typename T, bool reverseorder> \
+struct templatename<NumberVector<N,T>, NumberVector<N,T>, reverseorder> { \
+  typedef NumberVector<N, T> supertype; \
 }; \
  \
-template<std::size_t size, typename T, typename T2, bool reverseorder> \
-struct templatename<NumberVector<size,T>, NumberVector<size,T2>, reverseorder> { \
-  typedef NumberVector<size, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
+template<std::size_t N, typename T, typename T2, bool reverseorder> \
+struct templatename<NumberVector<N,T>, NumberVector<N,T2>, reverseorder> { \
+  typedef NumberVector<N, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
 }; \
  \
-template<std::size_t size, typename T, typename T2, bool reverseorder> \
-struct templatename<NumberVector<size, T>, T2, reverseorder, \
+template<std::size_t N, typename T, typename T2, bool reverseorder> \
+struct templatename<NumberVector<N, T>, T2, reverseorder, \
                     typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
-  typedef NumberVector<size, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
+  typedef NumberVector<N, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
 }
 
 NumberVector_comparisons(CompareTypes);
@@ -361,15 +364,15 @@ NumberVector_comparisons(MinusType);
 NumberVector_comparisons(MultipliesType);
 NumberVector_comparisons(DividesType);
 
-template <std::size_t size, typename T>
-struct RawType<NumberVector<size, T> >
+template <std::size_t N, typename T>
+struct RawType<NumberVector<N, T> >
 {
-  typedef NumberVector<size, typename RawType<T>::value_type> value_type;
+  typedef NumberVector<N, typename RawType<T>::value_type> value_type;
 
-  static value_type value(const NumberVector<size, T>& a)
+  static value_type value(const NumberVector<N, T>& a)
     {
       value_type returnval;
-      for (std::size_t i=0; i != size; ++i)
+      for (std::size_t i=0; i != N; ++i)
         returnval[i] = RawType<T>::value(a[i]);
       return returnval;
     }
@@ -384,12 +387,12 @@ using MetaPhysicL::NumberVector;
 using MetaPhysicL::CompareTypes;
 
 #define NumberVector_std_unary(funcname) \
-template <std::size_t size, typename T> \
+template <std::size_t N, typename T> \
 inline \
-NumberVector<size, T> \
-funcname (NumberVector<size, T> a) \
+NumberVector<N, T> \
+funcname (NumberVector<N, T> a) \
 { \
-  for (std::size_t i=0; i != size; ++i) \
+  for (std::size_t i=0; i != N; ++i) \
     a[i] = std::funcname(a[i]); \
  \
   return a; \
@@ -397,7 +400,7 @@ funcname (NumberVector<size, T> a) \
 
 
 #define NumberVector_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
-template <std::size_t size, typename T, typename T2> \
+template <std::size_t N, typename T, typename T2> \
 inline \
 typename CompareTypes<abtypes>::supertype \
 funcname (const atype& a, const btype& b) \
@@ -405,19 +408,19 @@ funcname (const atype& a, const btype& b) \
   typedef typename CompareTypes<abtypes>::supertype TS; \
   TS returnval; \
  \
-  for (std::size_t i=0; i != size; ++i) \
+  for (std::size_t i=0; i != N; ++i) \
     returnval[i] = std::funcname(aarg, barg); \
  \
   return returnval; \
 }
 
 #define NumberVector_std_binary(funcname) \
-NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>, NumberVector<size MacroComma T2>, \
-                            NumberVector<size MacroComma T> MacroComma NumberVector<size MacroComma T2>, a[i], b[i]) \
-NumberVector_std_binary_abab(funcname,                             T , NumberVector<size MacroComma T2>, \
-                            NumberVector<size MacroComma T2> MacroComma T,                              a,    b[i]) \
-NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>,                             T2 , \
-                            NumberVector<size MacroComma T> MacroComma T2,                              a[i],    b)
+NumberVector_std_binary_abab(funcname, NumberVector<N MacroComma T>, NumberVector<N MacroComma T2>, \
+                            NumberVector<N MacroComma T> MacroComma NumberVector<N MacroComma T2>, a[i], b[i]) \
+NumberVector_std_binary_abab(funcname,                             T , NumberVector<N MacroComma T2>, \
+                            NumberVector<N MacroComma T2> MacroComma T,                              a,    b[i]) \
+NumberVector_std_binary_abab(funcname, NumberVector<N MacroComma T>,                             T2 , \
+                            NumberVector<N MacroComma T> MacroComma T2,                              a[i],    b)
 
 NumberVector_std_binary(pow)
 NumberVector_std_unary(exp)
@@ -442,9 +445,9 @@ NumberVector_std_unary(floor)
 NumberVector_std_binary(fmod)
 
 
-template <std::size_t size, typename T>
-class numeric_limits<NumberVector<size, T> > : 
-  public MetaPhysicL::raw_numeric_limits<NumberVector<size, T>, T> {};
+template <std::size_t N, typename T>
+class numeric_limits<NumberVector<N, T> > : 
+  public MetaPhysicL::raw_numeric_limits<NumberVector<N, T>, T> {};
 
 } // namespace std
 

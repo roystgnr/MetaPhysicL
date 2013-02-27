@@ -275,7 +275,7 @@ public:
     typename IndexSet::ForEach()(f);
   }
 
-  static const unsigned int size = IndexSet::size;
+  static const unsigned int index_size = IndexSet::size;
 
   SparseNumberStruct() {}
 
@@ -441,6 +441,9 @@ public:
   template <unsigned int i>
   const typename entry_type<i>::type& get() const
     { return _data.template data<MetaPhysicL::UnsignedIntType<i> >(); }
+
+  std::size_t size() const
+    { return IndexSet::size; }
 
   bool boolean_test() const {
     bool is_nonzero = false;

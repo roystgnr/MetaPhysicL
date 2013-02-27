@@ -131,7 +131,10 @@ public:
     typedef SparseNumberVector<T2, IndexSet> other;
   };
 
-  static const unsigned int size = IndexSet::size;
+  static const size_t index_size = IndexSet::size;
+
+  std::size_t size() const
+    { return IndexSet::size; }
 
   SparseNumberVector() {}
 
@@ -141,7 +144,7 @@ public:
     if (val)
       throw std::domain_error("Cannot initialize SparseNumberVector with non-zero scalar");
 #endif
-    std::fill(_data, _data+size, val);
+    std::fill(_data, _data+size(), val);
   }
 
   template <typename T2>
@@ -151,12 +154,12 @@ public:
     if (val)
       throw std::domain_error("Cannot initialize SparseNumberVector with non-zero scalar");
 #endif
-    std::fill(_data, _data+size, T(val));
+    std::fill(_data, _data+size(), T(val));
   }
 
   template <typename T2>
   SparseNumberVector(SparseNumberVector<T2, IndexSet> src)
-    { std::copy(src.raw_data(), src.raw_data()+size, _data); }
+    { std::copy(src.raw_data(), src.raw_data()+size(), _data); }
 
   template <bool, typename ValueType, typename IndexSet2>
   struct SubCopyFunctor {
@@ -329,7 +332,7 @@ public:
 
   bool boolean_test() const {
     bool is_nonzero = false;
-    for (unsigned int i=0; i != size; ++i)
+    for (unsigned int i=0; i != index_size; ++i)
       if (_data[i])
         is_nonzero = true;
     return is_nonzero;
@@ -441,7 +444,7 @@ public:
   }
 
 private:
-  T _data[size];
+  T _data[index_size];
 };
 
 
@@ -449,7 +452,7 @@ private:
 // Non-member functions
 //
 
-template <unsigned int size,
+template <unsigned int N,
           unsigned int index1=0, typename Data1=void,
           unsigned int index2=0, typename Data2=void,
           unsigned int index3=0, typename Data3=void,
@@ -502,7 +505,7 @@ struct SparseNumberVectorOf
 
 
 
-template <std::size_t size, unsigned int index, typename T>
+template <std::size_t N, unsigned int index, typename T>
 struct SparseNumberVectorUnitVector
 {
   typedef MetaPhysicL::Container<
@@ -520,19 +523,19 @@ struct SparseNumberVectorUnitVector
 };
 
 
-template <std::size_t size, typename T>
+template <std::size_t N, typename T>
 struct SparseNumberVectorFullVector
 {
   typedef MetaPhysicL::Container<
-    MetaPhysicL::UnsignedIntType<size-1>,
-    typename SparseNumberVectorFullVector<size-1,T>::IndexSet
+    MetaPhysicL::UnsignedIntType<N-1>,
+    typename SparseNumberVectorFullVector<N-1,T>::IndexSet
   > IndexSet;
 
   typedef SparseNumberVector<T,IndexSet> type;
 
   static const type value() {
     type returnval;
-    for (unsigned int i=0; i != size; ++i)
+    for (unsigned int i=0; i != N; ++i)
       returnval[i] = 1;
     return returnval;
   }
