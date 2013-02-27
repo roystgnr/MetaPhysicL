@@ -231,7 +231,7 @@ struct Container
   
 
   // Container::size holds the number of elements within the Container
-  static const unsigned int size = tail_set::size + 1;
+  static const std::size_t size = tail_set::size + 1;
 
   // When considering a Container as a sequence, Container::IndexOf<ValueType>::value
   // gives the index (starting at 0) of ValueType::value within that sequence
@@ -670,7 +670,7 @@ struct NullContainer
     typedef NullContainer other;
   };
   
-  static const unsigned int size = 0;
+  static const std::size_t size = 0;
 
   template <typename ValueType>
   struct IndexOf {
