@@ -1,6 +1,8 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "metaphysicl_config.h"
+
 // If we have MASA we test ourselves against an MMS solution; if not
 // we just test that this compiles.
 #ifdef METAPHYSICL_HAVE_MASA

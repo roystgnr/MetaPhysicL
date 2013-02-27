@@ -36,6 +36,14 @@ TESTS += physics_unit
 TESTS += testheaders_unit
 TESTS += testopt_unit
 
+#-------------
+# MASA support
+#-------------
+if MASA_ENABLED
+  AM_CPPFLAGS += $(MASA_CXXFLAGS)
+  AM_LDFLAGS  += $(MASA_LIBS)
+endif
+
 if CODE_COVERAGE_ENABLED
   CLEANFILES = *.gcda *.gcno
 endif
