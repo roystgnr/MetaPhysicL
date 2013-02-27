@@ -1,8 +1,0 @@
-#!/bin/bash
-
-PROG="@top_builddir@/test/input_file_unit"
-
-INPUT="@top_srcdir@/test/input_files/test_input.txt"
-
-$PROG $INPUT
-

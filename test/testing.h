@@ -16,39 +16,40 @@ const unsigned int NDIM = 2;
 #ifdef USE_SPARSE
   #ifdef USE_SHADOW
     #ifdef USE_STRUCT
-      #include "dualshadowsparsestruct.h"
+      #include "metaphysicl/dualshadowsparsestruct.h"
     #else // USE_STRUCT
-      #include "dualshadowsparsevector.h"
+      #include "metaphysicl/dualshadowsparsevector.h"
     #endif // USE_STRUCT
-    typedef ShadowNumber<double, long double> RawScalar;
+    typedef MetaPhysicL::ShadowNumber<double, long double> RawScalar;
   #else // USE_SHADOW
     #ifdef USE_STRUCT
-      #include "dualsparsenumberstruct.h"
+      #include "metaphysicl/dualsparsenumberstruct.h"
     #else // USE_STRUCT
-      #include "dualsparsenumbervector.h"
+      #include "metaphysicl/dualsparsenumbervector.h"
     #endif // USE_STRUCT
     typedef double RawScalar;
   #endif // USE_SHADOW
   #ifdef USE_STRUCT
-    typedef CompileTimeContainer::SetConstructor<CompileTimeContainer::UnsignedIntType<0,RawScalar>, CompileTimeContainer::UnsignedIntType<1,RawScalar> >::type IndexSet;
-    typedef SparseNumberStruct<IndexSet> RawVector;
+    typedef
+    MetaPhysicL::SetConstructor<MetaPhysicL::UnsignedIntType<0,RawScalar>, MetaPhysicL::UnsignedIntType<1,RawScalar> >::type IndexSet;
+    typedef MetaPhysicL::SparseNumberStruct<IndexSet> RawVector;
     #define VectorUnitVector SparseNumberStructUnitVector
     #define VectorOf SparseNumberStructOf
   #else // USE_STRUCT
-    typedef CompileTimeContainer::SetConstructor<CompileTimeContainer::UnsignedIntType<0>, CompileTimeContainer::UnsignedIntType<1> >::type IndexSet;
-    typedef SparseNumberVector<RawScalar, IndexSet> RawVector;
+    typedef MetaPhysicL::SetConstructor<MetaPhysicL::UnsignedIntType<0>, MetaPhysicL::UnsignedIntType<1> >::type IndexSet;
+    typedef MetaPhysicL::SparseNumberVector<RawScalar, IndexSet> RawVector;
     #define VectorUnitVector SparseNumberVectorUnitVector
     #define VectorOf SparseNumberVectorOf
   #endif // USE_STRUCT
 #else // USE_SPARSE
   #ifdef USE_SHADOW
-    #include "dualshadowvector.h"
-    typedef ShadowNumber<double, long double> RawScalar;
+    #include "metaphysicl/dualshadowvector.h"
+    typedef MetaPhysicL::ShadowNumber<double, long double> RawScalar;
   #else // USE_SHADOW
-    #include "dualnumbervector.h"
+    #include "metaphysicl/dualnumbervector.h"
     typedef double RawScalar;
   #endif // USE_SHADOW
-  typedef NumberVector<NDIM, RawScalar> RawVector;
+  typedef MetaPhysicL::NumberVector<NDIM, RawScalar> RawVector;
   #define VectorUnitVector NumberVectorUnitVector
   #define VectorOf NumberVectorOf
 #endif // USE_SPARSE

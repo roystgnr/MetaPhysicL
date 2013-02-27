@@ -13,9 +13,6 @@ lib_LTLIBRARIES = libmetaphysicl.la
 #----------------------------------------------
 libmetaphysicl_la_SOURCES =
 
-# core
-libmetaphysicl_la_SOURCES += core/src/test_file.C
-
 # utilities
 libmetaphysicl_la_SOURCES += utilities/src/metaphysicl_version.C
 
@@ -24,9 +21,6 @@ libmetaphysicl_la_SOURCES += utilities/src/metaphysicl_version.C
 #----------------------------
 includedir = $(prefix)/include/metaphysicl
 include_HEADERS =
-
-# core
-include_HEADERS += core/include/metaphysicl/core.h
 
 # utilities
 include_HEADERS += utilities/include/metaphysicl/metaphysicl_exceptions.h

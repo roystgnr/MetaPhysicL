@@ -164,12 +164,10 @@ public:
     return returnval;
   }
 
-  template <typename T2=T>
-  typename SumType<NumberArray<size, T2> >::supertype
+  T
   sum () const
   {
-    typename SumType<NumberArray<size, T2> >::supertype
-      returnval = 0;
+    T returnval = 0;
     
     for (std::size_t i=0; i != size; ++i)
       returnval[i] = _data[i].sum();
@@ -286,72 +284,6 @@ NumberArray_op(-,Minus)
 NumberArray_op(*,Multiplies)
 NumberArray_op(/,Divides)
 
-namespace std {
-
-#define NumberArray_std_unary(funcname) \
-template <std::size_t size, typename T> \
-inline \
-NumberArray<size, T> \
-funcname (NumberArray<size, T> a) \
-{ \
-  for (std::size_t i=0; i != size; ++i) \
-    a[i] = std::funcname(a[i]); \
- \
-  return a; \
-}
-
-
-#define NumberArray_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
-template <std::size_t size, typename T, typename T2> \
-inline \
-typename CompareTypes<abtypes>::supertype \
-funcname (const atype& a, const btype& b) \
-{ \
-  typedef typename CompareTypes<abtypes>::supertype TS; \
-  TS returnval; \
- \
-  for (std::size_t i=0; i != size; ++i) \
-    returnval[i] = std::funcname(aarg, barg); \
- \
-  return returnval; \
-}
-
-#define NumberArray_std_binary(funcname) \
-NumberArray_std_binary_abab(funcname, NumberArray<size MacroComma T>, NumberArray<size MacroComma T2>, \
-                            NumberArray<size MacroComma T> MacroComma NumberArray<size MacroComma T2>, a[i], b[i]) \
-NumberArray_std_binary_abab(funcname,                             T , NumberArray<size MacroComma T2>, \
-                            NumberArray<size MacroComma T2> MacroComma T,                              a,    b[i]) \
-NumberArray_std_binary_abab(funcname, NumberArray<size MacroComma T>,                             T2 , \
-                            NumberArray<size MacroComma T> MacroComma T2,                              a[i],    b)
-
-NumberArray_std_binary(pow)
-NumberArray_std_unary(exp)
-NumberArray_std_unary(log)
-NumberArray_std_unary(log10)
-NumberArray_std_unary(sin)
-NumberArray_std_unary(cos)
-NumberArray_std_unary(tan)
-NumberArray_std_unary(asin)
-NumberArray_std_unary(acos)
-NumberArray_std_unary(atan)
-NumberArray_std_binary(atan2)
-NumberArray_std_unary(sinh)
-NumberArray_std_unary(cosh)
-NumberArray_std_unary(tanh)
-NumberArray_std_unary(sqrt)
-NumberArray_std_unary(abs)
-NumberArray_std_binary(max)
-NumberArray_std_binary(min)
-NumberArray_std_unary(ceil)
-NumberArray_std_unary(floor)
-NumberArray_std_binary(fmod)
-
-
-template <std::size_t size, typename T>
-class numeric_limits<NumberArray<size, T> > : 
-  public raw_numeric_limits<NumberArray<size, T>, T> {};
-
-} // namespace std
 
 #define NumberArray_operator_binary_abab(opname, atype, btype, aarg, barg) \
 template <std::size_t size, typename T, typename T2> \
@@ -433,5 +365,78 @@ struct RawType<NumberArray<size, T> >
 };
 
 } // namespace MetaPhysicL
+
+
+
+namespace std {
+
+using MetaPhysicL::NumberArray;
+using MetaPhysicL::CompareTypes;
+
+#define NumberArray_std_unary(funcname) \
+template <std::size_t size, typename T> \
+inline \
+NumberArray<size, T> \
+funcname (NumberArray<size, T> a) \
+{ \
+  for (std::size_t i=0; i != size; ++i) \
+    a[i] = std::funcname(a[i]); \
+ \
+  return a; \
+}
+
+
+#define NumberArray_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
+template <std::size_t size, typename T, typename T2> \
+inline \
+typename CompareTypes<abtypes>::supertype \
+funcname (const atype& a, const btype& b) \
+{ \
+  typedef typename CompareTypes<abtypes>::supertype TS; \
+  TS returnval; \
+ \
+  for (std::size_t i=0; i != size; ++i) \
+    returnval[i] = std::funcname(aarg, barg); \
+ \
+  return returnval; \
+}
+
+#define NumberArray_std_binary(funcname) \
+NumberArray_std_binary_abab(funcname, NumberArray<size MacroComma T>, NumberArray<size MacroComma T2>, \
+                            NumberArray<size MacroComma T> MacroComma NumberArray<size MacroComma T2>, a[i], b[i]) \
+NumberArray_std_binary_abab(funcname,                             T , NumberArray<size MacroComma T2>, \
+                            NumberArray<size MacroComma T2> MacroComma T,                              a,    b[i]) \
+NumberArray_std_binary_abab(funcname, NumberArray<size MacroComma T>,                             T2 , \
+                            NumberArray<size MacroComma T> MacroComma T2,                              a[i],    b)
+
+NumberArray_std_binary(pow)
+NumberArray_std_unary(exp)
+NumberArray_std_unary(log)
+NumberArray_std_unary(log10)
+NumberArray_std_unary(sin)
+NumberArray_std_unary(cos)
+NumberArray_std_unary(tan)
+NumberArray_std_unary(asin)
+NumberArray_std_unary(acos)
+NumberArray_std_unary(atan)
+NumberArray_std_binary(atan2)
+NumberArray_std_unary(sinh)
+NumberArray_std_unary(cosh)
+NumberArray_std_unary(tanh)
+NumberArray_std_unary(sqrt)
+NumberArray_std_unary(abs)
+NumberArray_std_binary(max)
+NumberArray_std_binary(min)
+NumberArray_std_unary(ceil)
+NumberArray_std_unary(floor)
+NumberArray_std_binary(fmod)
+
+
+template <std::size_t size, typename T>
+class numeric_limits<NumberArray<size, T> > : 
+  public MetaPhysicL::raw_numeric_limits<NumberArray<size, T>, T> {};
+
+} // namespace std
+
 
 #endif // METAPHYSICL_NUMBERARRAY_H

@@ -1,24 +1,40 @@
 BUILT_SOURCES   = .license.stamp
 
 check_PROGRAMS  =
-check_PROGRAMS += core_name_unit
-check_PROGRAMS += input_file_unit
+check_PROGRAMS += main_unit
+check_PROGRAMS += navier_unit
+check_PROGRAMS += pde_unit
+check_PROGRAMS += physics_unit
+check_PROGRAMS += testheaders_unit
+check_PROGRAMS += testopt_unit
 
 AM_CPPFLAGS  = 
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
+AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
+AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
+physics_unit_CXXFLAGS = -std=c++11
+
 # Sources for these tests
-core_name_unit_SOURCES = core_name_unit.C
-input_file_unit_SOURCES = input_file_unit.C
+main_unit_SOURCES = main_unit.C
+navier_unit_SOURCES = navier_unit.C
+pde_unit_SOURCES = pde_unit.C
+physics_unit_SOURCES = physics_unit.C
+testheaders_unit_SOURCES = testheaders_unit.C
+testopt_unit_SOURCES = testopt_unit.C
 
 #Define tests to actually be run
 TESTS  =
-TESTS += core_name_unit
-TESTS += input_file_unit.sh
+TESTS += main_unit
+TESTS += navier_unit
+TESTS += pde_unit
+TESTS += physics_unit
+TESTS += testheaders_unit
+TESTS += testopt_unit
 
 if CODE_COVERAGE_ENABLED
   CLEANFILES = *.gcda *.gcno

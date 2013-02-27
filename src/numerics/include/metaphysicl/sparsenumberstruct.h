@@ -863,181 +863,6 @@ operator / (const SparseNumberStruct<IndexSet>& a, const T2& b)
   return returnval;
 }
 
-namespace std {
-
-#define SparseNumberStruct_std_unary(funcname) \
-\
-struct funcname##_Subfunctor { \
-  template <typename T> \
-  T operator()(T& x) const { return std::funcname(x); } \
-}; \
-\
-template <typename IndexSet> \
-inline \
-SparseNumberStruct<IndexSet> \
-funcname (SparseNumberStruct<IndexSet> a) \
-{ \
-  a.for_each_datum \
-    (UnaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet> \
-      (funcname##_Subfunctor(), a.raw_data(), a.raw_data())); \
- \
-  return a; \
-}
-
-
-#define SparseNumberStruct_std_binary(funcname) \
-\
-struct funcname##_Subfunctor { \
-  template <typename T1, typename T2> \
-  typename CompareTypes<T1,T2>::supertype \
-  operator()(T1& x, T2& y) const { return std::funcname(x,y); } \
-}; \
-\
-template <typename IndexSet, typename IndexSet2> \
-inline \
-SparseNumberStruct<typename IndexSet2::template Intersection<IndexSet>::template Union<IndexSet>::type> \
-funcname (const SparseNumberStruct<IndexSet>& a, const SparseNumberStruct<IndexSet2>& b) \
-{ \
-  /* Intersection/Union hackery here handles data_type upgrading */ \
-  typedef typename \
-    IndexSet2::template Intersection<IndexSet>::template Union<IndexSet>::type IS; \
-  SparseNumberStruct<IS> returnval; \
- \
-  typename IndexSet::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet2,IS> \
-      (funcname##_Subfunctor(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
- \
-  return returnval; \
-} \
-\
-template <typename IndexSet, typename T2> \
-inline \
-typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype \
-funcname (const SparseNumberStruct<IndexSet>& a, const T2& b) \
-{ \
-  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype type; \
-  type returnval; \
- \
-  typename IndexSet::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<T2>,typename type::index_set> \
-      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<T2>(b), returnval.raw_data())); \
- \
-  return returnval; \
-} \
- \
-template <typename T, typename IndexSet> \
-inline \
-typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype \
-funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
-{ \
-  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype type; \
-  type returnval; \
- \
-  typename IndexSet::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<T>,IndexSet,typename type::index_set> \
-      (funcname##_Subfunctor(), ConstantDataSet<T>(a), b.raw_data(), returnval.raw_data())); \
- \
-  return returnval; \
-}
-
-
-#define SparseNumberStruct_std_binary_union(funcname) \
-\
-struct funcname##_Subfunctor { \
-  template <typename T1, typename T2> \
-  typename CompareTypes<T1,T2>::supertype \
-  operator()(T1& x, T2& y) const { return std::funcname(x,y); } \
-}; \
-\
-template <typename IndexSet, typename IndexSet2> \
-inline \
-SparseNumberStruct<typename IndexSet::template Union<IndexSet2>::type> \
-funcname (const SparseNumberStruct<IndexSet>& a, const SparseNumberStruct<IndexSet2>& b) \
-{ \
-  typedef typename IndexSet::template Union<IndexSet2>::type IS; \
-  SparseNumberStruct<IS> returnval; \
- \
-  typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet2,IS> \
-      (funcname##_Subfunctor(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
-  typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<int>,IS> \
-      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<int>(0), returnval.raw_data())); \
-  typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<int>,IndexSet2,IS> \
-      (funcname##_Subfunctor(), ConstantDataSet<int>(0), b.raw_data(), returnval.raw_data())); \
- \
-  return returnval; \
-} \
- \
-template <typename T2, typename IndexSet> \
-inline \
-typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype \
-funcname (const SparseNumberStruct<IndexSet>& a, const T2& b) \
-{ \
-  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype type; \
-  type returnval; \
- \
-  typename IndexSet::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<T2>,typename type::index_set> \
-      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<T2>(b), returnval.raw_data())); \
- \
-  return returnval; \
-} \
- \
-template <typename T, typename IndexSet> \
-inline \
-typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype \
-funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
-{ \
-  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype type; \
-  type returnval; \
- \
-  typename IndexSet::ForEach() \
-    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<T>,IndexSet,typename type::index_set> \
-      (funcname##_Subfunctor(), ConstantDataSet<T>(a), b.raw_data(), returnval.raw_data())); \
- \
-  return returnval; \
-}
-
-
-
-// NOTE: unary functions for which f(0) != 0 are undefined compile-time
-// errors, because there's no efficient way to have them make sense in
-// the sparse context.
-
-SparseNumberStruct_std_binary(pow)
-// SparseNumberStruct_std_unary(exp)
-// SparseNumberStruct_std_unary(log)
-// SparseNumberStruct_std_unary(log10)
-SparseNumberStruct_std_unary(sin)
-// SparseNumberStruct_std_unary(cos)
-SparseNumberStruct_std_unary(tan)
-// SparseNumberStruct_std_unary(asin)
-// SparseNumberStruct_std_unary(acos)
-SparseNumberStruct_std_unary(atan)
-SparseNumberStruct_std_binary(atan2)
-SparseNumberStruct_std_unary(sinh)
-// SparseNumberStruct_std_unary(cosh)
-SparseNumberStruct_std_unary(tanh)
-SparseNumberStruct_std_unary(sqrt)
-SparseNumberStruct_std_unary(abs)
-SparseNumberStruct_std_binary_union(max)
-SparseNumberStruct_std_binary_union(min)
-SparseNumberStruct_std_unary(ceil)
-SparseNumberStruct_std_unary(floor)
-SparseNumberStruct_std_binary(fmod)
-
-
-// Defining numeric_limits for heterogenous containers is pretty much
-// impossible
-/*
-template <typename IndexSet>
-class numeric_limits<SparseNumberStruct<IndexSet> > : 
-  public raw_numeric_limits<SparseNumberStruct<IndexSet>, IDunno> {};
-*/
-
-} // namespace std
 
 // FIXME: Set::rebind<bool> won't work as desired for tensors
 
@@ -1239,5 +1064,188 @@ struct RawType<SparseNumberStruct<IndexSet> >
 };
 
 } // namespace MetaPhysicL
+
+
+namespace std {
+
+using MetaPhysicL::SparseNumberStruct;
+using MetaPhysicL::BinaryFunctor;
+using MetaPhysicL::UnaryFunctor;
+using MetaPhysicL::ConstantDataSet;
+
+#define SparseNumberStruct_std_unary(funcname) \
+\
+struct funcname##_Subfunctor { \
+  template <typename T> \
+  T operator()(T& x) const { return std::funcname(x); } \
+}; \
+\
+template <typename IndexSet> \
+inline \
+SparseNumberStruct<IndexSet> \
+funcname (SparseNumberStruct<IndexSet> a) \
+{ \
+  a.for_each_datum \
+    (UnaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet> \
+      (funcname##_Subfunctor(), a.raw_data(), a.raw_data())); \
+ \
+  return a; \
+}
+
+
+#define SparseNumberStruct_std_binary(funcname) \
+\
+struct funcname##_Subfunctor { \
+  template <typename T1, typename T2> \
+  typename CompareTypes<T1,T2>::supertype \
+  operator()(T1& x, T2& y) const { return std::funcname(x,y); } \
+}; \
+\
+template <typename IndexSet, typename IndexSet2> \
+inline \
+SparseNumberStruct<typename IndexSet2::template Intersection<IndexSet>::template Union<IndexSet>::type> \
+funcname (const SparseNumberStruct<IndexSet>& a, const SparseNumberStruct<IndexSet2>& b) \
+{ \
+  /* Intersection/Union hackery here handles data_type upgrading */ \
+  typedef typename \
+    IndexSet2::template Intersection<IndexSet>::template Union<IndexSet>::type IS; \
+  SparseNumberStruct<IS> returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet2,IS> \
+      (funcname##_Subfunctor(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
+ \
+  return returnval; \
+} \
+\
+template <typename IndexSet, typename T2> \
+inline \
+typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype \
+funcname (const SparseNumberStruct<IndexSet>& a, const T2& b) \
+{ \
+  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype type; \
+  type returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<T2>,typename type::index_set> \
+      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<T2>(b), returnval.raw_data())); \
+ \
+  return returnval; \
+} \
+ \
+template <typename T, typename IndexSet> \
+inline \
+typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype \
+funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
+{ \
+  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype type; \
+  type returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<T>,IndexSet,typename type::index_set> \
+      (funcname##_Subfunctor(), ConstantDataSet<T>(a), b.raw_data(), returnval.raw_data())); \
+ \
+  return returnval; \
+}
+
+
+#define SparseNumberStruct_std_binary_union(funcname) \
+\
+struct funcname##_Subfunctor { \
+  template <typename T1, typename T2> \
+  typename CompareTypes<T1,T2>::supertype \
+  operator()(T1& x, T2& y) const { return std::funcname(x,y); } \
+}; \
+\
+template <typename IndexSet, typename IndexSet2> \
+inline \
+SparseNumberStruct<typename IndexSet::template Union<IndexSet2>::type> \
+funcname (const SparseNumberStruct<IndexSet>& a, const SparseNumberStruct<IndexSet2>& b) \
+{ \
+  typedef typename IndexSet::template Union<IndexSet2>::type IS; \
+  SparseNumberStruct<IS> returnval; \
+ \
+  typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet2,IS> \
+      (funcname##_Subfunctor(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
+  typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<int>,IS> \
+      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<int>(0), returnval.raw_data())); \
+  typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<int>,IndexSet2,IS> \
+      (funcname##_Subfunctor(), ConstantDataSet<int>(0), b.raw_data(), returnval.raw_data())); \
+ \
+  return returnval; \
+} \
+ \
+template <typename T2, typename IndexSet> \
+inline \
+typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype \
+funcname (const SparseNumberStruct<IndexSet>& a, const T2& b) \
+{ \
+  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T2>::supertype type; \
+  type returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,IndexSet,ConstantDataSet<T2>,typename type::index_set> \
+      (funcname##_Subfunctor(), a.raw_data(), ConstantDataSet<T2>(b), returnval.raw_data())); \
+ \
+  return returnval; \
+} \
+ \
+template <typename T, typename IndexSet> \
+inline \
+typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype \
+funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
+{ \
+  typedef typename CompareTypes<SparseNumberStruct<IndexSet>,T,true>::supertype type; \
+  type returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryFunctor<funcname##_Subfunctor,ConstantDataSet<T>,IndexSet,typename type::index_set> \
+      (funcname##_Subfunctor(), ConstantDataSet<T>(a), b.raw_data(), returnval.raw_data())); \
+ \
+  return returnval; \
+}
+
+
+
+// NOTE: unary functions for which f(0) != 0 are undefined compile-time
+// errors, because there's no efficient way to have them make sense in
+// the sparse context.
+
+SparseNumberStruct_std_binary(pow)
+// SparseNumberStruct_std_unary(exp)
+// SparseNumberStruct_std_unary(log)
+// SparseNumberStruct_std_unary(log10)
+SparseNumberStruct_std_unary(sin)
+// SparseNumberStruct_std_unary(cos)
+SparseNumberStruct_std_unary(tan)
+// SparseNumberStruct_std_unary(asin)
+// SparseNumberStruct_std_unary(acos)
+SparseNumberStruct_std_unary(atan)
+SparseNumberStruct_std_binary(atan2)
+SparseNumberStruct_std_unary(sinh)
+// SparseNumberStruct_std_unary(cosh)
+SparseNumberStruct_std_unary(tanh)
+SparseNumberStruct_std_unary(sqrt)
+SparseNumberStruct_std_unary(abs)
+SparseNumberStruct_std_binary_union(max)
+SparseNumberStruct_std_binary_union(min)
+SparseNumberStruct_std_unary(ceil)
+SparseNumberStruct_std_unary(floor)
+SparseNumberStruct_std_binary(fmod)
+
+
+// Defining numeric_limits for heterogenous containers is pretty much
+// impossible
+/*
+template <typename IndexSet>
+class numeric_limits<SparseNumberStruct<IndexSet> > : 
+  public raw_numeric_limits<SparseNumberStruct<IndexSet>, IDunno> {};
+*/
+
+} // namespace std
+
 
 #endif // METAPHYSICL_SPARSENUMBERSTRUCT_H

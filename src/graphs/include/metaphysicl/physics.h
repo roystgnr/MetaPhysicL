@@ -118,8 +118,8 @@ private:
 struct physicsname \
 { \
   static const char* name() { return #physicsname; } \
-  static const PhysicsSet::VarIndexType input1index = input1enum; \
-  static const PhysicsSet::VarIndexType outputindex = outputenum; \
+  static const MetaPhysicL::VarIndexType input1index = input1enum; \
+  static const MetaPhysicL::VarIndexType outputindex = outputenum; \
  \
   template <typename inputtype> \
   static auto evaluate (const inputtype& input1enum##_NAME) \
@@ -166,9 +166,9 @@ struct physicsname \
 struct physicsname \
 { \
   static const char* name() { return #physicsname; } \
-  static const PhysicsSet::VarIndexType input1index = input1enum; \
-  static const PhysicsSet::VarIndexType input2index = input2enum; \
-  static const PhysicsSet::VarIndexType outputindex = outputenum; \
+  static const MetaPhysicL::VarIndexType input1index = input1enum; \
+  static const MetaPhysicL::VarIndexType input2index = input2enum; \
+  static const MetaPhysicL::VarIndexType outputindex = outputenum; \
  \
   template <typename input1type, typename input2type> \
   static auto evaluate (const input1type& input1enum##_NAME, \
@@ -220,10 +220,10 @@ struct physicsname \
 struct physicsname \
 { \
   static const char* name() { return #physicsname; } \
-  static const PhysicsSet::VarIndexType input1index = input1enum; \
-  static const PhysicsSet::VarIndexType input2index = input2enum; \
-  static const PhysicsSet::VarIndexType input3index = input3enum; \
-  static const PhysicsSet::VarIndexType outputindex = outputenum; \
+  static const MetaPhysicL::VarIndexType input1index = input1enum; \
+  static const MetaPhysicL::VarIndexType input2index = input2enum; \
+  static const MetaPhysicL::VarIndexType input3index = input3enum; \
+  static const MetaPhysicL::VarIndexType outputindex = outputenum; \
  \
   template <typename input1type, typename input2type, typename input3type> \
   static auto evaluate (const input1type& input1enum##_NAME, \

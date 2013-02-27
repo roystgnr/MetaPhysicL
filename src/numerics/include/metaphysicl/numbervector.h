@@ -30,6 +30,7 @@
 #define METAPHYSICL_NUMBERVECTOR_H
 
 #include <algorithm>
+#include <limits>
 #include <ostream>
 
 #include "metaphysicl/compare_types.h"
@@ -293,72 +294,6 @@ NumberVector_op(-,Minus)
 NumberVector_op(*,Multiplies)
 NumberVector_op(/,Divides)
 
-namespace std {
-
-#define NumberVector_std_unary(funcname) \
-template <std::size_t size, typename T> \
-inline \
-NumberVector<size, T> \
-funcname (NumberVector<size, T> a) \
-{ \
-  for (std::size_t i=0; i != size; ++i) \
-    a[i] = std::funcname(a[i]); \
- \
-  return a; \
-}
-
-
-#define NumberVector_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
-template <std::size_t size, typename T, typename T2> \
-inline \
-typename CompareTypes<abtypes>::supertype \
-funcname (const atype& a, const btype& b) \
-{ \
-  typedef typename CompareTypes<abtypes>::supertype TS; \
-  TS returnval; \
- \
-  for (std::size_t i=0; i != size; ++i) \
-    returnval[i] = std::funcname(aarg, barg); \
- \
-  return returnval; \
-}
-
-#define NumberVector_std_binary(funcname) \
-NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>, NumberVector<size MacroComma T2>, \
-                            NumberVector<size MacroComma T> MacroComma NumberVector<size MacroComma T2>, a[i], b[i]) \
-NumberVector_std_binary_abab(funcname,                             T , NumberVector<size MacroComma T2>, \
-                            NumberVector<size MacroComma T2> MacroComma T,                              a,    b[i]) \
-NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>,                             T2 , \
-                            NumberVector<size MacroComma T> MacroComma T2,                              a[i],    b)
-
-NumberVector_std_binary(pow)
-NumberVector_std_unary(exp)
-NumberVector_std_unary(log)
-NumberVector_std_unary(log10)
-NumberVector_std_unary(sin)
-NumberVector_std_unary(cos)
-NumberVector_std_unary(tan)
-NumberVector_std_unary(asin)
-NumberVector_std_unary(acos)
-NumberVector_std_unary(atan)
-NumberVector_std_binary(atan2)
-NumberVector_std_unary(sinh)
-NumberVector_std_unary(cosh)
-NumberVector_std_unary(tanh)
-NumberVector_std_unary(sqrt)
-NumberVector_std_unary(abs)
-NumberVector_std_binary(max)
-NumberVector_std_binary(min)
-NumberVector_std_unary(ceil)
-NumberVector_std_unary(floor)
-NumberVector_std_binary(fmod)
-
-
-template <std::size_t size, typename T>
-class numeric_limits<NumberVector<size, T> > : 
-  public raw_numeric_limits<NumberVector<size, T>, T> {};
-
-} // namespace std
 
 #define NumberVector_operator_binary_abab(opname, atype, btype, aarg, barg) \
 template <std::size_t size, typename T, typename T2> \
@@ -441,5 +376,77 @@ struct RawType<NumberVector<size, T> >
 };
 
 } // namespace MetaPhysicL
+
+
+namespace std {
+
+using MetaPhysicL::NumberVector;
+using MetaPhysicL::CompareTypes;
+
+#define NumberVector_std_unary(funcname) \
+template <std::size_t size, typename T> \
+inline \
+NumberVector<size, T> \
+funcname (NumberVector<size, T> a) \
+{ \
+  for (std::size_t i=0; i != size; ++i) \
+    a[i] = std::funcname(a[i]); \
+ \
+  return a; \
+}
+
+
+#define NumberVector_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
+template <std::size_t size, typename T, typename T2> \
+inline \
+typename CompareTypes<abtypes>::supertype \
+funcname (const atype& a, const btype& b) \
+{ \
+  typedef typename CompareTypes<abtypes>::supertype TS; \
+  TS returnval; \
+ \
+  for (std::size_t i=0; i != size; ++i) \
+    returnval[i] = std::funcname(aarg, barg); \
+ \
+  return returnval; \
+}
+
+#define NumberVector_std_binary(funcname) \
+NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>, NumberVector<size MacroComma T2>, \
+                            NumberVector<size MacroComma T> MacroComma NumberVector<size MacroComma T2>, a[i], b[i]) \
+NumberVector_std_binary_abab(funcname,                             T , NumberVector<size MacroComma T2>, \
+                            NumberVector<size MacroComma T2> MacroComma T,                              a,    b[i]) \
+NumberVector_std_binary_abab(funcname, NumberVector<size MacroComma T>,                             T2 , \
+                            NumberVector<size MacroComma T> MacroComma T2,                              a[i],    b)
+
+NumberVector_std_binary(pow)
+NumberVector_std_unary(exp)
+NumberVector_std_unary(log)
+NumberVector_std_unary(log10)
+NumberVector_std_unary(sin)
+NumberVector_std_unary(cos)
+NumberVector_std_unary(tan)
+NumberVector_std_unary(asin)
+NumberVector_std_unary(acos)
+NumberVector_std_unary(atan)
+NumberVector_std_binary(atan2)
+NumberVector_std_unary(sinh)
+NumberVector_std_unary(cosh)
+NumberVector_std_unary(tanh)
+NumberVector_std_unary(sqrt)
+NumberVector_std_unary(abs)
+NumberVector_std_binary(max)
+NumberVector_std_binary(min)
+NumberVector_std_unary(ceil)
+NumberVector_std_unary(floor)
+NumberVector_std_binary(fmod)
+
+
+template <std::size_t size, typename T>
+class numeric_limits<NumberVector<size, T> > : 
+  public MetaPhysicL::raw_numeric_limits<NumberVector<size, T>, T> {};
+
+} // namespace std
+
 
 #endif // METAPHYSICL_NUMBERVECTOR_H

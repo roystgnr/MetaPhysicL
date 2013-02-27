@@ -636,7 +636,157 @@ operator / (const SparseNumberVector<T,IndexSet>& a, const T2& b)
   return returnval;
 }
 
+
+#define SparseNumberVector_operator_binary(opname, functorname) \
+template <typename T, typename T2, typename IndexSet, typename IndexSet2> \
+inline \
+SparseNumberVector<bool, typename IndexSet::template Union<IndexSet2>::type> \
+operator opname (const SparseNumberVector<T,IndexSet>& a, const SparseNumberVector<T2,IndexSet2>& b) \
+{ \
+  typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
+  typedef typename IndexSet::template Union<IndexSet2>::type IndexSetS; \
+  SparseNumberVector<bool, IndexSetS> returnval; \
+ \
+  typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
+    (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSet,T,T2,bool> \
+      (a.raw_data(), b.raw_data(), returnval.raw_data(), std::functorname<TS>())); \
+  typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
+    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,T,bool> \
+      (a.raw_data(), returnval.raw_data(), std::bind2nd(std::functorname<T>(),0))); \
+  typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
+    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,T2,bool> \
+      (b.raw_data(), returnval.raw_data(), std::bind1st(std::functorname<T2>(),0))); \
+ \
+  return returnval; \
+} \
+template <typename T, typename T2, typename IndexSet> \
+inline \
+SparseNumberVector<bool, IndexSet> \
+operator opname (const SparseNumberVector<T, IndexSet>& a, const T2& b) \
+{ \
+  SparseNumberVector<bool, IndexSet> returnval; \
+ \
+  for (unsigned int i=0; i != IndexSet::size; ++i) \
+    returnval.raw_at(i) = (a.raw_at(i) opname b); \
+ \
+  return returnval; \
+} \
+template <typename T, typename T2, typename IndexSet> \
+inline \
+SparseNumberVector<bool, IndexSet> \
+operator opname (const T& a, const SparseNumberVector<T2,IndexSet>& b) \
+{ \
+  SparseNumberVector<bool, IndexSet> returnval; \
+ \
+  for (unsigned int i=0; i != IndexSet::size; ++i) \
+    returnval.raw_at(i) = (a opname b.raw_at(i)); \
+ \
+  return returnval; \
+}
+
+// NOTE: unary functions for which 0-op-0 is true are undefined compile-time
+// errors, because there's no efficient way to have them make sense in
+// the sparse context.
+
+SparseNumberVector_operator_binary(<, less)
+// SparseNumberVector_operator_binary(<=)
+SparseNumberVector_operator_binary(>, greater)
+// SparseNumberVector_operator_binary(>=)
+// SparseNumberVector_operator_binary(==)
+SparseNumberVector_operator_binary(!=, not_equal_to)
+
+// Making this a local struct seems to fail??
+template <typename T, typename IndexSet>
+struct SparseNumberVectorOutputFunctor {
+  SparseNumberVectorOutputFunctor(std::ostream& o, const T* d) : _out(o), _data(d) {}
+
+  template <typename ValueType>
+  inline void operator()() const {
+    _out << ", (" << ValueType::value << ',' <<
+            _data[IndexSet::template IndexOf<ValueType>::index] << ')';
+  }
+
+private:
+  std::ostream& _out;
+  const T* _data;
+};
+
+
+template <typename T, typename IndexSet>
+inline
+std::ostream&      
+operator<< (std::ostream& output, const SparseNumberVector<T, IndexSet>& a)
+{
+  // Enclose the entire output in braces
+  output << '{';
+
+  // Output the first value from a non-empty set
+  // All values are given as ordered (index, value) pairs
+  if (IndexSet::size)
+    output << '(' << IndexSet::head_type::value << ',' <<
+              a.raw_at(0) << ')';
+
+  // Output the comma-separated subsequent values from a non-singleton
+  // set
+  if (IndexSet::size > 1)
+    typename IndexSet::tail_set::ForEach()
+      (SparseNumberVectorOutputFunctor<T,typename IndexSet::tail_set>(output, a.raw_data()+1));
+
+  output << '}';
+  return output;
+}
+
+
+// CompareTypes, RawType specializations
+
+#define SparseNumberVector_comparisons(templatename, settype) \
+template<typename T, typename IndexSet, bool reverseorder> \
+struct templatename<SparseNumberVector<T,IndexSet>, SparseNumberVector<T,IndexSet>, reverseorder> { \
+  typedef SparseNumberVector<T,IndexSet> supertype; \
+}; \
+ \
+template<typename T, typename T2, typename IndexSet, typename IndexSet2, bool reverseorder> \
+struct templatename<SparseNumberVector<T,IndexSet>, SparseNumberVector<T2,IndexSet2>, reverseorder> { \
+  typedef SparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
+                            typename IndexSet::template settype<IndexSet2>::type> supertype; \
+}; \
+ \
+template<typename T, typename T2, typename IndexSet, bool reverseorder> \
+struct templatename<SparseNumberVector<T, IndexSet>, T2, reverseorder, \
+                    typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
+  typedef SparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, IndexSet> supertype; \
+}
+
+SparseNumberVector_comparisons(CompareTypes, Union);
+SparseNumberVector_comparisons(PlusType, Union);
+SparseNumberVector_comparisons(MinusType, Union);
+SparseNumberVector_comparisons(MultipliesType, Intersection);
+SparseNumberVector_comparisons(DividesType, First);
+
+
+template <typename T, typename IndexSet>
+struct RawType<SparseNumberVector<T, IndexSet> >
+{
+  typedef SparseNumberVector<typename RawType<T>::value_type, IndexSet> value_type;
+
+  static value_type value(const SparseNumberVector<T, IndexSet>& a)
+    {
+      value_type returnval;
+      for (unsigned int i=0; i != IndexSet::size; ++i)
+        returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
+      return returnval;
+    }
+};
+
+} // namespace MetaPhysicL
+
+
 namespace std {
+
+using MetaPhysicL::SparseNumberVector;
+using MetaPhysicL::SymmetricCompareTypes;
+using MetaPhysicL::UnaryVectorFunctor;
+using MetaPhysicL::BinaryVectorFunctor;
 
 #define SparseNumberVector_std_unary(funcname) \
 template <typename T, typename IndexSet> \
@@ -784,151 +934,9 @@ SparseNumberVector_std_binary(fmod)
 
 template <typename T, typename IndexSet>
 class numeric_limits<SparseNumberVector<T, IndexSet> > : 
-  public raw_numeric_limits<SparseNumberVector<T, IndexSet>, T> {};
+  public MetaPhysicL::raw_numeric_limits<SparseNumberVector<T, IndexSet>, T> {};
 
 } // namespace std
 
-#define SparseNumberVector_operator_binary(opname, functorname) \
-template <typename T, typename T2, typename IndexSet, typename IndexSet2> \
-inline \
-SparseNumberVector<bool, typename IndexSet::template Union<IndexSet2>::type> \
-operator opname (const SparseNumberVector<T,IndexSet>& a, const SparseNumberVector<T2,IndexSet2>& b) \
-{ \
-  typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
-  typedef typename IndexSet::template Union<IndexSet2>::type IndexSetS; \
-  SparseNumberVector<bool, IndexSetS> returnval; \
- \
-  typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSet,T,T2,bool> \
-      (a.raw_data(), b.raw_data(), returnval.raw_data(), std::functorname<TS>())); \
-  typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,T,bool> \
-      (a.raw_data(), returnval.raw_data(), std::bind2nd(std::functorname<T>(),0))); \
-  typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,T2,bool> \
-      (b.raw_data(), returnval.raw_data(), std::bind1st(std::functorname<T2>(),0))); \
- \
-  return returnval; \
-} \
-template <typename T, typename T2, typename IndexSet> \
-inline \
-SparseNumberVector<bool, IndexSet> \
-operator opname (const SparseNumberVector<T, IndexSet>& a, const T2& b) \
-{ \
-  SparseNumberVector<bool, IndexSet> returnval; \
- \
-  for (unsigned int i=0; i != IndexSet::size; ++i) \
-    returnval.raw_at(i) = (a.raw_at(i) opname b); \
- \
-  return returnval; \
-} \
-template <typename T, typename T2, typename IndexSet> \
-inline \
-SparseNumberVector<bool, IndexSet> \
-operator opname (const T& a, const SparseNumberVector<T2,IndexSet>& b) \
-{ \
-  SparseNumberVector<bool, IndexSet> returnval; \
- \
-  for (unsigned int i=0; i != IndexSet::size; ++i) \
-    returnval.raw_at(i) = (a opname b.raw_at(i)); \
- \
-  return returnval; \
-}
-
-// NOTE: unary functions for which 0-op-0 is true are undefined compile-time
-// errors, because there's no efficient way to have them make sense in
-// the sparse context.
-
-SparseNumberVector_operator_binary(<, less)
-// SparseNumberVector_operator_binary(<=)
-SparseNumberVector_operator_binary(>, greater)
-// SparseNumberVector_operator_binary(>=)
-// SparseNumberVector_operator_binary(==)
-SparseNumberVector_operator_binary(!=, not_equal_to)
-
-// Making this a local struct seems to fail??
-template <typename T, typename IndexSet>
-struct SparseNumberVectorOutputFunctor {
-  SparseNumberVectorOutputFunctor(std::ostream& o, const T* d) : _out(o), _data(d) {}
-
-  template <typename ValueType>
-  inline void operator()() const {
-    _out << ", (" << ValueType::value << ',' <<
-            _data[IndexSet::template IndexOf<ValueType>::index] << ')';
-  }
-
-private:
-  std::ostream& _out;
-  const T* _data;
-};
-
-
-template <typename T, typename IndexSet>
-inline
-std::ostream&      
-operator<< (std::ostream& output, const SparseNumberVector<T, IndexSet>& a)
-{
-  // Enclose the entire output in braces
-  output << '{';
-
-  // Output the first value from a non-empty set
-  // All values are given as ordered (index, value) pairs
-  if (IndexSet::size)
-    output << '(' << IndexSet::head_type::value << ',' <<
-              a.raw_at(0) << ')';
-
-  // Output the comma-separated subsequent values from a non-singleton
-  // set
-  if (IndexSet::size > 1)
-    typename IndexSet::tail_set::ForEach()
-      (SparseNumberVectorOutputFunctor<T,typename IndexSet::tail_set>(output, a.raw_data()+1));
-
-  output << '}';
-  return output;
-}
-
-
-// CompareTypes, RawType specializations
-
-#define SparseNumberVector_comparisons(templatename, settype) \
-template<typename T, typename IndexSet, bool reverseorder> \
-struct templatename<SparseNumberVector<T,IndexSet>, SparseNumberVector<T,IndexSet>, reverseorder> { \
-  typedef SparseNumberVector<T,IndexSet> supertype; \
-}; \
- \
-template<typename T, typename T2, typename IndexSet, typename IndexSet2, bool reverseorder> \
-struct templatename<SparseNumberVector<T,IndexSet>, SparseNumberVector<T2,IndexSet2>, reverseorder> { \
-  typedef SparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
-                            typename IndexSet::template settype<IndexSet2>::type> supertype; \
-}; \
- \
-template<typename T, typename T2, typename IndexSet, bool reverseorder> \
-struct templatename<SparseNumberVector<T, IndexSet>, T2, reverseorder, \
-                    typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
-  typedef SparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, IndexSet> supertype; \
-}
-
-SparseNumberVector_comparisons(CompareTypes, Union);
-SparseNumberVector_comparisons(PlusType, Union);
-SparseNumberVector_comparisons(MinusType, Union);
-SparseNumberVector_comparisons(MultipliesType, Intersection);
-SparseNumberVector_comparisons(DividesType, First);
-
-
-template <typename T, typename IndexSet>
-struct RawType<SparseNumberVector<T, IndexSet> >
-{
-  typedef SparseNumberVector<typename RawType<T>::value_type, IndexSet> value_type;
-
-  static value_type value(const SparseNumberVector<T, IndexSet>& a)
-    {
-      value_type returnval;
-      for (unsigned int i=0; i != IndexSet::size; ++i)
-        returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
-      return returnval;
-    }
-};
-
-} // namespace MetaPhysicL
 
 #endif // METAPHYSICL_SPARSENUMBERVECTOR_H

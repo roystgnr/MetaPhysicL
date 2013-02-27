@@ -1041,8 +1041,6 @@ struct VectorConstructor<>
   typedef NullContainer type;
 };
 
-} // namespace MetaPhysicL
-
 
 // CompareTypes specializations are useful for sets-with-data
 template<typename Head1, typename Tail1, typename Comparison1,
@@ -1150,5 +1148,7 @@ CompareTypes_default_Type(Multiplies,
 CompareTypes_default_Type(Divides,
                           typename T MacroComma, MetaPhysicL::NullContainer, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+
+} // namespace MetaPhysicL
 
 #endif // METAPHYSICL_CT_SET_H

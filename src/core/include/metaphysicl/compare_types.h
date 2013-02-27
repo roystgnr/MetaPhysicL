@@ -31,6 +31,8 @@
 // System includes
 #include <complex>
 
+namespace MetaPhysicL {
+
 // Compile-time assertions:
 // Use of ctassert<E>, where E is a constant expression,
 // will cause a compile-time error unless E evaulates to
@@ -353,5 +355,7 @@ Symmetric_definition(PlusType);
 Symmetric_definition(MinusType);
 Symmetric_definition(MultipliesType);
 Symmetric_definition(DividesType);
+
+} // namespace MetaPhysicL
 
 #endif // METAPHYSICL_COMPARE_TYPES_H

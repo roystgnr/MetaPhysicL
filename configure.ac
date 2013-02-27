@@ -54,6 +54,13 @@ AC_PROG_CXX
 dnl Added for AX_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
 
+dnl---------------------------------------------------------
+dnl Checks for  library prerequisites for other libraries...
+dnl---------------------------------------------------------
+
+dnl Optional check for MASA
+AX_PATH_MASA(0.20,no)
+
 dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
@@ -82,11 +89,6 @@ DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(METAPHYSICL, doxygen/metaphysicl.dox, docs/doxygen)
 
 AC_CONFIG_FILES(doxygen/txt_common/about.page)
-
-dnl-----------------------------------------------
-dnl Generate files for unit and regression testing
-dnl-----------------------------------------------
-AC_CONFIG_FILES(test/input_file_unit.sh, [chmod +x test/input_file_unit.sh])
 
 dnl-----------------------------------------------
 dnl Generate header files

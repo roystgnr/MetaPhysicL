@@ -30,6 +30,7 @@
 #define METAPHYSICL_DUALNUMBER_H
 
 #include <ostream>
+#include <limits>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/raw_type.h"
@@ -259,98 +260,6 @@ DualNumber_op(/, Divides, this->derivatives() /= in,
   this->derivatives() -= this->value()/(in.value()*in.value()) * in.derivatives();
 )
 
-
-
-namespace std {
-
-// Some forward declarations necessary for recursive DualNumbers
-
-template <typename T, typename D>
-inline DualNumber<T,D> cos   (DualNumber<T,D> a);
-
-template <typename T, typename D>
-inline DualNumber<T,D> cosh  (DualNumber<T,D> a);
-
-// Now just combined declaration/definitions
-
-#define DualNumber_std_unary(funcname, derivative, precalc) \
-template <typename T, typename D> \
-inline \
-DualNumber<T,D> funcname   (DualNumber<T,D> in) \
-{ \
-  T funcval = std::funcname(in.value()); \
-  precalc; \
-  in.derivatives() *= derivative; \
-  in.value() = funcval; \
-  return in; \
-}
-
-DualNumber_std_unary(sqrt, 1 / (2 * funcval),)
-DualNumber_std_unary(exp, funcval,)
-DualNumber_std_unary(log, 1 / in.value(),)
-DualNumber_std_unary(log10, 1 / in.value() * (1/std::log(T(10.))),)
-DualNumber_std_unary(sin, std::cos(in.value()),)
-DualNumber_std_unary(cos, -std::sin(in.value()),)
-DualNumber_std_unary(tan, sec_in * sec_in, T sec_in = 1 / std::cos(in.value()))
-DualNumber_std_unary(asin, 1 / std::sqrt(1 - in.value()*in.value()),)
-DualNumber_std_unary(acos, -1 / std::sqrt(1 - in.value()*in.value()),)
-DualNumber_std_unary(atan, 1 / (1 + in.value()*in.value()),)
-DualNumber_std_unary(sinh, std::cosh(in.value()),)
-DualNumber_std_unary(cosh, std::sinh(in.value()),)
-DualNumber_std_unary(tanh, sech_in * sech_in, T sech_in = 1 / std::cos(in.value()))
-DualNumber_std_unary(abs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
-DualNumber_std_unary(ceil, 0,)
-DualNumber_std_unary(floor, 0,)
-
-#define DualNumber_std_binary(funcname, derivative) \
-template <typename T, typename D, typename T2, typename D2> \
-inline \
-typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
-funcname (const DualNumber<T,D>& a, const DualNumber<T2,D2>& b) \
-{ \
-  typedef typename CompareTypes<T,T2>::supertype TS; \
-  typedef typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype type; \
- \
-  TS funcval = std::funcname(a.value(), b.value()); \
-  return type(funcval, derivative); \
-} \
- \
-template <typename T, typename T2, typename D> \
-inline \
-typename CompareTypes<DualNumber<T2,D>,T,true>::supertype \
-funcname (const T& a, const DualNumber<T2,D>& b) \
-{ \
-  typedef typename CompareTypes<DualNumber<T2,D>,T,true>::supertype type; \
-  type newa(a); \
-  return std::funcname(newa, b); \
-} \
- \
-template <typename T, typename T2, typename D> \
-inline \
-typename CompareTypes<DualNumber<T,D>,T2>::supertype \
-funcname (const DualNumber<T,D>& a, const T2& b) \
-{ \
-  typedef typename CompareTypes<DualNumber<T,D>,T2>::supertype type; \
-  type newb(b); \
-  return std::funcname(a, newb); \
-}
-
-DualNumber_std_binary(pow, 
-  funcval * (b.value() * a.derivatives() / a.value() + b.derivatives() * std::log(a.value())))
-DualNumber_std_binary(atan2,
-  (b.value() * a.derivatives() - a.value() * b.derivatives()) /
-  (b.value() * b.value() + a.value() * a.value()))
-DualNumber_std_binary(max,
-  (a.value() > b.value()) ?  a : b)
-DualNumber_std_binary(min,
-  (a.value() > b.value()) ?  b : a)
-DualNumber_std_binary(fmod, a.derivatives())
-
-template <typename T, typename D>
-class numeric_limits<DualNumber<T, D> > : 
-  public raw_numeric_limits<DualNumber<T, D>, T> {};
-
-} // namespace std
 
 #define DualNumber_compare(opname) \
 template <typename T, typename D, typename T2, typename D2> \
@@ -598,5 +507,101 @@ D gradient(const DualNumber<T, D>& a)
 
 
 } // namespace MetaPhysicL
+
+
+namespace std {
+
+using MetaPhysicL::DualNumber;
+using MetaPhysicL::CompareTypes;
+
+// Some forward declarations necessary for recursive DualNumbers
+
+template <typename T, typename D>
+inline DualNumber<T,D> cos   (DualNumber<T,D> a);
+
+template <typename T, typename D>
+inline DualNumber<T,D> cosh  (DualNumber<T,D> a);
+
+// Now just combined declaration/definitions
+
+#define DualNumber_std_unary(funcname, derivative, precalc) \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname   (DualNumber<T,D> in) \
+{ \
+  T funcval = std::funcname(in.value()); \
+  precalc; \
+  in.derivatives() *= derivative; \
+  in.value() = funcval; \
+  return in; \
+}
+
+DualNumber_std_unary(sqrt, 1 / (2 * funcval),)
+DualNumber_std_unary(exp, funcval,)
+DualNumber_std_unary(log, 1 / in.value(),)
+DualNumber_std_unary(log10, 1 / in.value() * (1/std::log(T(10.))),)
+DualNumber_std_unary(sin, std::cos(in.value()),)
+DualNumber_std_unary(cos, -std::sin(in.value()),)
+DualNumber_std_unary(tan, sec_in * sec_in, T sec_in = 1 / std::cos(in.value()))
+DualNumber_std_unary(asin, 1 / std::sqrt(1 - in.value()*in.value()),)
+DualNumber_std_unary(acos, -1 / std::sqrt(1 - in.value()*in.value()),)
+DualNumber_std_unary(atan, 1 / (1 + in.value()*in.value()),)
+DualNumber_std_unary(sinh, std::cosh(in.value()),)
+DualNumber_std_unary(cosh, std::sinh(in.value()),)
+DualNumber_std_unary(tanh, sech_in * sech_in, T sech_in = 1 / std::cos(in.value()))
+DualNumber_std_unary(abs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
+DualNumber_std_unary(ceil, 0,)
+DualNumber_std_unary(floor, 0,)
+
+#define DualNumber_std_binary(funcname, derivative) \
+template <typename T, typename D, typename T2, typename D2> \
+inline \
+typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
+funcname (const DualNumber<T,D>& a, const DualNumber<T2,D2>& b) \
+{ \
+  typedef typename CompareTypes<T,T2>::supertype TS; \
+  typedef typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype type; \
+ \
+  TS funcval = std::funcname(a.value(), b.value()); \
+  return type(funcval, derivative); \
+} \
+ \
+template <typename T, typename T2, typename D> \
+inline \
+typename CompareTypes<DualNumber<T2,D>,T,true>::supertype \
+funcname (const T& a, const DualNumber<T2,D>& b) \
+{ \
+  typedef typename CompareTypes<DualNumber<T2,D>,T,true>::supertype type; \
+  type newa(a); \
+  return std::funcname(newa, b); \
+} \
+ \
+template <typename T, typename T2, typename D> \
+inline \
+typename CompareTypes<DualNumber<T,D>,T2>::supertype \
+funcname (const DualNumber<T,D>& a, const T2& b) \
+{ \
+  typedef typename CompareTypes<DualNumber<T,D>,T2>::supertype type; \
+  type newb(b); \
+  return std::funcname(a, newb); \
+}
+
+DualNumber_std_binary(pow, 
+  funcval * (b.value() * a.derivatives() / a.value() + b.derivatives() * std::log(a.value())))
+DualNumber_std_binary(atan2,
+  (b.value() * a.derivatives() - a.value() * b.derivatives()) /
+  (b.value() * b.value() + a.value() * a.value()))
+DualNumber_std_binary(max,
+  (a.value() > b.value()) ?  a : b)
+DualNumber_std_binary(min,
+  (a.value() > b.value()) ?  b : a)
+DualNumber_std_binary(fmod, a.derivatives())
+
+template <typename T, typename D>
+class numeric_limits<DualNumber<T, D> > : 
+  public MetaPhysicL::raw_numeric_limits<DualNumber<T, D>, T> {};
+
+} // namespace std
+
 
 #endif // METAPHYSICL_DUALNUMBER_H
