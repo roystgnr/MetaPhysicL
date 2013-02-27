@@ -30,6 +30,15 @@ echo Configure date................ : $BUILD_DATE
 echo Build architecture............ : $BUILD_ARCH
 echo SVN revision number........... : $BUILD_VERSION
 echo
+echo Optional Packages for Testing:
+if test "x$HAVE_MASA" = "x1"; then
+  echo '  'MASA........................ : yes
+  echo '  'MASA_INCLUDE ............... : $MASA_INCLUDE
+  echo '  'MASA_LIB ................... : $MASA_LIB
+else
+  echo '  'MASA........................ : no
+fi
+echo
 echo '-------------------------------------------------------------------------------'
 
 echo
