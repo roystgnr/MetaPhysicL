@@ -5,6 +5,7 @@
 #include "metaphysicl_config.h"
 
 #include "metaphysicl/numberarray.h"
+#include "metaphysicl/numbervector.h"
 
 static const unsigned int N = 10; // test pts.
 
@@ -17,17 +18,20 @@ using namespace MetaPhysicL;
     std::cerr << "Failed test: " << #test_func << std::endl; \
   returnval = returnval || new_returnval; }
 
-template <typename Scalar>
-int test_error_vec (const NumberArray<N,Scalar>& random_vec,
-                    const NumberArray<N,Scalar>& error_vec)
+template <typename Vector>
+int test_error_vec (const Vector& random_vec,
+                    const Vector& error_vec)
 {
   using std::max;
   using std::fabs;
 
+  typedef typename Vector::value_type Scalar;
+
   static const Scalar tol = std::numeric_limits<Scalar>::epsilon() * 10;
 
   Scalar max_abs_error = 0;
-  for (unsigned int i=0; i != N; ++i)
+
+  for (unsigned int i=0; i != error_vec.size(); ++i)
     {
       max_abs_error = max(max_abs_error, fabs(error_vec[i]));
 
@@ -43,7 +47,7 @@ int test_error_vec (const NumberArray<N,Scalar>& random_vec,
   return 0;
 }
 
-template <typename Scalar>
+template <typename Vector>
 int vectester (void)
 {
   using std::abs;
@@ -65,9 +69,11 @@ int vectester (void)
   using std::tan;
   using std::tanh;
 
-  NumberArray<N, Scalar> random_vec;
+  typedef typename Vector::value_type Scalar;
 
-  NumberArray<N, Scalar> error_vec = 0;
+  Vector random_vec;
+
+  Vector error_vec = 0;
 
   std::srand(12345); // Fixed seed for reproduceability of failures
 
@@ -117,9 +123,13 @@ int vectester (void)
 int main(void)
 {
   int returnval = 0;
-  returnval = returnval || vectester<float>();
-  returnval = returnval || vectester<double>();
-  returnval = returnval || vectester<long double>();
+  returnval = returnval || vectester<NumberArray<N, float> >();
+  returnval = returnval || vectester<NumberArray<N, double> >();
+  returnval = returnval || vectester<NumberArray<N, long double> >();
+
+  returnval = returnval || vectester<NumberVector<N, float> >();
+  returnval = returnval || vectester<NumberVector<N, double> >();
+  returnval = returnval || vectester<NumberVector<N, long double> >();
 
   return returnval;
 }
