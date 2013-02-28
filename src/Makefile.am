@@ -31,6 +31,7 @@ include_HEADERS += graphs/include/metaphysicl/physics.h
 
 # numerics
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h
+include_HEADERS += numerics/include/metaphysicl/dualnumberarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadow.h
 include_HEADERS += numerics/include/metaphysicl/dualshadowsparsestruct.h
