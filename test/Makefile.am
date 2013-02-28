@@ -1,6 +1,7 @@
 BUILT_SOURCES   = .license.stamp
 
 check_PROGRAMS  =
+check_PROGRAMS += identities_unit
 check_PROGRAMS += main_unit
 check_PROGRAMS += navier_unit
 check_PROGRAMS += pde_unit
@@ -20,6 +21,7 @@ AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 physics_unit_CXXFLAGS = -std=c++11
 
 # Sources for these tests
+identities_unit_SOURCES = identities_unit.C
 main_unit_SOURCES = main_unit.C
 navier_unit_SOURCES = navier_unit.C
 pde_unit_SOURCES = pde_unit.C
@@ -29,6 +31,7 @@ testopt_unit_SOURCES = testopt_unit.C
 
 #Define tests to actually be run
 TESTS  =
+TESTS += identities_unit
 TESTS += main_unit
 TESTS += navier_unit
 TESTS += pde_unit
