@@ -740,7 +740,7 @@ operator<< (std::ostream& output, const SparseNumberVector<T, IndexSet>& a)
 }
 
 
-// CompareTypes, RawType specializations
+// CompareTypes, RawType, ValueType specializations
 
 #define SparseNumberVector_comparisons(templatename, settype) \
 template<typename T, typename IndexSet, bool reverseorder> \
@@ -779,6 +779,12 @@ struct RawType<SparseNumberVector<T, IndexSet> >
         returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
       return returnval;
     }
+};
+
+template <typename T, typename IndexSet>
+struct ValueType<SparseNumberVector<T, IndexSet> >
+{
+  typedef typename ValueType<T>::type type;
 };
 
 } // namespace MetaPhysicL

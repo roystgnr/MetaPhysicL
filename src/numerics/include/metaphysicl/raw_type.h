@@ -33,6 +33,22 @@
 
 namespace MetaPhysicL {
 
+// ValueType strips the dimensionality off of 
+// vector types.  Differentiable types remain differentiable.
+template <typename T>
+struct ValueType
+{
+  typedef T type;
+};
+
+template <typename T>
+struct ValueType<const T>
+{
+  typedef const typename ValueType<T>::type type;
+};
+
+// RawType strips the derivatives, shadow magic, etc. off of 
+// types.  Vector types remain vector types.
 template <typename T>
 struct RawType
 {

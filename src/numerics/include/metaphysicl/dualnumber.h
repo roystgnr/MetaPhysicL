@@ -472,7 +472,7 @@ struct CompareTypes<DualNumber<T, D>, DualNumber<T, D> > {
 template <typename T>
 struct DerivativeType
 {
-  typedef typename T::derivatives_type::value_type type;
+  typedef typename ValueType<typename T::derivatives_type>::type type;
 };
 
 

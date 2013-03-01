@@ -329,7 +329,7 @@ operator<< (std::ostream& output, const NumberArray<N,T>& a)
 }
 
 
-// CompareTypes, RawType specializations
+// CompareTypes, RawType, ValueType specializations
 
 #define NumberArray_comparisons(templatename) \
 template<std::size_t N, typename T, bool reverseorder> \
@@ -365,6 +365,12 @@ struct RawType<NumberArray<N, T> >
         returnval[i] = RawType<T>::value(a[i]);
       return returnval;
     }
+};
+
+template <std::size_t N, typename T>
+struct ValueType<NumberArray<N, T> >
+{
+  typedef typename ValueType<T>::type type;
 };
 
 } // namespace MetaPhysicL

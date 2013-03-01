@@ -339,7 +339,7 @@ operator<< (std::ostream& output, const NumberVector<N,T>& a)
 }
 
 
-// CompareTypes, RawType specializations
+// CompareTypes, RawType, ValueType specializations
 
 #define NumberVector_comparisons(templatename) \
 template<std::size_t N, typename T, bool reverseorder> \
@@ -376,6 +376,12 @@ struct RawType<NumberVector<N, T> >
         returnval[i] = RawType<T>::value(a[i]);
       return returnval;
     }
+};
+
+template <std::size_t N, typename T>
+struct ValueType<NumberVector<N, T> >
+{
+  typedef typename ValueType<T>::type type;
 };
 
 } // namespace MetaPhysicL
