@@ -35,6 +35,27 @@ AUX_DIST        += build-aux/config.sub
 AUX_DIST        += build-aux/depcomp
 AUX_DIST        += build-aux/ltmain.sh
 
+# Support for pkgconfig
+pkgconfigdir   = $(libdir)/pkgconfig
+pkgconfig_DATA = metaphysicl.pc
+
+# Support 'make install prefix=/other/path' with pkgconfig
+install-data-hook:
+	@if (test "x$(prefix)" != "x@prefix@"); then \
+	  oldprefix="@prefix@" ; \
+	  newprefix="$(prefix)" ; \
+	  cd $(DESTDIR)$(libdir)/pkgconfig ; \
+	  for genfile in $(pkgconfig_DATA); do \
+	  echo " " ; \
+	    echo " *** replacing $$oldprefix" ; \
+	    echo " ***      with $$newprefix" ; \
+	    echo " *** in generated file $$genfile" ; \
+	    echo " " ; \
+	    cd $(DESTDIR)$(prefix) && cat $$genfile | $(SED) "s,$$oldprefix,$$newprefix,g" > $$genfile.replaced ; \
+	    cd $(DESTDIR)$(prefix) && mv $$genfile.replaced $$genfile ; \
+          done ; \
+	fi
+
 # Additional files to be deleted by 'make distclean'
 DISTCLEANFILES  = _configs.sed
 DISTCLEANFILES += metaphysicl_config.h

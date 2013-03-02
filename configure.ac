@@ -98,7 +98,13 @@ AC_CONFIG_FILES(src/utilities/include/metaphysicl/metaphysicl_version.h)
 dnl-----------------------------------------------
 dnl Generate Makefiles
 dnl-----------------------------------------------
-AC_CONFIG_FILES([Makefile src/Makefile test/Makefile doxygen/Makefile])
+AC_CONFIG_FILES([
+  doxygen/Makefile
+  Makefile
+  metaphysicl.pc
+  src/Makefile
+  test/Makefile
+  ])
 
 # Must still call AC_OUTPUT() after generating all the files
 AC_OUTPUT()
