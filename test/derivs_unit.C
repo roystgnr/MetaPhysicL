@@ -89,6 +89,9 @@ int vectester (void)
 
   int returnval = 0;
 
+  // Running non-derivatives tests with DualNumbers sometimes catches
+  // problems too
+
   one_test(2*random_vec - random_vec - random_vec);
 
   one_test(3*random_vec - random_vec*3);
@@ -120,6 +123,15 @@ int vectester (void)
 
   one_test(abs(random_vec) - random_vec);
   one_test(fabs(random_vec-.75) - abs(random_vec-.75));
+
+  // And now for derivatives tests
+
+  one_test(derivatives(pow(sin(random_vec-2),2)) -
+	   2*sin(random_vec)*cos(random_vec));
+
+  one_test(derivatives(cos(2*random_vec)) + 2*sin(2*random_vec));
+
+  one_test(derivatives(sqrt(random_vec+1)) - 1/sqrt(random_vec+1)/2);
 
   return returnval;
 }
