@@ -41,9 +41,23 @@ struct DerivativeType<MetaPhysicL::Container<HeadType,TailSet,Comparison> >
   typedef
     MetaPhysicL::Container<
       typename HeadType::template rebind<
-        typename HeadType::data_type::derivatives_type::value_type
+        typename DerivativeType<typename HeadType::data_type>::type
       >::other,
       typename DerivativeType<TailSet>::type,
+      Comparison
+    > type;
+};
+
+
+template <typename HeadType, typename TailSet, typename Comparison>
+struct DerivativesType<MetaPhysicL::Container<HeadType,TailSet,Comparison> >
+{
+  typedef
+    MetaPhysicL::Container<
+      typename HeadType::template rebind<
+        typename DerivativesType<typename HeadType::data_type>::type
+      >::other,
+      typename DerivativesType<TailSet>::type,
       Comparison
     > type;
 };
@@ -56,6 +70,13 @@ struct DerivativeType<MetaPhysicL::NullContainer>
 };
 
 
+template <>
+struct DerivativesType<MetaPhysicL::NullContainer>
+{
+  typedef MetaPhysicL::NullContainer type;
+};
+
+
 template <typename IndexSet>
 struct DerivativeType<SparseNumberStruct<IndexSet> >
 {
@@ -63,37 +84,64 @@ struct DerivativeType<SparseNumberStruct<IndexSet> >
 };
 
 
+template <typename IndexSet>
+struct DerivativesType<SparseNumberStruct<IndexSet> >
+{
+  typedef SparseNumberStruct<typename DerivativesType<IndexSet>::type> type;
+};
+
+
+struct RuntimeDerivativeSubfunctor
+{
+  template <typename T1>
+  typename DerivativeType<T1>::type
+  operator()(const T1& x, unsigned int derivativeindex) const {
+    return derivative(x, derivativeindex);
+  }
+};
+
 
 struct DerivativesSubfunctor
 {
   template <typename T1>
   typename DerivativeType<T1>::type
   operator()(const T1& x, unsigned int derivativeindex) const {
-    return DerivativesOf<T1>::derivative(x, derivativeindex);
+    return derivative(x, derivativeindex);
   }
 };
-
 
 
 template <typename IndexSet>
-struct DerivativesOf<SparseNumberStruct<IndexSet> >
+inline
+typename DerivativeType<SparseNumberStruct<IndexSet> >::type
+derivative (const SparseNumberStruct<IndexSet>& a,
+            unsigned int derivativeindex)
 {
-  static
-  typename DerivativeType<SparseNumberStruct<IndexSet> >::type
-  derivative (const SparseNumberStruct<IndexSet>& a,
-              unsigned int derivativeindex)
-  {
-    typedef typename DerivativeType<IndexSet>::type IS;
-    SparseNumberStruct<IS> returnval;
+  typedef typename DerivativeType<IndexSet>::type IS;
+  SparseNumberStruct<IS> returnval;
 
-    typename IndexSet::ForEach()
-      (BinaryFunctor<DerivativesSubfunctor, IndexSet, ConstantDataSet<unsigned int>, IS>
-        (DerivativesSubfunctor(), a.raw_data(), ConstantDataSet<unsigned int>(derivativeindex), returnval.raw_data()));
+  typename IndexSet::ForEach()
+    (BinaryFunctor<RuntimeDerivativeSubfunctor, IndexSet, ConstantDataSet<unsigned int>, IS>
+      (RuntimeDerivativeSubfunctor(), a.raw_data(), ConstantDataSet<unsigned int>(derivativeindex), returnval.raw_data()));
 
-    return returnval;
-  }
-};
+  return returnval;
+}
 
+
+template <typename IndexSet>
+inline
+typename DerivativesType<SparseNumberStruct<IndexSet> >::type
+derivative (const SparseNumberStruct<IndexSet>& a)
+{
+  typedef typename DerivativesType<IndexSet>::type IS;
+  SparseNumberStruct<IS> returnval;
+
+  typename IndexSet::ForEach()
+    (UnaryFunctor<DerivativesSubfunctor, IndexSet, IS>
+      (DerivativesSubfunctor(), a.raw_data(), returnval.raw_data()));
+
+  return returnval;
+}
 
 
 template <unsigned int derivativeindex>

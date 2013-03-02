@@ -43,19 +43,36 @@ struct DerivativeType<NumberVector<size, T> >
 
 
 template <std::size_t size, typename T>
-struct DerivativesOf<NumberVector<size, T> >
+struct DerivativesType<NumberVector<size, T> >
 {
-  static
-  typename DerivativeType<NumberVector<size, T> >::type
-  derivative(const NumberVector<size, T>& a, unsigned int derivativeindex)
-  {
-    typename DerivativeType<NumberVector<size, T> >::type returnval;
-    for (unsigned int i=0; i != size; ++i)
-      returnval[i] = DerivativesOf<T>::derivative(a[i], derivativeindex);
-  
-    return returnval;
-  }
+  typedef NumberVector<size, typename DerivativesType<T>::type> type;
 };
+
+
+template <std::size_t size, typename T>
+inline
+typename DerivativeType<NumberVector<size, T> >::type
+derivative(const NumberVector<size, T>& a, unsigned int derivativeindex)
+{
+  typename DerivativeType<NumberVector<size, T> >::type returnval;
+  for (unsigned int i=0; i != size; ++i)
+    returnval[i] = derivative(a[i], derivativeindex);
+
+  return returnval;
+}
+
+
+template <std::size_t size, typename T>
+inline
+typename DerivativesType<NumberVector<size, T> >::type
+derivatives(const NumberVector<size, T>& a)
+{
+  typename DerivativesType<NumberVector<size, T> >::type returnval;
+  for (unsigned int i=0; i != size; ++i)
+    returnval[i] = derivatives(a[i]);
+
+  return returnval;
+}
 
 
 template <std::size_t size, typename T, unsigned int derivativeindex>
@@ -87,7 +104,7 @@ divergence(const NumberVector<size, T>& a)
   typename DerivativeType<T>::type returnval = 0;
 
   for (unsigned int i=0; i != size; ++i)
-    returnval += DerivativesOf<T>::derivative(a[i], i);
+    returnval += derivative(a[i], i);
 
   return returnval;
 }

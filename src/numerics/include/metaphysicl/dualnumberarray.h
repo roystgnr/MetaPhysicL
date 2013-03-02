@@ -43,19 +43,35 @@ struct DerivativeType<NumberArray<size, T> >
 
 
 template <std::size_t size, typename T>
-struct DerivativesOf<NumberArray<size, T> >
+struct DerivativesType<NumberArray<size, T> >
 {
-  static
-  typename DerivativeType<NumberArray<size, T> >::type
-  derivative(const NumberArray<size, T>& a, unsigned int derivativeindex)
-  {
-    typename DerivativeType<NumberArray<size, T> >::type returnval;
-    for (unsigned int i=0; i != size; ++i)
-      returnval[i] = DerivativesOf<T>::derivative(a[i], derivativeindex);
-  
-    return returnval;
-  }
+  typedef NumberArray<size, typename DerivativesType<T>::type> type;
 };
+
+
+template <std::size_t size, typename T>
+inline
+typename DerivativeType<NumberArray<size, T> >::type
+derivative(const NumberArray<size, T>& a, unsigned int derivativeindex)
+{
+  typename DerivativeType<NumberArray<size, T> >::type returnval;
+  for (unsigned int i=0; i != size; ++i)
+    returnval[i] = derivative(a[i], derivativeindex);
+
+  return returnval;
+}
+
+template <std::size_t size, typename T>
+inline
+typename DerivativesType<NumberArray<size, T> >::type
+derivatives(const NumberArray<size, T>& a)
+{
+  typename DerivativesType<NumberArray<size, T> >::type returnval;
+  for (unsigned int i=0; i != size; ++i)
+    returnval[i] = derivatives(a[i]);
+
+  return returnval;
+}
 
 
 template <std::size_t size, typename T, unsigned int derivativeindex>

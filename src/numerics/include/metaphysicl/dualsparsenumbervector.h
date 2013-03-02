@@ -43,19 +43,35 @@ struct DerivativeType<SparseNumberVector<T, IndexSet> >
 
 
 template <typename T, typename IndexSet>
-struct DerivativesOf<SparseNumberVector<T, IndexSet> >
+struct DerivativesType<SparseNumberVector<T, IndexSet> >
 {
-  static
-  typename DerivativeType<SparseNumberVector<T, IndexSet> >::type
-  derivative (const SparseNumberVector<T, IndexSet>& a,
-              unsigned int derivativeindex)
-  {
-    typename DerivativeType<SparseNumberVector<T, IndexSet> >::type returnval;
-    for (unsigned int i=0; i != IndexSet::size; ++i)
-      returnval.raw_at(i) = DerivativesOf<T>::derivative(a.raw_at(i),derivativeindex);
-    return returnval;
-  }
+  typedef SparseNumberVector<typename DerivativesType<T>::type, IndexSet> type;
 };
+
+
+template <typename T, typename IndexSet>
+inline
+typename DerivativeType<SparseNumberVector<T, IndexSet> >::type
+derivative (const SparseNumberVector<T, IndexSet>& a,
+            unsigned int derivativeindex)
+{
+  typename DerivativeType<SparseNumberVector<T, IndexSet> >::type returnval;
+  for (unsigned int i=0; i != IndexSet::size; ++i)
+    returnval.raw_at(i) = derivative(a.raw_at(i),derivativeindex);
+  return returnval;
+}
+
+
+template <typename T, typename IndexSet>
+inline
+typename DerivativesType<SparseNumberVector<T, IndexSet> >::type
+derivatives (const SparseNumberVector<T, IndexSet>& a)
+{
+  typename DerivativesType<SparseNumberVector<T, IndexSet> >::type returnval;
+  for (unsigned int i=0; i != IndexSet::size; ++i)
+    returnval.raw_at(i) = derivatives(a.raw_at(i));
+  return returnval;
+}
 
 
 template <typename T, typename IndexSet, unsigned int derivativeindex>

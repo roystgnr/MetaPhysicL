@@ -477,14 +477,27 @@ struct DerivativeType
 
 
 template <typename T>
-struct DerivativesOf {
-  static
-  typename DerivativeType<T>::type
-  derivative(const T& a, unsigned int derivativeindex)
-  {
-    return a.derivatives()[derivativeindex];
-  }
+struct DerivativesType
+{
+  typedef typename T::derivatives_type type;
 };
+
+
+template <typename T>
+inline
+typename DerivativeType<T>::type
+derivative(const T& a, unsigned int derivativeindex)
+{
+  return a.derivatives()[derivativeindex];
+}
+
+template <typename T>
+inline
+typename DerivativesType<T>::type
+derivatives(const T& a)
+{
+  return a.derivatives();
+}
 
 
 template <typename T, unsigned int derivativeindex>
