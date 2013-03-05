@@ -25,7 +25,7 @@ int test_error_vec (const DualVector& random_vec,
   using std::max;
   using std::fabs;
 
-  typedef typename Vector::value_type Scalar;
+  typedef typename ValueType<Vector>::type Scalar;
 
   static const Scalar tol = std::numeric_limits<Scalar>::epsilon() * 10;
 
@@ -69,7 +69,7 @@ int vectester (void)
   using std::tan;
   using std::tanh;
 
-  typedef typename Vector::value_type DualScalar;
+  typedef typename ValueType<Vector>::type DualScalar;
   typedef typename DualScalar::value_type Scalar;
 
   Vector random_vec;
@@ -130,8 +130,32 @@ int vectester (void)
 	   2*sin(random_vec)*cos(random_vec));
 
   one_test(derivatives(cos(2*random_vec)) + 2*sin(2*random_vec));
+  one_test(derivatives(tan(.5*random_vec)) - .5/pow(cos(.5*random_vec),2));
 
   one_test(derivatives(sqrt(random_vec+1)) - 1/sqrt(random_vec+1)/2);
+
+  one_test(derivatives((random_vec-1)*(random_vec-1)) - 2*(random_vec-1));
+
+  one_test(derivatives(pow(random_vec,1.5)) -
+		       1.5*pow(random_vec,.5));
+
+  one_test(derivatives(exp(pow(random_vec,3))) -
+		       exp(pow(random_vec,3))*3*pow(random_vec,2));
+
+  one_test(derivatives(exp(random_vec)) -
+		       exp(random_vec));
+
+  one_test(derivatives(pow(2,random_vec)) -
+	   pow(2,random_vec)*log(Scalar(2)));
+
+  one_test(derivatives(asin(random_vec)) -
+		       1/sqrt(1-random_vec*random_vec));
+
+  one_test(derivatives(sinh(random_vec)) - cosh(random_vec));
+  one_test(derivatives(cosh(random_vec)) - sinh(random_vec));
+
+  one_test(derivatives(tanh(random_vec)) -
+	   derivatives(sinh(random_vec)/cosh(random_vec)));
 
   return returnval;
 }
