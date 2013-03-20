@@ -340,7 +340,7 @@ public:
 
   SparseNumberVector<T,IndexSet> operator- () const {
     SparseNumberVector<T,IndexSet> returnval;
-    for (unsigned int i=0; i != size; ++i) returnval.raw_at(i) = -_data[i];
+    for (unsigned int i=0; i != index_size; ++i) returnval.raw_at(i) = -_data[i];
     return returnval;
   }
 
@@ -387,11 +387,11 @@ public:
 
   template <typename T2>
   SparseNumberVector<T,IndexSet>& operator*= (const T2& a)
-    { for (unsigned int i=0; i != size; ++i) _data[i] *= a; return *this; }
+    { for (unsigned int i=0; i != index_size; ++i) _data[i] *= a; return *this; }
 
   template <typename T2>
   SparseNumberVector<T,IndexSet>& operator/= (const T2& a)
-    { for (unsigned int i=0; i != size; ++i) _data[i] /= a; return *this; }
+    { for (unsigned int i=0; i != index_size; ++i) _data[i] /= a; return *this; }
 
   template <typename T2, typename IndexSet2>
   typename SymmetricMultipliesType<T,T2>::supertype
@@ -416,7 +416,7 @@ public:
 
     static const unsigned int size2 = IndexSet2::size;
 
-    for (unsigned int i=0; i != size; ++i)
+    for (unsigned int i=0; i != index_size; ++i)
       for (unsigned int j=0; j != size2; ++j)
         returnval.raw_at(i).raw_at(j) = _data[i] * a.raw_at(j);
 
@@ -427,7 +427,7 @@ public:
   {
     SparseNumberVector<SparseNumberVector<T, IndexSet>, IndexSet > returnval(0);
   
-    for (unsigned int i=0; i != size; ++i)
+    for (unsigned int i=0; i != index_size; ++i)
       returnval.raw_at(i).raw_at(i) = 1;
 
     return returnval;
@@ -437,7 +437,7 @@ public:
   {
     T returnval = 0;
 
-    for (unsigned int i=0; i != size; ++i)
+    for (unsigned int i=0; i != index_size; ++i)
       returnval += _data[i];
 
     return returnval;
