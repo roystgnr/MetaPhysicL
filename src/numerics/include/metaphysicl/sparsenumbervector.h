@@ -882,6 +882,20 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T2,
   return returnval; \
 } \
  \
+template <typename T, typename IndexSet> \
+inline \
+SparseNumberVector<T, IndexSet> \
+funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T, IndexSet>& b) \
+{ \
+  SparseNumberVector<T, IndexSet> returnval; \
+ \
+  typename IndexSet::ForEach() \
+    (BinaryVectorFunctor<std::binary_function<T,T,T>,IndexSet,IndexSet,IndexSet,T,T,T> \
+      (a.raw_data(), b.raw_data(), returnval.raw_data(), std::ptr_fun(std::funcname<T>))); \
+ \
+  return returnval; \
+} \
+ \
 template <typename T, typename T2, typename IndexSet> \
 inline \
 SparseNumberVector<typename SymmetricCompareTypes<T,T2>::supertype, IndexSet> \

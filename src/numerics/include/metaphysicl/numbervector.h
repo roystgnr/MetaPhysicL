@@ -420,13 +420,29 @@ funcname (const atype& a, const btype& b) \
   return returnval; \
 }
 
+#define NumberVector_std_binary_aa(funcname, atype) \
+template <std::size_t N, typename T> \
+inline \
+atype \
+funcname (const atype& a, const atype& b) \
+{ \
+  atype returnval; \
+ \
+  for (std::size_t i=0; i != N; ++i) \
+    returnval[i] = std::funcname(a[i], b[i]); \
+ \
+  return returnval; \
+}
+
+
 #define NumberVector_std_binary(funcname) \
 NumberVector_std_binary_abab(funcname, NumberVector<N MacroComma T>, NumberVector<N MacroComma T2>, \
                             NumberVector<N MacroComma T> MacroComma NumberVector<N MacroComma T2>, a[i], b[i]) \
 NumberVector_std_binary_abab(funcname,                             T , NumberVector<N MacroComma T2>, \
                             NumberVector<N MacroComma T2> MacroComma T,                              a,    b[i]) \
 NumberVector_std_binary_abab(funcname, NumberVector<N MacroComma T>,                             T2 , \
-                            NumberVector<N MacroComma T> MacroComma T2,                              a[i],    b)
+                            NumberVector<N MacroComma T> MacroComma T2,                              a[i],    b) \
+NumberVector_std_binary_aa(funcname, NumberVector<N MacroComma T>)
 
 NumberVector_std_binary(pow)
 NumberVector_std_unary(exp)

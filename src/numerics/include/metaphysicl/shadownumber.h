@@ -282,6 +282,16 @@ funcname (const ShadowNumber<T,S>& a, const ShadowNumber<T2,S2>& b) \
              std::funcname(a.shadow(), b.shadow())); \
 } \
  \
+template <typename T, typename S> \
+inline \
+ShadowNumber<T,S> \
+funcname (const ShadowNumber<T,S>& a, const ShadowNumber<T,S>& b) \
+{ \
+  return ShadowNumber<T,S> \
+    (std::funcname(a.value(), b.value()), \
+     std::funcname(a.shadow(), b.shadow())); \
+} \
+ \
 template <typename T, typename S, typename T2> \
 inline \
 typename CompareTypes<ShadowNumber<T,S>,T2>::supertype \

@@ -580,6 +580,15 @@ funcname (const DualNumber<T,D>& a, const DualNumber<T2,D2>& b) \
   return type(funcval, derivative); \
 } \
  \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> \
+funcname (const DualNumber<T,D>& a, const DualNumber<T,D>& b) \
+{ \
+  T funcval = std::funcname(a.value(), b.value()); \
+  return DualNumber<T,D>(funcval, derivative); \
+} \
+ \
 template <typename T, typename T2, typename D> \
 inline \
 typename CompareTypes<DualNumber<T2,D>,T,true>::supertype \
@@ -606,9 +615,9 @@ DualNumber_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
   (b.value() * b.value() + a.value() * a.value()))
 DualNumber_std_binary(max,
-  (a.value() > b.value()) ?  a : b)
+  (a.value() > b.value()) ? a.derivatives() : b.derivatives())
 DualNumber_std_binary(min,
-  (a.value() > b.value()) ?  b : a)
+  (a.value() > b.value()) ? b.derivatives() : a.derivatives())
 DualNumber_std_binary(fmod, a.derivatives())
 
 template <typename T, typename D>

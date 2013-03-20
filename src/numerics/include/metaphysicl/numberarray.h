@@ -410,13 +410,29 @@ funcname (const atype& a, const btype& b) \
   return returnval; \
 }
 
+#define NumberArray_std_binary_aa(funcname, atype) \
+template <std::size_t N, typename T> \
+inline \
+atype \
+funcname (const atype& a, const atype& b) \
+{ \
+  atype returnval; \
+ \
+  for (std::size_t i=0; i != N; ++i) \
+    returnval[i] = std::funcname(a[i], b[i]); \
+ \
+  return returnval; \
+}
+
+
 #define NumberArray_std_binary(funcname) \
 NumberArray_std_binary_abab(funcname, NumberArray<N MacroComma T>, NumberArray<N MacroComma T2>, \
                             NumberArray<N MacroComma T> MacroComma NumberArray<N MacroComma T2>, a[i], b[i]) \
 NumberArray_std_binary_abab(funcname,                             T , NumberArray<N MacroComma T2>, \
                             NumberArray<N MacroComma T2> MacroComma T,                              a,    b[i]) \
 NumberArray_std_binary_abab(funcname, NumberArray<N MacroComma T>,                             T2 , \
-                            NumberArray<N MacroComma T> MacroComma T2,                              a[i],    b)
+                            NumberArray<N MacroComma T> MacroComma T2,                              a[i],    b) \
+NumberArray_std_binary_aa(funcname, NumberArray<N MacroComma T>)
 
 NumberArray_std_binary(pow)
 NumberArray_std_unary(exp)
