@@ -55,7 +55,10 @@ DeclareUnaryPhysics(SpecificInternalEnergyFromOnlyTransationalRotationalEnergy,
                     e_tr);
 
 
-template <typename Scalar>
+template <typename ScalarT,
+          typename ScalarC=ScalarT,
+          typename VectorV=NumberVector<3,ScalarT>,
+          typename VectorRho=NumberVector<13,ScalarT> >
 struct TestPhysics
 {
   typedef MetaPhysicL::VectorConstructor<
@@ -72,9 +75,9 @@ struct TestPhysics
   >::type AllPhysics;
 
   typedef typename UIntStructConstructor<
-    DENSITIES_VAR, NumberVector<13,Scalar>,
-    VELOCITY_VAR, NumberVector<3,Scalar>,
-    TEMPERATURE_VAR, Scalar
+    DENSITIES_VAR, VectorRho,
+    VELOCITY_VAR, VectorV,
+    TEMPERATURE_VAR, ScalarT
   >::type primitive_vars;
 
   typedef UIntVectorConstructor<
@@ -84,7 +87,7 @@ struct TestPhysics
   >::type conserved_vars;
 
   typedef typename UIntStructConstructor<
-    TRANSLATIONAL_ROTATIONAL_SPECIFIC_HEAT_VAR, Scalar
+    TRANSLATIONAL_ROTATIONAL_SPECIFIC_HEAT_VAR, ScalarC
   >::type constants;
 
   typedef typename primitive_vars::template Union<constants>::type
