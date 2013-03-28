@@ -54,6 +54,9 @@ AC_PROG_CXX
 dnl Added for AX_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
 
+dnl We're going to need C++11 for one of our test cases
+AX_CXX_COMPILE_STDCXX_11(noext,true)
+
 dnl -Wall warnings, -Wall the time.
 AX_CXXFLAGS_WARN_ALL
 

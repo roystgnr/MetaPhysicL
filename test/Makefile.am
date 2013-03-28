@@ -6,9 +6,12 @@ check_PROGRAMS += identities_unit
 check_PROGRAMS += main_unit
 check_PROGRAMS += navier_unit
 check_PROGRAMS += pde_unit
-check_PROGRAMS += physics_unit
 check_PROGRAMS += testheaders_unit
 check_PROGRAMS += testopt_unit
+
+if CXX11_ENABLED
+  check_PROGRAMS += physics_unit
+endif
 
 AM_CPPFLAGS  = 
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
@@ -18,8 +21,6 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
-
-physics_unit_CXXFLAGS = -std=c++11
 
 # Sources for these tests
 derivs_unit_SOURCES = derivs_unit.C
@@ -38,9 +39,12 @@ TESTS += identities_unit
 TESTS += main_unit
 TESTS += navier_unit
 TESTS += pde_unit
-TESTS += physics_unit
 TESTS += testheaders_unit
 TESTS += testopt_unit
+
+if CXX11_ENABLED
+  TESTS += physics_unit
+endif
 
 #-------------
 # MASA support
