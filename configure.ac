@@ -107,6 +107,7 @@ dnl Generate Makefiles
 dnl-----------------------------------------------
 AC_CONFIG_FILES([
   doxygen/Makefile
+  doxygen/metaphysicl.dox
   Makefile
   metaphysicl.pc
   src/Makefile
