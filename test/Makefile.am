@@ -26,8 +26,10 @@ AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 derivs_unit_SOURCES = derivs_unit.C
 identities_unit_SOURCES = identities_unit.C
 main_unit_SOURCES = main_unit.C
-navier_unit_SOURCES = navier_unit.C
-pde_unit_SOURCES = pde_unit.C
+navier_unit_SOURCES =  navier_unit.C
+navier_unit_SOURCES += testing.h
+pde_unit_SOURCES =  pde_unit.C
+pde_unit_SOURCES += testing.h
 physics_unit_SOURCES = physics_unit.C
 testheaders_unit_SOURCES = testheaders_unit.C
 testopt_unit_SOURCES = testopt_unit.C
@@ -54,14 +56,18 @@ if MASA_ENABLED
   AM_LDFLAGS  += $(MASA_LIBS)
 endif
 
+CLEANFILES =
+
 if CODE_COVERAGE_ENABLED
-  CLEANFILES = *.gcda *.gcno
+  CLEANFILES += *.gcda *.gcno
 endif
 
 .license.stamp: $(top_srcdir)/LICENSE
 	$(top_srcdir)/src/common/lic_utils/update_license.pl $(top_srcdir)/LICENSE \
 	$(top_srcdir)/test/*.C
 	echo 'updated source license headers' >$@
+
+CLEANFILES += .license.stamp
 
 # Required for AX_AM_MACROS
 ###@INC_AMINCLUDE@

@@ -93,7 +93,7 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
 
-DX_INIT_DOXYGEN(METAPHYSICL, doxygen/metaphysicl.dox, docs/doxygen)
+DX_INIT_DOXYGEN(metaphysicl, doxygen/metaphysicl.dox, docs/doxygen)
 
 AC_CONFIG_FILES(doxygen/txt_common/about_vpath.page)
 
