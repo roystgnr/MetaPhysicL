@@ -39,6 +39,7 @@ include_HEADERS += numerics/include/metaphysicl/dualshadowsparsevector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadowvector.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumberstruct.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumbervector.h
+include_HEADERS += numerics/include/metaphysicl/gpuvector.h
 include_HEADERS += numerics/include/metaphysicl/numberarray.h
 include_HEADERS += numerics/include/metaphysicl/numbervector.h
 include_HEADERS += numerics/include/metaphysicl/raw_type.h
