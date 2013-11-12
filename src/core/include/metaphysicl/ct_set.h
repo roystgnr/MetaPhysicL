@@ -33,6 +33,10 @@
 
 #include "metaphysicl/compare_types.h"
 
+#if  __cplusplus >= 201103L
+#include <array>
+#endif
+
 // Compile-time editable list / set / map data structure
 
 namespace MetaPhysicL {
@@ -41,7 +45,7 @@ namespace MetaPhysicL {
 // If the condition is true, then IfElse::type is the same type as parameter 2.
 // If the condition is false, then IfElse::type is the same type as parameter 3.
 template <bool Condition, typename TrueResult, typename FalseResult>
-class IfElse;
+struct IfElse;
 
 template <typename TrueResult, typename FalseResult>
 struct IfElse<true, TrueResult, FalseResult> {
@@ -647,7 +651,7 @@ struct Container
   {
     template <typename Functor>
     void operator()(const Functor &f) {
-      f.operator()<HeadType>();
+      f.template operator()<HeadType>();
       typename tail_set::ForEach()(f);
     }
   };
@@ -794,6 +798,104 @@ struct NullContainer
     }
   };
 };
+
+#if  __cplusplus >= 201103L
+template <unsigned int...>
+struct UIntList {};
+
+template <unsigned int i, class TestA>
+struct TestB;
+
+template <unsigned int i, template <unsigned int j> class TestA,
+         unsigned int j>
+struct TestB<i, TestA<j> >
+{
+  static const unsigned int value = j;
+};
+
+template <typename T, T i, class List>
+struct ListPrepend;
+
+template <typename T,
+          T i, 
+          template <T... Args> class ListT,
+          T... Args>
+struct ListPrepend<T, i, ListT<Args...> >
+{
+  typedef ListT<i, Args...> type;
+};
+
+
+template <class List>
+struct ListAsArray;
+
+template <typename T>
+template <template <T... Args> class List, T... Args>
+struct ListAsArray<List<Args...> >
+{
+  static const std::array<T, sizeof...(Args)> value = {Args...};
+};
+
+
+template <typename Set, typename IndexType=unsigned int>
+struct SetAsList
+{
+  typedef typename
+    ListPrepend<typename Set::head_type::value_type,
+                Set::head_type::value,
+                typename SetAsList<typename Set::tail_set>::type
+               >::type type;
+};
+
+template <>
+struct SetAsList<NullContainer, unsigned int>
+{
+  typedef UIntList<> type;
+};
+
+
+template <typename Set>
+struct SetAsArray
+{
+  static const
+    std::array<typename Set::head_type::value_type, Set::size> value =
+      ListAsArray<typename SetAsList<Set>::type>::value;
+};
+
+
+template <typename Set1, typename Set2, typename IndexType=unsigned int>
+struct PermutationList
+{
+  typedef typename
+    ListPrepend<IndexType,
+                Set2::template IndexOf<Set1::head_type>::value,
+                typename PermutationList<
+                  typename Set1::tail_set,
+                  Set2, IndexType>::type
+               >::type type;
+};
+
+
+template <typename Set2>
+struct PermutationList<NullContainer, Set2, unsigned int>
+{
+  typedef UIntList<> type;
+};
+
+
+template <typename Set1, typename Set2, typename IndexType=unsigned int>
+struct PermutationArray
+{
+  static const
+    std::array<IndexType, Set1::size> value =
+      ListAsArray<
+        typename PermutationList<Set1, Set2, IndexType>::type
+      >::value;
+};
+
+
+#endif
+
 
 template <typename Set>
 struct SetOfSetsUnion
