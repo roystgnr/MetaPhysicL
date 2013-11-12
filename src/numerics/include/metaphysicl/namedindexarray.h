@@ -129,13 +129,23 @@ operator opname (const NamedIndexArray<DataVector,  SparseSizeVector>&  a, \
   using std::max; \
   using MetaPhysicL::PermutationArray; \
   const auto final_sizes = max(a.raw_sizes(), b.raw_sizes()); \
-  return reshape(a.raw_data(), \
-                 final_sizes, \
-                 PermutationArray<IndexSet,UnionSet>::value) \
-         opname \
-         reshape(b.raw_data(), \
-                 final_sizes, \
-                 PermutationArray<IndexSet2,UnionSet>::value); \
+  return NamedIndexArray<decltype( \
+    reshape(a.raw_data(), \
+            final_sizes, \
+            PermutationArray<IndexSet,UnionSet>::value) \
+    opname \
+    reshape(b.raw_data(), \
+            final_sizes, \
+            PermutationArray<IndexSet2,UnionSet>::value)), \
+                         decltype(final_sizes)> ( \
+    reshape(a.raw_data(), \
+            final_sizes, \
+            PermutationArray<IndexSet,UnionSet>::value) \
+    opname \
+    reshape(b.raw_data(), \
+            final_sizes, \
+            PermutationArray<IndexSet2,UnionSet>::value), \
+    final_sizes); \
 } \
  \
 template <typename DataVector, typename SparseSizeVector, typename T2> \
@@ -221,15 +231,15 @@ funcname (const NamedIndexArray<DataVector , SparseSizeVector >& a, \
 funcname( \
     reshape(a.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value) \
+            PermutationArray<IndexSet,UnionSet>::value), \
     reshape(b.raw_data(), \
             final_sizes, \
             PermutationArray<IndexSet2,UnionSet>::value))), \
-                         SparseSizeVector> (\
+                         decltype(final_sizes)> (\
 funcname( \
     reshape(a.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value) \
+            PermutationArray<IndexSet,UnionSet>::value), \
     reshape(b.raw_data(), \
             final_sizes, \
             PermutationArray<IndexSet2,UnionSet>::value)) \
