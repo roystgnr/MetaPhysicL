@@ -144,7 +144,7 @@ public:
     if (val)
       throw std::domain_error("Cannot initialize SparseNumberVector with non-zero scalar");
 #endif
-    std::fill(_data, _data+size(), val);
+    std::fill(raw_data(), raw_data()+size(), val);
   }
 
   template <typename T2>
@@ -154,7 +154,7 @@ public:
     if (val)
       throw std::domain_error("Cannot initialize SparseNumberVector with non-zero scalar");
 #endif
-    std::fill(_data, _data+size(), T(val));
+    std::fill(raw_data(), raw_data()+size(), T(val));
   }
 
   template <typename T2>
@@ -224,7 +224,7 @@ public:
     template <typename ValueType>
     inline void operator()() const {
       const unsigned int
-        indexin = IndexSet::template IndexOf<ValueType>::index,
+        indexin = IndexSet::template IndexOf<ValueType>::index;
       _subfunctor(_out, _in[indexin]);
     }
 
@@ -280,7 +280,8 @@ public:
   // error for IndexSet2 which is not a subset of IndexSet
   template <typename T2, typename IndexSet2>
   SparseNumberVector(SparseNumberVector<T2, IndexSet2> src) {
-    typename IndexSet::ForEach()(CopyFunctor<IndexSet2,T2>(src.raw_data(), _data));
+    typename IndexSet::ForEach()
+      (CopyFunctor<IndexSet2,T2>(src.raw_data(), raw_data()));
     ctassert<IndexSet2::template Difference<IndexSet>::type::size == 0>::apply();
   }
 
@@ -296,12 +297,19 @@ public:
     return returnval;
   }
 
+#if  __cplusplus >= 201103L
+  std::array<T,index_size>& raw_data_array()
+    { return _data; }
+
+  const std::array<T,index_size>& raw_data_array() const
+    { return _data; }
+#endif
 
   T* raw_data()
-    { return _data; }
+    { return index_size?&_data[0]:NULL; }
 
   const T* raw_data() const
-    { return _data; }
+    { return index_size?&_data[0]:NULL; }
 
   T& raw_at(unsigned int i)
     { return _data[i]; }
@@ -349,7 +357,7 @@ public:
     operator+= (const SparseNumberVector<T2,IndexSet2>& a) { 
     typename IndexSet2::ForEach()
       (OpEqualsFunctor<std::plus<T>, IndexSet2, T2>
-        (std::plus<T>(), a.raw_data(), _data));
+        (std::plus<T>(), a.raw_data(), raw_data()));
     ctassert<IndexSet2::template Difference<IndexSet>::type::size == 0>::apply();
     return *this;
   }
@@ -401,7 +409,7 @@ public:
     typename IndexSet::template Intersection<IndexSet2>::type::ForEach()
       (BinaryIteratedFunctor<AccumulateDot<T,T2>, IndexSet2, T2,
                              typename SymmetricMultipliesType<T,T2>::supertype>
-        (AccumulateDot<T,T2>(), _data, a.raw_data(), returnval));
+        (AccumulateDot<T,T2>(), raw_data(), a.raw_data(), returnval));
 
     return returnval;
   }
@@ -444,7 +452,11 @@ public:
   }
 
 private:
+#if  __cplusplus >= 201103L
+  std::array<T,index_size> _data;
+#else
   T _data[index_size];
+#endif
 };
 
 
