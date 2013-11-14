@@ -44,21 +44,18 @@ template <typename DataVector, typename SparseSizeVector>
 class NamedIndexArray
 {
 public:
-  typedef typename DataVector::value_type value_type;
-
   typedef typename SparseSizeVector::index_set index_set;
 
   typedef typename index_set::head_type index_type;
-
-  typedef typename index_type::value_type index_value_type;
 
   static const size_t index_size = index_set::size;
 
   std::size_t size() const
     { return _data_vector.size(); }
 
-  NamedIndexArray(DataVector &&vec_in) : _data_vector(vec_in) {
-    // assert(vec_in.size() == product(size_vector));
+  NamedIndexArray(DataVector vec_in, SparseSizeVector size_in) :
+    _data_vector(vec_in), _size_vector(size_in) {
+    // assert(vec_in.size() == product(_size_vector));
   }
 
   DataVector& raw_data()
@@ -190,7 +187,6 @@ operator<< (std::ostream& output,
   output << "Data: " << a.raw_data() << '\n';
   return output;
 }
-
 
 } // namespace MetaPhysicL
 
