@@ -803,16 +803,6 @@ struct NullContainer
 template <unsigned int...>
 struct UIntList {};
 
-template <unsigned int i, class TestA>
-struct TestB;
-
-template <unsigned int i, template <unsigned int j> class TestA,
-         unsigned int j>
-struct TestB<i, TestA<j> >
-{
-  static const unsigned int value = j;
-};
-
 template <typename T, T i, class List>
 struct ListPrepend;
 
@@ -868,7 +858,7 @@ struct PermutationList
 {
   typedef typename
     ListPrepend<IndexType,
-                Set2::template IndexOf<Set1::head_type>::value,
+                Set2::template IndexOf<typename Set1::head_type>::index,
                 typename PermutationList<
                   typename Set1::tail_set,
                   Set2, IndexType>::type
@@ -886,7 +876,7 @@ struct PermutationList<NullContainer, Set2, unsigned int>
 template <typename Set1, typename Set2, typename IndexType=unsigned int>
 struct PermutationArray
 {
-  static const
+  static constexpr
     std::array<IndexType, Set1::size> value =
       ListAsArray<
         typename PermutationList<Set1, Set2, IndexType>::type
