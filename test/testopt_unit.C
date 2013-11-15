@@ -41,7 +41,7 @@ int main(void)
 
   SparseNumberStructUnitVector<3, 2, float>::type SNS;
   std::sin(SNS);
-//  std::max(SNS, SNS);
-//  std::max(1.0, SNS);
-//  std::max(SNS, 1);
+  std::max(SNS, SNS);
+  std::max(1.0, SNS);
+  std::max(SNS, 1);
 }
