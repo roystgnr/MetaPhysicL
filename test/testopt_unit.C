@@ -35,7 +35,13 @@ int main(void)
 
   SparseNumberVectorUnitVector<3, 2, float>::type SNV;
   std::sin(SNV);
+  std::max(SNV, SNV);
+  std::max(1.0, SNV);
+  std::max(SNV, 1);
 
   SparseNumberStructUnitVector<3, 2, float>::type SNS;
   std::sin(SNS);
+//  std::max(SNS, SNS);
+//  std::max(1.0, SNS);
+//  std::max(SNS, 1);
 }
