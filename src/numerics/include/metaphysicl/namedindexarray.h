@@ -33,6 +33,7 @@
 #include <functional>
 #include <stdexcept>
 #include <ostream>
+#include <type_traits>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
@@ -86,7 +87,7 @@ public:
     ctassert<IndexSet2::template Difference<IndexSet>::type::size == 0>::apply(); \
     _data_vector opname reshape(a.raw_data(), \
                             _size_vector.raw_data_array(), \
-                            PermutationArray<IndexSet2,IndexSet>::value); \
+                            PermutationArray<IndexSet2,IndexSet>::value()); \
     return *this; \
   } \
  \
@@ -128,22 +129,24 @@ operator opname (const NamedIndexArray<DataVector,  SparseSizeVector>&  a, \
   const auto final_sizes = max(a.raw_sizes(), b.raw_sizes()); \
   return NamedIndexArray<decltype( \
     reshape(a.raw_data(), \
-            final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value) \
+            final_sizes.raw_data_array(), \
+            PermutationArray<IndexSet,UnionSet>::value()) \
     opname \
     reshape(b.raw_data(), \
-            final_sizes, \
-            PermutationArray<IndexSet2,UnionSet>::value)), \
-                         decltype(final_sizes)> ( \
+            final_sizes.raw_data_array(), \
+            PermutationArray<IndexSet2,UnionSet>::value())), \
+    typename std::remove_const<decltype(final_sizes)>::type> (  \
     reshape(a.raw_data(), \
-            final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value) \
+            final_sizes.raw_data_array(), \
+            PermutationArray<IndexSet,UnionSet>::value()) \
     opname \
     reshape(b.raw_data(), \
-            final_sizes, \
-            PermutationArray<IndexSet2,UnionSet>::value), \
+            final_sizes.raw_data_array(), \
+            PermutationArray<IndexSet2,UnionSet>::value()), \
     final_sizes); \
 } \
+
+#if 0
  \
 template <typename DataVector, typename SparseSizeVector, typename T2> \
 inline \
@@ -164,6 +167,7 @@ operator opname (const T& a, \
   return NamedIndexArray<decltype(a opname b.raw_data()), SparseSizeVector> \
     (a opname b.raw_data(), b.raw_sizes()); \
 }
+#endif
 
 NamedIndexArray_op_ab(+)
 NamedIndexArray_op_ab(-)
@@ -227,18 +231,18 @@ funcname (const NamedIndexArray<DataVector , SparseSizeVector >& a, \
 funcname( \
     reshape(a.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value), \
+            PermutationArray<IndexSet,UnionSet>::value()), \
     reshape(b.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet2,UnionSet>::value))), \
+            PermutationArray<IndexSet2,UnionSet>::value()))), \
                          decltype(final_sizes)> (\
 funcname( \
     reshape(a.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet,UnionSet>::value), \
+            PermutationArray<IndexSet,UnionSet>::value()), \
     reshape(b.raw_data(), \
             final_sizes, \
-            PermutationArray<IndexSet2,UnionSet>::value)) \
+            PermutationArray<IndexSet2,UnionSet>::value())) \
 , final_sizes); \
 } \
  \

@@ -139,6 +139,28 @@ struct UnsignedIntType
 };
 
 
+template <long unsigned int i, typename DataType=NullType>
+struct UnsignedLongType
+{
+  typedef long unsigned int value_type;
+  static const value_type value = i;
+
+  typedef DataType data_type;
+  DataType data;
+
+  // name returns a string making it easier to print int container contents.
+  static std::string name() { std::stringstream ss; ss << value; return ss.str(); }
+
+  // rebind creates another UnsignedLongType with the same ulong but
+  // different data.
+  // This is useful for "upgrading" the contents of containers.
+  template <typename DataType2>
+  struct rebind {
+    typedef UnsignedLongType<i, DataType2> other;
+  };
+};
+
+
 // CombinedType gets defined to enable type upgrading in
 // Container::Insert.  It needs to be defined for any pair of types,
 // but only needs to make sense for those types which compare
@@ -800,8 +822,21 @@ struct NullContainer
 };
 
 #if  __cplusplus >= 201103L
-template <unsigned int...>
-struct UIntList {};
+template <unsigned int... Args>
+struct UIntList {
+  static constexpr 
+  std::array<unsigned int, sizeof...(Args)>
+  value() 
+  { return {Args...}; }
+};
+
+template <long unsigned int... Args>
+struct ULongList {
+  static constexpr
+  std::array<long unsigned int, sizeof...(Args)>
+  value()
+  { return {Args...}; }
+};
 
 template <typename T, T i, class List>
 struct ListPrepend;
@@ -815,25 +850,13 @@ struct ListPrepend<T, i, ListT<Args...> >
   typedef ListT<i, Args...> type;
 };
 
-
-template <class List>
-struct ListAsArray;
-
-template <typename T>
-template <template <T... Args> class List, T... Args>
-struct ListAsArray<List<Args...> >
-{
-  static const std::array<T, sizeof...(Args)> value = {Args...};
-};
-
-
-template <typename Set, typename IndexType=unsigned int>
+template <typename Set, typename IndexType=typename Set::head_type::value_type>
 struct SetAsList
 {
   typedef typename
     ListPrepend<typename Set::head_type::value_type,
                 Set::head_type::value,
-                typename SetAsList<typename Set::tail_set>::type
+                typename SetAsList<typename Set::tail_set, IndexType>::type
                >::type type;
 };
 
@@ -843,17 +866,24 @@ struct SetAsList<NullContainer, unsigned int>
   typedef UIntList<> type;
 };
 
+template <>
+struct SetAsList<NullContainer, long unsigned int>
+{
+  typedef ULongList<> type;
+};
+
 
 template <typename Set>
 struct SetAsArray
 {
-  static const
-    std::array<typename Set::head_type::value_type, Set::size> value =
-      ListAsArray<typename SetAsList<Set>::type>::value;
+  static constexpr
+  std::array<typename Set::head_type::value_type, Set::size>
+  value()
+  { return SetAsList<Set>::type::value(); }
 };
 
 
-template <typename Set1, typename Set2, typename IndexType=unsigned int>
+template <typename Set1, typename Set2, typename IndexType=typename Set2::head_type::value_type>
 struct PermutationList
 {
   typedef typename
@@ -873,14 +903,20 @@ struct PermutationList<NullContainer, Set2, unsigned int>
 };
 
 
-template <typename Set1, typename Set2, typename IndexType=unsigned int>
+template <typename Set2>
+struct PermutationList<NullContainer, Set2, long unsigned int>
+{
+  typedef ULongList<> type;
+};
+
+
+template <typename Set1, typename Set2>
 struct PermutationArray
 {
   static constexpr
-    std::array<IndexType, Set1::size> value =
-      ListAsArray<
-        typename PermutationList<Set1, Set2, IndexType>::type
-      >::value;
+  std::array<typename Set2::head_type::value_type, Set1::size>
+  value()
+  { return PermutationList<Set1, Set2>::type::value(); }
 };
 
 
@@ -984,6 +1020,40 @@ struct SetConstructor<>
 {
   typedef NullContainer type;
 };
+
+
+// ULongSetConstructor is some syntactic sugar to make it easier to
+// manually construct short (16 element or less) set-of-uint types.
+template <int I0=-1,
+          int I1=-1, 
+          int I2=-1, 
+          int I3=-1, 
+          int I4=-1, 
+          int I5=-1, 
+          int I6=-1, 
+          int I7=-1,
+          int I8=-1,
+          int I9=-1,
+          int I10=-1,
+          int I11=-1,
+          int I12=-1,
+          int I13=-1,
+          int I14=-1,
+          int I15=-1>
+struct ULongSetConstructor
+{
+  typedef typename
+    ULongSetConstructor<I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,I13,I14,I15>::type::
+      template Insert<UnsignedLongType<I0>,ValueLessThan>::type
+      type;
+};
+
+template<>
+struct ULongSetConstructor<>
+{
+  typedef NullContainer type;
+};
+
 
 
 // UIntSetConstructor is some syntactic sugar to make it easier to
@@ -1172,6 +1242,15 @@ struct CompareTypes<MetaPhysicL::UnsignedIntType<i,T>,
                     reverseorder>
 {
   typedef MetaPhysicL::UnsignedIntType<i,T> supertype;
+};
+
+
+template<long unsigned int i, typename T, bool reverseorder>
+struct CompareTypes<MetaPhysicL::UnsignedLongType<i,T>,
+                    MetaPhysicL::NullType,
+                    reverseorder>
+{
+  typedef MetaPhysicL::UnsignedLongType<i,T> supertype;
 };
 
 
