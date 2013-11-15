@@ -1164,7 +1164,10 @@ funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
 struct funcname##_Subfunctor { \
   template <typename T1, typename T2> \
   typename CompareTypes<T1,T2>::supertype \
-  operator()(T1& x, T2& y) const { return std::funcname(x,y); } \
+  operator()(const T1& x, const T2& y) const { \
+    typedef typename CompareTypes<T1,T2>::supertype TS; \
+    return std::funcname(TS(x),TS(y)); \
+  } \
 }; \
  \
 template <typename IndexSet, typename IndexSet2> \
@@ -1195,7 +1198,7 @@ funcname (const SparseNumberStruct<IndexSet>& a, const SparseNumberStruct<IndexS
 { \
   SparseNumberStruct<IndexSet> returnval; \
  \
-  IndexSet::ForEach() \
+  typename IndexSet::ForEach() \
     (BinaryFunctor<funcname##_Subfunctor,IndexSet,IndexSet,IndexSet> \
       (funcname##_Subfunctor(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
  \
