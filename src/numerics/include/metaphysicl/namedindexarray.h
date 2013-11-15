@@ -55,8 +55,18 @@ public:
     { return _data_vector.size(); }
 
   NamedIndexArray(DataVector vec_in, SparseSizeVector size_in) :
-    _data_vector(vec_in), _size_vector(size_in) {
-    // assert(vec_in.size() == product(_size_vector));
+    _data_vector(vec_in), _size_vector(size_in) {}
+
+  template <typename DataVector2, typename SparseSizeVector2>
+  NamedIndexArray(const NamedIndexArray<DataVector2,SparseSizeVector2>& arr_in) :
+    _data_vector(arr_in.raw_data()), _size_vector(arr_in.raw_sizes()) {}
+
+  template <typename DataVector2, typename SparseSizeVector2>
+  NamedIndexArray<DataVector, SparseSizeVector>&
+  operator= (const NamedIndexArray<DataVector2,SparseSizeVector2>& arr_in) {
+    _data_vector = arr_in.raw_data();
+    _size_vector = arr_in.raw_sizes();
+    return *this;
   }
 
   DataVector& raw_data()
@@ -145,8 +155,6 @@ operator opname (const NamedIndexArray<DataVector,  SparseSizeVector>&  a, \
             PermutationArray<IndexSet2,UnionSet>::value()), \
     final_sizes); \
 } \
-
-#if 0
  \
 template <typename DataVector, typename SparseSizeVector, typename T2> \
 inline \
@@ -167,7 +175,6 @@ operator opname (const T& a, \
   return NamedIndexArray<decltype(a opname b.raw_data()), SparseSizeVector> \
     (a opname b.raw_data(), b.raw_sizes()); \
 }
-#endif
 
 NamedIndexArray_op_ab(+)
 NamedIndexArray_op_ab(-)
