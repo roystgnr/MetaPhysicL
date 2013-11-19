@@ -54,6 +54,9 @@ public:
   std::size_t size() const
     { return _data_vector.size(); }
 
+  NamedIndexArray() :
+    _data_vector(), _size_vector() {}
+
   NamedIndexArray(DataVector vec_in, SparseSizeVector size_in) :
     _data_vector(vec_in), _size_vector(size_in) {}
 
@@ -82,9 +85,12 @@ public:
     { return _size_vector; }
 
   auto
-  operator- () const {
-    return NamedIndexArray<decltype(-_data_vector),
-                           SparseSizeVector>(-_data_vector);
+  operator- () const 
+  -> NamedIndexArray <decltype(-this->raw_data()), SparseSizeVector>
+  {
+    return NamedIndexArray
+      <decltype(-_data_vector), SparseSizeVector>
+        (-_data_vector, _size_vector);
   }
 
 #define NamedIndexArray_opequals(opname) \
@@ -105,7 +111,6 @@ public:
   NamedIndexArray<DataVector,SparseSizeVector>& \
   operator opname (const T2& a) \
     { _data_vector opname a; return *this; }
-
 
   NamedIndexArray_opequals(+=)
   NamedIndexArray_opequals(-=)
