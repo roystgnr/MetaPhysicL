@@ -106,7 +106,8 @@ bound_second<BinaryFunctor>
 binary_bind2nd (BinaryFunctor f, const Arg2 &b)
 { return bound_second<BinaryFunctor>{f, b}; }
 
-  template <typename SubFunctor, typename IndexSet, typename T, typename Tout>
+  template <typename SubFunctor, typename IndexSet,
+            typename IndexSetOut, typename T, typename Tout>
   struct UnaryVectorFunctor {
     UnaryVectorFunctor(SubFunctor f, const T* in, Tout* out) :
       _subfunctor(f), _datain(in), _dataout(out) {}
@@ -114,8 +115,9 @@ binary_bind2nd (BinaryFunctor f, const Arg2 &b)
     template <typename ValueType>
     inline void operator()() const {
       const unsigned int
-        index = IndexSet::template IndexOf<ValueType>::index;
-      _dataout[index] = _subfunctor(_datain[index]);
+        indexin  = IndexSet::template IndexOf<ValueType>::index,
+        indexout = IndexSetOut::template IndexOf<ValueType>::index;
+      _dataout[indexout] = _subfunctor(_datain[indexin]);
     }
 
   private:
@@ -727,10 +729,10 @@ operator opname (const SparseNumberVector<T,IndexSet>& a, const SparseNumberVect
     (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSet,T,T2,bool> \
       (a.raw_data(), b.raw_data(), returnval.raw_data(), std::functorname<TS>())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,T,bool> \
+    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,IndexSetS,T,bool> \
       (a.raw_data(), returnval.raw_data(), std::bind2nd(std::functorname<T>(),TS(0)))); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,T2,bool> \
+    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,IndexSetS,T2,bool> \
       (b.raw_data(), returnval.raw_data(), std::bind1st(std::functorname<T2>(),T2(0)))); \
  \
   return returnval; \
@@ -910,7 +912,7 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const T2& b) \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,T,TS> \
+    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,IndexSet,T,TS> \
       (std::bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),b), \
        a.raw_data(), returnval.raw_data())); \
  \
@@ -926,7 +928,7 @@ funcname (const T& a, const SparseNumberVector<T2, IndexSet>& b) \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,T2,TS> \
+    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,IndexSet,T2,TS> \
       (std::bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),a), \
        b.raw_data(), returnval.raw_data())); \
  \
@@ -950,11 +952,11 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T2,
       (MetaPhysicL::binary_ptr_fun(std::funcname<TS>), \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,T,TS> \
+    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSetS,T,TS> \
       (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(0)), \
        a.raw_data(), returnval.raw_data())); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet2,T2,TS> \
+    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet2,IndexSetS,T2,TS> \
       (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(0)), \
        b.raw_data(), returnval.raw_data())); \
  \
@@ -985,7 +987,7 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const T2& b) \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,T,TS> \
+    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T,TS> \
       (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(b)), \
        a.raw_data(), returnval.raw_data())); \
  \
@@ -1001,7 +1003,7 @@ funcname (const T& a, const SparseNumberVector<T2, IndexSet>& b) \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,T2,TS> \
+    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T2,TS> \
       (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(a)), \
        b.raw_data(), returnval.raw_data())); \
  \
