@@ -882,6 +882,16 @@ struct SetAsArray
   { return SetAsList<Set>::type::value(); }
 };
 
+template <>
+struct SetAsArray<NullContainer>
+{
+  static constexpr
+  std::array<bool, 0>
+  value()
+  { return {}; }
+};
+
+
 
 template <typename Set1, typename Set2, typename IndexType=typename Set2::head_type::value_type>
 struct PermutationList
