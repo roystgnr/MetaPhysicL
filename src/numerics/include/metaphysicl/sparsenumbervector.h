@@ -726,7 +726,7 @@ operator opname (const SparseNumberVector<T,IndexSet>& a, const SparseNumberVect
   SparseNumberVector<bool, IndexSetS> returnval; \
  \
   typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSet,T,T2,bool> \
+    (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSetS,T,T2,bool> \
       (a.raw_data(), b.raw_data(), returnval.raw_data(), std::functorname<TS>())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
     (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,IndexSetS,T,bool> \
@@ -948,7 +948,7 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T2,
   SparseNumberVector<TS, IndexSetS> returnval; \
  \
   typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryVectorFunctor<std::pointer_to_binary_function<const TS&,const TS&,const TS&>,IndexSet,IndexSet2,IndexSet,T,T2,TS> \
+    (BinaryVectorFunctor<std::pointer_to_binary_function<const TS&,const TS&,const TS&>,IndexSet,IndexSet2,IndexSetS,T,T2,TS> \
       (MetaPhysicL::binary_ptr_fun(std::funcname<TS>), \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
