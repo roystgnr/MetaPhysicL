@@ -888,7 +888,7 @@ struct SetAsArray<NullContainer>
   static constexpr
   std::array<bool, 0>
   value()
-  { return {}; }
+  { return std::array<bool, 0>(); }
 };
 
 
