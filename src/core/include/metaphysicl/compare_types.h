@@ -356,6 +356,20 @@ Symmetric_definition(MinusType);
 Symmetric_definition(MultipliesType);
 Symmetric_definition(DividesType);
 
+// Undefine our local macros to avoid polluting the namespace
+
+#undef ScalarBuiltin_true
+#undef CompareTypes_default_Types
+#undef CompareTypes_super
+#undef CompareTypes_all
+#undef CompareTypes_single
+#undef Symmetric_definition
+
+// But keep macros that are used elsewhere
+
+// #undef MacroComma
+// #undef CompareTypes_default_Type
+
 } // namespace MetaPhysicL
 
 #endif // METAPHYSICL_COMPARE_TYPES_H
