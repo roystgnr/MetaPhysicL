@@ -857,7 +857,6 @@ typename DividesType<SparseNumberStruct<IndexSet>,T2>::supertype
 operator / (const SparseNumberStruct<IndexSet>& a, const T2& b)
 {
   typedef typename DividesType<SparseNumberStruct<IndexSet>,T2>::supertype type;
-  static const unsigned int size = IndexSet::size;
 
   type returnval;
   typename IndexSet::ForEach()
