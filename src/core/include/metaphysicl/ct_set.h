@@ -32,6 +32,7 @@
 #include <stdexcept>
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/ct_types.h"
 
 #if  __cplusplus >= 201103L
 #include <array>
@@ -40,52 +41,6 @@
 // Compile-time editable list / set / map data structure
 
 namespace MetaPhysicL {
-
-// IfElse takes a boolean condition as the first parameter.
-// If the condition is true, then IfElse::type is the same type as parameter 2.
-// If the condition is false, then IfElse::type is the same type as parameter 3.
-template <bool Condition, typename TrueResult, typename FalseResult>
-struct IfElse;
-
-template <typename TrueResult, typename FalseResult>
-struct IfElse<true, TrueResult, FalseResult> {
-  typedef TrueResult type;
-};
-
-template <typename TrueResult, typename FalseResult>
-struct IfElse<false, TrueResult, FalseResult> {
-  typedef FalseResult type;
-};
-
-// TypesEqual takes two types as parameters.
-// If they are the exact same type, then TypesEqual::value is the boolean true,
-// otherwise TypesEqual::value is the boolean false.
-template <typename T1, typename T2>
-struct TypesEqual {
-  static const bool value = false;
-};
-
-template <typename T>
-struct TypesEqual<T,T> {
-  static const bool value = true;
-};
-
-// NullType is used as the equivalent of "NULL" in some compile-time algorithms
-struct NullType {};
-
-// TrueType is used as the equivalent of boolean true in some compile-time algorithms
-struct TrueType
-{
-  typedef bool value_type;
-  static const bool value = true;
-};
-
-// FalseType is used as the equivalent of boolean true in some compile-time algorithms
-struct FalseType
-{
-  typedef bool value_type;
-  static const bool value = false;
-};
 
 // Forward Declarations
 struct NullContainer;
