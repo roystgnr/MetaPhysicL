@@ -33,6 +33,7 @@
 #include <limits>
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/dualderivatives.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
 
@@ -466,48 +467,6 @@ struct CompareTypes<DualNumber<T, D>, DualNumber<T2, D2> > {
 template<typename T, typename D>
 struct CompareTypes<DualNumber<T, D>, DualNumber<T, D> > {
   typedef DualNumber<T, typename SymmetricCompareTypes<T, D>::supertype> supertype;
-};
-
-
-template <typename T>
-struct DerivativeType
-{
-  typedef typename ValueType<typename T::derivatives_type>::type type;
-};
-
-
-template <typename T>
-struct DerivativesType
-{
-  typedef typename T::derivatives_type type;
-};
-
-
-template <typename T>
-inline
-typename DerivativeType<T>::type
-derivative(const T& a, unsigned int derivativeindex)
-{
-  return a.derivatives()[derivativeindex];
-}
-
-template <typename T>
-inline
-typename DerivativesType<T>::type
-derivatives(const T& a)
-{
-  return a.derivatives();
-}
-
-
-template <typename T, unsigned int derivativeindex>
-struct DerivativeOf {
-  static
-  typename DerivativeType<T>::type
-  derivative(const T& a)
-  {
-    return a.derivatives().template get<derivativeindex>();
-  }
 };
 
 

@@ -30,6 +30,7 @@ include_HEADERS += core/include/metaphysicl/ct_set.h
 include_HEADERS += graphs/include/metaphysicl/physics.h
 
 # numerics
+include_HEADERS += numerics/include/metaphysicl/dualderivatives.h
 include_HEADERS += numerics/include/metaphysicl/dualexpression.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h
 include_HEADERS += numerics/include/metaphysicl/dualnumberarray.h

@@ -33,6 +33,7 @@
 #include <limits>
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/dualderivatives.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
 
@@ -65,7 +66,7 @@ public:
   bool boolean_test() const { return _val; }
 
   auto operator- () const {
-    return DualExpression<decltype(-val),decltype(-deriv)>
+    return DualExpression<decltype(-_val),decltype(-_deriv)>
       (-_val, -_deriv);
   }
 
@@ -217,8 +218,8 @@ auto \
 operator opname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
 { \
   return DualExpression<decltype(a.value() opname b.value()), \
-                        decltype(derivcalc)> \
-    (a.value() opname b.value(), derivcalc); \
+                        decltype(fullderiv)> \
+    (a.value() opname b.value(), fullderiv); \
 } \
  \
 template <typename T, typename T2, typename D> \
@@ -227,8 +228,8 @@ auto \
 operator opname (const T& a, const DualExpression<T2,D>& b) \
 { \
   return DualExpression<decltype(a opname b.value()), \
-                        decltype(FIXME)> \
-    (a opname b.value(), FIXME); \
+                        decltype(rightderiv)> \
+    (a opname b.value(), rightderiv); \
 } \
  \
 template <typename T, typename D, typename T2> \
@@ -236,9 +237,9 @@ inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const T2& b) \
 { \
-  return DualExpression<decltype(a opname b.value()), \
-                        decltype(FIXME)> \
-    (a.value() opname b, FIXME); \
+  return DualExpression<decltype(a.value() opname b), \
+                        decltype(leftderiv)> \
+    (a.value() opname b, leftderiv); \
 }
 
 
@@ -468,48 +469,6 @@ struct CompareTypes<DualExpression<T, D>, DualExpression<T, D> > {
 };
 
 
-template <typename T>
-struct DerivativeType
-{
-  typedef typename ValueType<typename T::derivatives_type>::type type;
-};
-
-
-template <typename T>
-struct DerivativesType
-{
-  typedef typename T::derivatives_type type;
-};
-
-
-template <typename T>
-inline
-typename DerivativeType<T>::type
-derivative(const T& a, unsigned int derivativeindex)
-{
-  return a.derivatives()[derivativeindex];
-}
-
-template <typename T>
-inline
-typename DerivativesType<T>::type
-derivatives(const T& a)
-{
-  return a.derivatives();
-}
-
-
-template <typename T, unsigned int derivativeindex>
-struct DerivativeOf {
-  static
-  typename DerivativeType<T>::type
-  derivative(const T& a)
-  {
-    return a.derivatives().template get<derivativeindex>();
-  }
-};
-
-
 template <typename T, typename D>
 inline
 D gradient(const DualExpression<T, D>& a)
@@ -526,6 +485,8 @@ namespace std {
 using MetaPhysicL::DualExpression;
 using MetaPhysicL::CompareTypes;
 
+DualExpression<double, double> testexpr;
+
 // Some forward declarations necessary for recursive DualExpressions
 
 template <typename T, typename D>
@@ -539,14 +500,14 @@ inline DualExpression<T,D> cosh  (DualExpression<T,D> a);
 #define DualExpression_std_unary(funcname, derivcalc) \
 template <typename T, typename D> \
 inline \
-auto funcname   (DualExpression<T,D> in) \
+auto funcname (DualExpression<T,D> in) \
 { \
   return DualExpression<decltype(std::funcname(in.value())),
                         decltype((derivcalc)*in.derivatives())>
     (std::funcname(in.value()), (derivcalc)*in.derivatives());
 }
 
-DualExpression_std_unary(sqrt, 1 / (2 * std::sqrt(in.value())),)
+DualExpression_std_unary(sqrt, 1 / (2 * std::sqrt(in.value())))
 DualExpression_std_unary(exp, std::exp(in.value()))
 DualExpression_std_unary(log, 1 / in.value())
 DualExpression_std_unary(log10, 1 / in.value() * (1/std::log(T(10))))
