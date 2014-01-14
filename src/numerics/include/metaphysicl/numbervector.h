@@ -34,6 +34,7 @@
 #include <ostream>
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/ct_types.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
@@ -347,9 +348,24 @@ struct templatename<NumberVector<N,T>, NumberVector<N,T>, reverseorder> { \
   typedef NumberVector<N, T> supertype; \
 }; \
  \
+template<std::size_t N, typename T, bool reverseorder> \
+struct templatename<NumberVector<N,T>, NullType, reverseorder> { \
+  typedef NumberVector<N, T> supertype; \
+}; \
+ \
+template<std::size_t N, typename T, bool reverseorder> \
+struct templatename<NullType, NumberVector<N,T>, reverseorder> { \
+  typedef NumberVector<N, T> supertype; \
+}; \
+ \
 template<std::size_t N, typename T, typename T2, bool reverseorder> \
 struct templatename<NumberVector<N,T>, NumberVector<N,T2>, reverseorder> { \
   typedef NumberVector<N, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
+}; \
+ \
+template<std::size_t N, std::size_t N2, typename T, typename T2, bool reverseorder> \
+struct templatename<NumberVector<N,T>, NumberVector<N2,T2>, reverseorder> { \
+  typedef NumberVector<0, int> supertype; \
 }; \
  \
 template<std::size_t N, typename T, typename T2, bool reverseorder> \
