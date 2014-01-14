@@ -502,9 +502,9 @@ template <typename T, typename D> \
 inline \
 auto funcname (DualExpression<T,D> in) \
 { \
-  return DualExpression<decltype(std::funcname(in.value())),
-                        decltype((derivcalc)*in.derivatives())>
-    (std::funcname(in.value()), (derivcalc)*in.derivatives());
+  return DualExpression<decltype(std::funcname(in.value())), \
+                        decltype((derivcalc)*in.derivatives())> \
+    (std::funcname(in.value()), (derivcalc)*in.derivatives()); \
 }
 
 DualExpression_std_unary(sqrt, 1 / (2 * std::sqrt(in.value())))
