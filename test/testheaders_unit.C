@@ -1,4 +1,5 @@
 
+#include "metaphysicl/dualexpression.h"
 #include "metaphysicl/dualshadowsparsestruct.h"
 #include "metaphysicl/dualshadowsparsevector.h"
 #include "metaphysicl/dualshadowvector.h"
