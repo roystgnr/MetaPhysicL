@@ -5,10 +5,6 @@
 // Order of header inclusion matters here: ShadowNumbers need to
 // precede DualNumbers which need to precede *Vector
 
-#define USE_SHADOW
-#define USE_SPARSE
-#define USE_STRUCT
-
 const unsigned int NDIM = 2;
 
 #define TESTPRINT(a) do { std::cout << #a " = " << a << std::endl; } while (0)
