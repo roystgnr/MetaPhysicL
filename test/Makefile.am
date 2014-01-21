@@ -6,11 +6,15 @@ check_PROGRAMS += identities_unit
 check_PROGRAMS += instantiations_unit
 check_PROGRAMS += main_unit
 check_PROGRAMS += namedindexarray_unit
-check_PROGRAMS += navier_unit
 check_PROGRAMS += shadow_sparse_struct_navier_unit
+check_PROGRAMS += shadow_sparse_vector_navier_unit
+check_PROGRAMS += shadow_vector_navier_unit
+check_PROGRAMS += sparse_struct_navier_unit
+check_PROGRAMS += sparse_vector_navier_unit
 check_PROGRAMS += pde_unit
 check_PROGRAMS += testheaders_unit
 check_PROGRAMS += testopt_unit
+check_PROGRAMS += vector_navier_unit
 
 if CXX11_ENABLED
   check_PROGRAMS += physics_unit
@@ -31,16 +35,29 @@ identities_unit_SOURCES = identities_unit.C
 instantiations_unit_SOURCES = instantiations_unit.C
 main_unit_SOURCES = main_unit.C
 namedindexarray_unit_SOURCES =  namedindexarray_unit.C
-navier_unit_SOURCES =  navier_unit.C
-navier_unit_SOURCES += testing.h
 shadow_sparse_struct_navier_unit_SOURCES =  shadow_sparse_struct_navier_unit.C
 shadow_sparse_struct_navier_unit_SOURCES += navier_unit.h
 shadow_sparse_struct_navier_unit_SOURCES += testing.h
+shadow_sparse_vector_navier_unit_SOURCES =  shadow_sparse_vector_navier_unit.C
+shadow_sparse_vector_navier_unit_SOURCES += navier_unit.h
+shadow_sparse_vector_navier_unit_SOURCES += testing.h
+shadow_vector_navier_unit_SOURCES =  shadow_vector_navier_unit.C
+shadow_vector_navier_unit_SOURCES += navier_unit.h
+shadow_vector_navier_unit_SOURCES += testing.h
+sparse_struct_navier_unit_SOURCES =  sparse_struct_navier_unit.C
+sparse_struct_navier_unit_SOURCES += navier_unit.h
+sparse_struct_navier_unit_SOURCES += testing.h
+sparse_vector_navier_unit_SOURCES =  sparse_vector_navier_unit.C
+sparse_vector_navier_unit_SOURCES += navier_unit.h
+sparse_vector_navier_unit_SOURCES += testing.h
 pde_unit_SOURCES =  pde_unit.C
 pde_unit_SOURCES += testing.h
 physics_unit_SOURCES = physics_unit.C
 testheaders_unit_SOURCES = testheaders_unit.C
 testopt_unit_SOURCES = testopt_unit.C
+vector_navier_unit_SOURCES =  vector_navier_unit.C
+vector_navier_unit_SOURCES += navier_unit.h
+vector_navier_unit_SOURCES += testing.h
 
 #Define tests to actually be run
 TESTS  =
@@ -49,11 +66,15 @@ TESTS += identities_unit
 TESTS += instantiations_unit
 TESTS += main_unit
 TESTS += namedindexarray_unit
-TESTS += navier_unit
 TESTS += shadow_sparse_struct_navier_unit
+TESTS += shadow_sparse_vector_navier_unit
+TESTS += shadow_vector_navier_unit
+TESTS += sparse_struct_navier_unit
+TESTS += sparse_vector_navier_unit
 TESTS += pde_unit
 TESTS += testheaders_unit
 TESTS += testopt_unit
+TESTS += vector_navier_unit
 
 if CXX11_ENABLED
   TESTS += physics_unit
