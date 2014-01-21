@@ -42,6 +42,10 @@ namespace MetaPhysicL {
 template <typename T, typename D=T>
 class DualExpression : public safe_bool<DualExpression<T,D> >
 {
+private:
+  T _val;
+  D _deriv;
+
 public:
   typedef T value_type;
 
@@ -65,7 +69,10 @@ public:
 
   bool boolean_test() const { return _val; }
 
-  auto operator- () const {
+  auto
+  operator- () 
+  -> DualExpression<decltype(-this->_val), decltype(-this->_deriv)>
+  const {
     return DualExpression<decltype(-_val),decltype(-_deriv)>
       (-_val, -_deriv);
   }
@@ -93,10 +100,6 @@ public:
 
   template <typename T2>
   DualExpression<T,D>& operator/= (const T2& a);
-
-private:
-  T _val;
-  D _deriv;
 };
 
 
