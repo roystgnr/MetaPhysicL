@@ -237,7 +237,7 @@ struct Container
     if (head_type::value < t)
       return (tail_set::runtime_index_of(t) + 1);
 #ifndef NDEBUG
-    if (t < head_type::value)
+    if (t != head_type::value)
       throw std::domain_error("Container::runtime_index_of argument not found");
 #endif
     return 0;
