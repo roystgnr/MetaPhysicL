@@ -179,16 +179,6 @@ public:
     return returnval;
   }
 
-  T sum () const
-  {
-    T returnval = 0;
-    
-    for (std::size_t i=0; i != N; ++i)
-      returnval += _data[i];
-
-    return returnval;
-  }
-
 
 private:
   T _data[N];
@@ -269,6 +259,18 @@ transpose(NumberVector<N, NumberVector<N, T> > a)
       std::swap(a[i][j], a[j][i]);
 
   return a;
+}
+
+
+template<std::size_t N, typename T>
+T sum (const NumberVector<N, T> &a)
+{
+  T returnval = 0;
+  
+  for (std::size_t i=0; i != N; ++i)
+    returnval += a[i];
+
+  return returnval;
 }
 
 

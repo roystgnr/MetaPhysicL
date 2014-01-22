@@ -33,6 +33,7 @@
 #include <ostream>
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/ct_types.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
@@ -167,18 +168,6 @@ public:
     return returnval;
   }
 
-  T
-  sum () const
-  {
-    T returnval = 0;
-    
-    for (std::size_t i=0; i != N; ++i)
-      returnval[i] = _data[i].sum();
-
-    return returnval;
-  }
-
-
 private:
   T _data[N];
 };
@@ -250,14 +239,27 @@ struct NumberArrayFullVector
 
 template <std::size_t N, typename T>
 inline
-NumberArray<N, NumberArray<N, T> >
-transpose(const NumberArray<N, NumberArray<N, T> > a)
+NumberArray<N, T>
+transpose(NumberArray<N, T> a)
 {
+  NumberArray<N, T> returnval;
   for (std::size_t i=0; i != N; ++i)
-    for (std::size_t j=i+1; j != N; ++j)
-      std::swap(a[i][j], a[j][i]);
+      returnval[i] = transpose(a[i]);
 
-  return a;
+  return returnval;
+}
+
+template<std::size_t N, typename T>
+NumberArray<N, typename SumType<T>::supertype>
+sum (const NumberArray<N, T>& a)
+{
+  NumberArray<N, typename SumType<T>::supertype>
+    returnval = 0;
+  
+  for (std::size_t i=0; i != N; ++i)
+    returnval[i] = a[i].sum();
+
+  return returnval;
 }
 
 
@@ -337,9 +339,24 @@ struct templatename<NumberArray<N,T>, NumberArray<N,T>, reverseorder> { \
   typedef NumberArray<N, T> supertype; \
 }; \
  \
+template<std::size_t N, typename T, bool reverseorder> \
+struct templatename<NumberArray<N,T>, NullType, reverseorder> { \
+  typedef NumberArray<N, T> supertype; \
+}; \
+ \
+template<std::size_t N, typename T, bool reverseorder> \
+struct templatename<NullType, NumberArray<N,T>, reverseorder> { \
+  typedef NumberArray<N, T> supertype; \
+}; \
+ \
 template<std::size_t N, typename T, typename T2, bool reverseorder> \
 struct templatename<NumberArray<N,T>, NumberArray<N,T2>, reverseorder> { \
   typedef NumberArray<N, typename Symmetric##templatename<T, T2, reverseorder>::supertype> supertype; \
+}; \
+ \
+template<std::size_t N, std::size_t N2, typename T, typename T2, bool reverseorder> \
+struct templatename<NumberArray<N,T>, NumberArray<N2,T2>, reverseorder> { \
+  typedef NumberArray<0, int> supertype; \
 }; \
  \
 template<std::size_t N, typename T, typename T2, bool reverseorder> \
