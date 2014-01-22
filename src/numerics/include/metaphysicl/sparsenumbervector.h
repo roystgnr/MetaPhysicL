@@ -325,7 +325,7 @@ public:
     operator-= (const SparseNumberVector<T2,IndexSet2>& a) { 
     typename IndexSet2::ForEach()
       (OpEqualsFunctor<std::minus<T>, IndexSet2, T2>
-        (std::minus<T>(), a.raw_data(), _data));
+        (std::minus<T>(), a.raw_data(), raw_data()));
     ctassert<IndexSet2::template Difference<IndexSet>::type::size == 0>::apply();
     return *this;
   }
@@ -335,7 +335,7 @@ public:
     operator*= (const SparseNumberVector<T2,IndexSet2>& a) { 
     typename IndexSet::template Intersection<IndexSet2>::type::ForEach()
       (OpEqualsFunctor<std::multiplies<T>, IndexSet2, T2>
-        (std::multiplies<T>(), a.raw_data(), _data));
+        (std::multiplies<T>(), a.raw_data(), raw_data()));
     typename IndexSet::template Difference<IndexSet2>::type::ForEach()
       (SetZeroFunctor(_data));
     return *this;
