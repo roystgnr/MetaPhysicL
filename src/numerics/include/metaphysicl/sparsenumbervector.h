@@ -37,6 +37,7 @@
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
 #include "metaphysicl/raw_type.h"
+#include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
 
 namespace MetaPhysicL {
@@ -44,112 +45,6 @@ namespace MetaPhysicL {
 // Forward declarations
 template <typename T, typename IndexSet>
 class SparseNumberVector;
-
-// Utilities
-
-
-// std::ptr_fun can be ambiguous when used in C++11
-template <class Arg1, class Arg2, class Result>
-std::pointer_to_binary_function<Arg1,Arg2,Result>
-binary_ptr_fun (Result (*f)(Arg1,Arg2))
-{ return std::pointer_to_binary_function<Arg1,Arg2,Result>(f); }
-
-// std::bind1st/2nd don't play nice with const reference argument
-// types in gcc 4.8
-template <typename BinaryFunctor>
-struct bound_first
-  : public std::unary_function<typename BinaryFunctor::second_argument_type,
-                               typename BinaryFunctor::result_type>
-{
-protected:
-  BinaryFunctor f;
-  typename BinaryFunctor::first_argument_type arg1;
-
-public:
-  bound_first(const BinaryFunctor& f_in,
-              const typename BinaryFunctor::first_argument_type&
-              arg1_in) : f(f_in), arg1(arg1_in) {}
-
-  typename BinaryFunctor::result_type
-  operator()
-    (const typename BinaryFunctor::second_argument_type& arg2) const
-  { return f(arg1, arg2); }
-};
-
-template <typename BinaryFunctor>
-struct bound_second
-  : public std::unary_function<typename BinaryFunctor::first_argument_type,
-                               typename BinaryFunctor::result_type>
-{
-protected:
-  BinaryFunctor f;
-  typename BinaryFunctor::second_argument_type arg2;
-
-public:
-  bound_second(const BinaryFunctor& f_in,
-               const typename BinaryFunctor::second_argument_type&
-               arg2_in) : f(f_in), arg2(arg2_in) {}
-
-  typename BinaryFunctor::result_type
-  operator()
-    (const typename BinaryFunctor::first_argument_type& arg1) const
-  { return f(arg1, arg2); }
-};
-
-template <typename BinaryFunctor, typename Arg1>
-bound_first<BinaryFunctor>
-binary_bind1st (BinaryFunctor f, const Arg1 &a)
-{ return bound_first<BinaryFunctor>{f, a}; }
-
-template <typename BinaryFunctor, typename Arg2>
-bound_second<BinaryFunctor>
-binary_bind2nd (BinaryFunctor f, const Arg2 &b)
-{ return bound_second<BinaryFunctor>{f, b}; }
-
-  template <typename SubFunctor, typename IndexSet,
-            typename IndexSetOut, typename T, typename Tout>
-  struct UnaryVectorFunctor {
-    UnaryVectorFunctor(SubFunctor f, const T* in, Tout* out) :
-      _subfunctor(f), _datain(in), _dataout(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      const unsigned int
-        indexin  = IndexSet::template IndexOf<ValueType>::index,
-        indexout = IndexSetOut::template IndexOf<ValueType>::index;
-      _dataout[indexout] = _subfunctor(_datain[indexin]);
-    }
-
-  private:
-    SubFunctor _subfunctor;
-    const T* _datain;
-    Tout* _dataout;
-  };
-
-
-  template <typename SubFunctor,
-            typename IndexSet1, typename IndexSet2, typename IndexSetOut,
-            typename T1, typename T2, typename Tout>
-  struct BinaryVectorFunctor {
-    BinaryVectorFunctor(SubFunctor f, const T1* in1, const T2* in2,
-		       Tout* out) :
-      _subfunctor(f), _datain1(in1), _datain2(in2), _dataout(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      const unsigned int
-        indexin1 = IndexSet1::template IndexOf<ValueType>::index,
-        indexin2 = IndexSet2::template IndexOf<ValueType>::index,
-        indexout = IndexSetOut::template IndexOf<ValueType>::index;
-      _dataout[indexout] = _subfunctor(_datain1[indexin1], _datain2[indexin2]);
-    }
-
-  private:
-    SubFunctor _subfunctor;
-    const T1* _datain1;
-    const T2* _datain2;
-    Tout* _dataout;
-  };
 
 template<typename IndexSet1, typename IndexSet2, typename S, typename T, bool reverseorder>
 struct DotType<SparseNumberVector<S,IndexSet1>,
@@ -1012,12 +907,31 @@ funcname (const T& a, const SparseNumberVector<T2, IndexSet>& b) \
 }
 
 
+// Pow needs its own specialization, both to avoid being confused by
+// pow<T1,T2> and because pow(x,0) isn't 0.
+
+template <typename T, typename T2, typename IndexSet>
+inline
+SparseNumberVector<typename SymmetricCompareTypes<T,T2>::supertype, IndexSet>
+pow (const SparseNumberVector<T, IndexSet>& a, const T2& b)
+{
+  typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
+  SparseNumberVector<TS, IndexSet> returnval;
+
+  typename IndexSet::ForEach()
+    (UnaryVectorFunctor<std::unary_function<T,TS>,IndexSet,IndexSet,T,TS>
+      (std::bind2nd(MetaPhysicL::binary_ptr_fun(std::pow<T,T2>),b),
+       a.raw_data(), returnval.raw_data()));
+
+  return returnval;
+}
+
 
 // NOTE: unary functions for which f(0) != 0 are undefined compile-time
 // errors, because there's no efficient way to have them make sense in
 // the sparse context.
 
-SparseNumberVector_std_binary(pow)
+// SparseNumberVector_std_binary(pow) // separate definition
 // SparseNumberVector_std_unary(exp)
 // SparseNumberVector_std_unary(log)
 // SparseNumberVector_std_unary(log10)
