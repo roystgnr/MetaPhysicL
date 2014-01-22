@@ -76,7 +76,7 @@ int vectester (void)
   std::srand(12345); // Fixed seed for reproduceability of failures
 
   // Avoid divide by zero errors later
-  for (unsigned int i=0; i != N; ++i)
+  for (unsigned int i=0; i != random_vec.size(); ++i)
     random_vec[i] = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX);
 
   Scalar pi = acos(Scalar(-1));
