@@ -51,18 +51,17 @@ int test_error_vec (const Vector& random_vec,
 template <typename Vector>
 int vectester (void)
 {
+  using std::abs;
   using std::acos;
-  using std::cos;
-  using std::cosh;
-  using std::exp;
+  using std::asin;
+  using std::atan;
+  using std::ceil;
+  using std::fabs;
   using std::floor;
-  using std::log;
-  using std::log10;
   using std::pow;
   using std::sin;
-  using std::sinh;
+  using std::sqrt;
   using std::tan;
-  using std::tanh;
 
   typedef typename Vector::value_type Scalar;
 
@@ -72,27 +71,30 @@ int vectester (void)
 
   std::srand(12345); // Fixed seed for reproduceability of failures
 
-  // Avoid divide by zero errors later
   for (unsigned int i=0; i != N; ++i)
     random_vec[i] = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX);
 
-  Scalar pi = acos(Scalar(-1));
-
   int returnval = 0;
 
-  one_test(log(exp(random_vec)) - random_vec);
-  one_test(exp(log(random_vec)) - random_vec);
-  one_test(exp(random_vec) - pow(exp(Scalar(1)), random_vec));
+  one_test(2*random_vec - random_vec - random_vec);
 
-  one_test(tan(random_vec) - sin(random_vec)/cos(random_vec));
-  one_test(random_vec - cos(acos(random_vec)));
-  one_test(1 - pow(sin(random_vec), 2) - pow(cos(random_vec), 2));
-  one_test(cos(random_vec) - sin(random_vec + pi/2));
+  one_test(3*random_vec - random_vec*3);
 
-  one_test(tanh(random_vec) - sinh(random_vec)/cosh(random_vec));
-  one_test(1 + pow(sinh(random_vec), 2) - pow(cosh(random_vec), 2));
+  one_test((random_vec + random_vec)/2 - random_vec);
 
-  one_test(log10(random_vec) - log(random_vec)/log(Scalar(10)));
+  one_test(sqrt(random_vec) * sqrt(random_vec) - random_vec);
+  one_test(random_vec*random_vec - pow(random_vec,2));
+  one_test(sqrt(random_vec) - pow(random_vec,Scalar(.5)));
+
+  one_test(random_vec - sin(asin(random_vec)));
+  one_test(random_vec - tan(atan(random_vec)));
+
+  one_test(floor(random_vec / 2));
+  one_test(ceil(random_vec / 2 - 1));
+
+  one_test(abs(random_vec) - random_vec);
+  one_test(fabs(random_vec-.75) - abs(random_vec-.75));
+
 
   return returnval;
 }
@@ -107,6 +109,24 @@ int main(void)
   returnval = returnval || vectester<NumberVector<N, float> >();
   returnval = returnval || vectester<NumberVector<N, double> >();
   returnval = returnval || vectester<NumberVector<N, long double> >();
+
+/*
+  returnval = returnval || vectester<SparseNumberArrayOf<4,
+                                                         0, float,
+                                                         1, float,
+                                                         2, float,
+                                                         3, float>::type >();
+  returnval = returnval || vectester<SparseNumberArrayOf<4,
+                                                         0, double,
+                                                         1, double,
+                                                         2, double,
+                                                         3, double>::type >();
+  returnval = returnval || vectester<SparseNumberArrayOf<4,
+                                                         0, long double,
+                                                         1, long double,
+                                                         2, long double,
+                                                         3, long double>::type >();
+*/
 
   return returnval;
 }

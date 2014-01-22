@@ -1,6 +1,6 @@
 #include "metaphysicl_config.h"
 
-//#define USE_SPARSE
+// #define USE_SPARSE
 
 #include "testing.h"
 

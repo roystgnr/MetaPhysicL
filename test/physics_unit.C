@@ -11,7 +11,7 @@ using namespace MetaPhysicL;
 
 DeclareUnaryPhysics(DensityFromSpeciesDensities,
                     DENSITIES_VAR, DENSITY_VAR,
-                    rhoi.sum());
+                    sum(rhoi));
 
 DeclareBinaryPhysics(MomentumFromVelocity,
                      DENSITY_VAR, VELOCITY_VAR, MOMENTUM_VAR,
@@ -155,7 +155,7 @@ int main(void)
   std::cout << "Densities rho_i = " << state2.var<DENSITIES_VAR>() 
             << " kg/m^3" << std::endl;
 
-  std::cout << "Density sums rho = " << state2.var<DENSITIES_VAR>().sum()
+  std::cout << "Density sums rho = " << sum(state2.var<DENSITIES_VAR>())
             << " kg/m^3" << std::endl;
 
   std::cout << "Velocities U_i = " << state2.var<VELOCITY_VAR>() 

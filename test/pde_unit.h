@@ -183,6 +183,13 @@ double evaluate_q (const Vector& xyz, const int ret)
   ADScalar RHO = rho_0 + rho_x * std::sin(a_rhox * PI * x / L) + rho_y * std::cos(a_rhoy * PI * y / L);
   ADScalar P = p_0 + p_x * std::cos(a_px * PI * x / L) + p_y * std::sin(a_py * PI * y / L);
 
+  P/RHO;
+
+
+
+
+
+
   // Perfect gas energies
   ADScalar E = 1./(Gamma-1.)*P/RHO;
   ADScalar ET = E + .5 * U.dot(U);
