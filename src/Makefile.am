@@ -25,6 +25,7 @@ include_HEADERS =
 # core
 include_HEADERS += core/include/metaphysicl/compare_types.h
 include_HEADERS += core/include/metaphysicl/ct_set.h
+include_HEADERS += core/include/metaphysicl/ct_types.h
 
 # graphs
 include_HEADERS += graphs/include/metaphysicl/physics.h
