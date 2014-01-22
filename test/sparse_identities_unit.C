@@ -55,8 +55,6 @@ int vectester (void)
   using std::acos;
   using std::asin;
   using std::atan;
-  using std::ceil;
-  using std::fabs;
   using std::floor;
   using std::pow;
   using std::sin;
@@ -90,10 +88,7 @@ int vectester (void)
   one_test(random_vec - tan(atan(random_vec)));
 
   one_test(floor(random_vec / 2));
-  one_test(ceil(random_vec / 2 - 1));
-
   one_test(abs(random_vec) - random_vec);
-  one_test(fabs(random_vec-.75) - abs(random_vec-.75));
 
 
   return returnval;

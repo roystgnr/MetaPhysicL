@@ -51,10 +51,13 @@ int test_error_vec (const Vector& random_vec,
 template <typename Vector>
 int vectester (void)
 {
+  using std::abs;
   using std::acos;
+  using std::ceil;
   using std::cos;
   using std::cosh;
   using std::exp;
+  using std::fabs;
   using std::floor;
   using std::log;
   using std::log10;
@@ -93,6 +96,9 @@ int vectester (void)
   one_test(1 + pow(sinh(random_vec), 2) - pow(cosh(random_vec), 2));
 
   one_test(log10(random_vec) - log(random_vec)/log(Scalar(10)));
+
+  one_test(ceil(random_vec / 2 - 1));
+  one_test(fabs(random_vec-.75) - abs(random_vec-.75));
 
   return returnval;
 }
