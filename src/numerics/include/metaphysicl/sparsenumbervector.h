@@ -117,7 +117,7 @@ public:
 
   template <typename T2>
   SparseNumberVector(SparseNumberVector<T2, IndexSet> src)
-    { std::copy(src.raw_data(), src.raw_data()+size(), _data); }
+    { std::copy(src.raw_data(), src.raw_data()+size(), raw_data()); }
 
   template <bool, typename ValueType, typename IndexSet2>
   struct SubCopyFunctor {
