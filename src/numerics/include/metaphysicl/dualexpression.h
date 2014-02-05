@@ -160,6 +160,19 @@ struct DualExpressionConstructor<DualExpression<T,D>, DD>
 
 
 //
+// Syntactic sugar
+//
+
+template <typename T, typename D>
+inline
+DualExpression<T,D>
+make_dual_expression(const T& t, const D& d)
+{
+  return DualExpression<T,D>(t,d);
+}
+
+
+//
 // Member function definitions
 //
 
