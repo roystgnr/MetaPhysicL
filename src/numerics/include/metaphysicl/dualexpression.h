@@ -232,6 +232,7 @@ template <typename T, typename D, typename T2, typename D2> \
 inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
+-> DualExpression<decltype(a.value() opname b.value()), decltype(fullderiv)> \
 { \
   return DualExpression<decltype(a.value() opname b.value()), \
                         decltype(fullderiv)> \
@@ -242,6 +243,7 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 operator opname (const T& a, const DualExpression<T2,D>& b) \
+-> DualExpression<decltype(a opname b.value()), decltype(rightderiv)> \
 { \
   return DualExpression<decltype(a opname b.value()), \
                         decltype(rightderiv)> \
@@ -252,6 +254,7 @@ template <typename T, typename D, typename T2> \
 inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const T2& b) \
+-> DualExpression<decltype(a.value() opname b), decltype(leftderiv)> \
 { \
   return DualExpression<decltype(a.value() opname b), \
                         decltype(leftderiv)> \
@@ -288,6 +291,7 @@ template <typename T, typename D, typename T2, typename D2> \
 inline \
 auto \
 operator opname  (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
+-> decltype(a.value() opname b.value()) \
 { \
   return (a.value() opname b.value()); \
 } \
@@ -296,6 +300,7 @@ template <typename T, typename T2, typename D2> \
 inline \
 auto \
 operator opname  (const T& a, const DualExpression<T2,D2>& b) \
+-> decltype(a opname b.value()) \
 { \
   return (a opname b.value()); \
 } \
@@ -304,6 +309,7 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 operator opname  (const DualExpression<T,D>& a, const T2& b) \
+-> decltype(a.value() opname b) \
 { \
   return (a.value() opname b); \
 }
@@ -517,6 +523,8 @@ inline DualExpression<T,D> cosh  (DualExpression<T,D> a);
 template <typename T, typename D> \
 inline \
 auto funcname (DualExpression<T,D> in) \
+-> DualExpression<decltype(std::funcname(in.value())), \
+                  decltype((derivcalc)*in.derivatives())> \
 { \
   return DualExpression<decltype(std::funcname(in.value())), \
                         decltype((derivcalc)*in.derivatives())> \
@@ -546,6 +554,8 @@ template <typename T, typename D, typename T2, typename D2> \
 inline \
 auto \
 funcname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
+-> DualExpression<decltype(std::funcname(a.value(), b.value())), \
+                  decltype(derivative)> \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b.value())), \
                         decltype(derivative)> \
@@ -556,6 +566,8 @@ template <typename T, typename D> \
 inline \
 auto \
 funcname (const DualExpression<T,D>& a, const DualExpression<T,D>& b) \
+-> DualExpression<decltype(std::funcname(a.value(), b.value())), \
+                  decltype(derivative)> \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b.value())), \
                         decltype(derivative)> \
@@ -566,6 +578,8 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const T& a, const DualExpression<T2,D>& b) \
+-> DualExpression<decltype(std::funcname(a, b.value())), \
+                  decltype(rightderiv)> \
 { \
   return DualExpression<decltype(std::funcname(a, b.value())), \
                         decltype(rightderiv)> \
@@ -576,6 +590,8 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const DualExpression<T,D>& a, const T2& b) \
+-> DualExpression<decltype(std::funcname(a.value(), b)), \
+                  decltype(leftderiv)> \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b)), \
                         decltype(leftderiv)> \
