@@ -34,6 +34,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/dualderivatives.h"
+#include "metaphysicl/metaprogramming.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
 
@@ -232,7 +233,8 @@ template <typename T, typename D, typename T2, typename D2> \
 inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
--> DualExpression<decltype(a.value() opname b.value()), decltype(fullderiv)> \
+-> DualExpression<decltype(a.value() opname b.value()), \
+                  decltype(fullderiv)> \
 { \
   return DualExpression<decltype(a.value() opname b.value()), \
                         decltype(fullderiv)> \
@@ -243,7 +245,13 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 operator opname (const T& a, const DualExpression<T2,D>& b) \
--> DualExpression<decltype(a opname b.value()), decltype(rightderiv)> \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         T, \
+         DualExpression<T2,D> \
+       > \
+     >::value, \
+     DualExpression<decltype(a opname b.value()), decltype(rightderiv)> \
+   >::type \
 { \
   return DualExpression<decltype(a opname b.value()), \
                         decltype(rightderiv)> \
@@ -254,7 +262,13 @@ template <typename T, typename D, typename T2> \
 inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const T2& b) \
--> DualExpression<decltype(a.value() opname b), decltype(leftderiv)> \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         DualExpression<T,D>, \
+         T2 \
+       > \
+     >::value, \
+     DualExpression<decltype(a.value() opname b), decltype(leftderiv)> \
+   >::type \
 { \
   return DualExpression<decltype(a.value() opname b), \
                         decltype(leftderiv)> \
@@ -506,6 +520,8 @@ namespace std {
 
 using MetaPhysicL::DualExpression;
 using MetaPhysicL::CompareTypes;
+using MetaPhysicL::enable_if_c;
+using MetaPhysicL::has_supertype;
 
 DualExpression<double, double> testexpr;
 
@@ -578,8 +594,14 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const T& a, const DualExpression<T2,D>& b) \
--> DualExpression<decltype(std::funcname(a, b.value())), \
-                  decltype(rightderiv)> \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         T, \
+         DualExpression<T2,D> \
+       > \
+     >::value, \
+     DualExpression<decltype(std::funcname(a, b.value())), \
+                    decltype(rightderiv)> \
+   >::type \
 { \
   return DualExpression<decltype(std::funcname(a, b.value())), \
                         decltype(rightderiv)> \
@@ -590,8 +612,14 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const DualExpression<T,D>& a, const T2& b) \
--> DualExpression<decltype(std::funcname(a.value(), b)), \
-                  decltype(leftderiv)> \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         DualExpression<T,D>, \
+         T2 \
+       > \
+     >::value, \
+     DualExpression<decltype(std::funcname(a.value(), b)), \
+                    decltype(leftderiv)> \
+   >::type \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b)), \
                         decltype(leftderiv)> \
