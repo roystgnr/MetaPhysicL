@@ -51,6 +51,24 @@ namespace MetaPhysicL
     const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
   };
 
+  template <typename T>
+  class has_supertype
+  {
+    typedef char no;
+    typedef char yes[2];
+
+    struct Fallback { struct supertype { }; };
+    struct Derived : T, Fallback { };
+
+    template < class C >
+    static no& test ( typename C::supertype* );
+    template < typename C >
+    static yes& test ( C* );
+
+  public:
+    const static bool value = (sizeof(test<Derived>(0)) == sizeof(yes));
+  };
+
 } // end namespace MetaPhysicL
 
 #endif // METAPHYSICL_METAPROGRAMMING_H
