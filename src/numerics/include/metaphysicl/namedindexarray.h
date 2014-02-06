@@ -37,6 +37,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
+#include "metaphysicl/metaprogramming.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
@@ -166,6 +167,13 @@ inline \
 auto \
 operator opname (const NamedIndexArray<DataVector, SparseSizeVector>& a, \
                  const T2& b) \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         NamedIndexArray<DataVector, SparseSizeVector>, \
+         T2 \
+       > \
+     >::value, \
+     NamedIndexArray<decltype(a.raw_data() opname b), SparseSizeVector> \
+   >::type \
 { \
   return NamedIndexArray<decltype(a.raw_data() opname b), SparseSizeVector> \
     (a.raw_data() opname b, a.raw_sizes()); \
@@ -176,6 +184,13 @@ inline \
 auto \
 operator opname (const T& a, \
                  const NamedIndexArray<DataVector, SparseSizeVector>& b) \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         NamedIndexArray<DataVector, SparseSizeVector>, \
+         T \
+       > \
+     >::value, \
+     NamedIndexArray<decltype(a opname b.raw_data()), SparseSizeVector> \
+   >::type \
 { \
   return NamedIndexArray<decltype(a opname b.raw_data()), SparseSizeVector> \
     (a opname b.raw_data(), b.raw_sizes()); \
@@ -204,12 +219,59 @@ operator<< (std::ostream& output,
   return output;
 }
 
+// ScalarTraits, RawType, CompareTypes specializations
+
+template <typename DataVector, typename SparseSizeVector>
+struct ScalarTraits<NamedIndexArray<DataVector, SparseSizeVector> >
+{
+  static const bool value = ScalarTraits<DataVector>::value;
+};
+
+template <typename DataVector, typename SparseSizeVector>
+struct RawType<NamedIndexArray<DataVector, SparseSizeVector> >
+{
+  typedef typename RawType<DataVector>::value_type value_type;
+
+  static value_type value(const NamedIndexArray<DataVector, SparseSizeVector>& a)
+  { return raw_value(a.raw_data()); }
+};
+
+// NamedIndexArray CompareTypes values aren't accurate, but we can
+// still test for their existence to determine what types are
+// comparable
+template <typename DataVector, typename SparseSizeVector, typename T2, bool reverseorder>
+struct CompareTypes<NamedIndexArray<DataVector, SparseSizeVector>, T2, reverseorder,
+                    typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
+  typedef bool supertype;
+};
+
+template <typename DataVector, typename SparseSizeVector,
+          typename DataVector2, typename SparseSizeVector2, bool reverseorder>
+struct CompareTypes<NamedIndexArray<DataVector, SparseSizeVector>,
+                    NamedIndexArray<DataVector2, SparseSizeVector2>,
+                    reverseorder> {
+  typedef bool supertype;
+};
+
+template <typename DataVector, typename SparseSizeVector, bool reverseorder>
+struct CompareTypes<NamedIndexArray<DataVector, SparseSizeVector>,
+                    NamedIndexArray<DataVector, SparseSizeVector>,
+                    reverseorder> {
+  typedef bool supertype;
+};
+
+
+
+
 } // namespace MetaPhysicL
 
 
 namespace std {
 
 using MetaPhysicL::NamedIndexArray;
+using MetaPhysicL::CompareTypes;
+using MetaPhysicL::enable_if_c;
+using MetaPhysicL::has_supertype;
 
 #define NamedIndexArray_std_unary(funcname) \
 template <typename DataVector, typename SparseSizeVector> \
@@ -263,6 +325,13 @@ inline \
 auto \
 funcname (const NamedIndexArray<DataVector, SparseSizeVector>& a, \
           const T2& b) \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         NamedIndexArray<DataVector, SparseSizeVector>, \
+         T2 \
+       > \
+     >::value, \
+     NamedIndexArray<decltype(funcname(a.raw_data(), b)), SparseSizeVector> \
+   >::type \
 { \
   using std::funcname; \
   return NamedIndexArray<decltype(funcname(a.raw_data(), b)), SparseSizeVector> \
@@ -274,6 +343,13 @@ inline \
 auto \
 funcname (const T& a, \
           const NamedIndexArray<DataVector, SparseSizeVector>& b) \
+-> typename enable_if_c<has_supertype<CompareTypes< \
+         NamedIndexArray<DataVector, SparseSizeVector>, \
+         T \
+       > \
+     >::value, \
+     NamedIndexArray<decltype(funcname(a, b.raw_data())), SparseSizeVector> \
+   >::type \
 { \
   using std::funcname; \
   return NamedIndexArray<decltype(funcname(a, b.raw_data())), SparseSizeVector> \
