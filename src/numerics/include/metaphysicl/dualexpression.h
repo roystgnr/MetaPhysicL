@@ -489,19 +489,17 @@ struct CompareTypes<DualExpression<T, D>, T2, reverseorder,
                      >::supertype> supertype;
 };
 
+// DualExpression CompareTypes supertypes can't be made accurate, but
+// we can still test for their existence to determine what types are
+// comparable
 template<typename T, typename D, typename T2, typename D2>
 struct CompareTypes<DualExpression<T, D>, DualExpression<T2, D2> > {
-  typedef DualExpression<typename SymmetricCompareTypes<T, T2>::supertype,
-                     typename SymmetricCompareTypes<
-                       typename SymmetricCompareTypes<T, T2>::supertype,
-                       typename SymmetricCompareTypes<D, D2>::supertype
-                     >::supertype
-                    > supertype;
+  typedef bool supertype;
 };
 
 template<typename T, typename D>
 struct CompareTypes<DualExpression<T, D>, DualExpression<T, D> > {
-  typedef DualExpression<T, typename SymmetricCompareTypes<T, D>::supertype> supertype;
+  typedef bool supertype;
 };
 
 
