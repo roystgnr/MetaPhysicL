@@ -478,6 +478,9 @@ struct DividesType<DualExpression<T, D>, DualExpression<T, D>, true> {
 };
 
 
+// DualExpression CompareTypes supertypes can't be made accurate, but
+// we can still test for their existence to determine what types are
+// comparable
 
 template<typename T, typename T2, typename D, bool reverseorder>
 struct CompareTypes<DualExpression<T, D>, T2, reverseorder,
@@ -489,9 +492,6 @@ struct CompareTypes<DualExpression<T, D>, T2, reverseorder,
                      >::supertype> supertype;
 };
 
-// DualExpression CompareTypes supertypes can't be made accurate, but
-// we can still test for their existence to determine what types are
-// comparable
 template<typename T, typename D, typename T2, typename D2>
 struct CompareTypes<DualExpression<T, D>, DualExpression<T2, D2> > {
   typedef bool supertype;
