@@ -86,7 +86,7 @@ struct DerivativeOf<NamedIndexArray<DataVector, SparseSizeVector>, derivativeind
     typename DerivativeType<NamedIndexArray<DataVector, SparseSizeVector> >::type returnval;
     for (unsigned int i=0; i != a.size(); ++i)
       returnval.raw_data()[i] =
-        DerivativeOf<T,derivativeindex>::derivative(a.raw_data()[i]);
+        DerivativeOf<decltype(a.raw_data()[i]),derivativeindex>::derivative(a.raw_data()[i]);
   
     return returnval;
   }
@@ -114,11 +114,11 @@ divergence(const NamedIndexArray<DataVector, SparseSizeVector>& a)
 // For a vector of values, the gradient is going to be a vector of gradients
 template <typename DataVector, typename SparseSizeVector>
 inline
-NamedIndexArray<typename DerivativeType<DataVector>::type, typename SparseSizeVector>
+NamedIndexArray<typename DerivativeType<DataVector>::type, SparseSizeVector>
 gradient(const NamedIndexArray<DataVector, SparseSizeVector>& a)
 {
   NamedIndexArray<typename DerivativeType<DataVector>::type,
-                  typename SparseSizeVector>
+                  SparseSizeVector>
     returnval;
 
   for (unsigned int i=0; i != a.size(); ++i)
@@ -135,13 +135,16 @@ gradient(const NamedIndexArray<DataVector, SparseSizeVector>& a)
 #define DualNamedArray_comparisons(templatename) \
 template<typename T, typename D, \
          typename DataVector, typename SparseSizeVector, bool reverseorder> \
-struct templatename<NamedIndexArray<DataVector, SparseSizeVector>, DualExpression<T, D>, reverseorder> { \
+struct templatename< \
+  DualExpression<T, D>, \
+  NamedIndexArray<DataVector, SparseSizeVector>, \
+  reverseorder> { \
   typedef DualExpression< \
     NamedIndexArray< \
-      typename Symmetric##templatename<DataVector, T, reverseorder>::supertype \
+      typename Symmetric##templatename<DataVector, T, reverseorder>::supertype, \
       SparseSizeVector>, \
     NamedIndexArray< \
-      typename Symmetric##templatename<DataVector, D, reverseorder>::supertype \
+      typename Symmetric##templatename<DataVector, D, reverseorder>::supertype, \
       SparseSizeVector> \
   > supertype; \
 }
