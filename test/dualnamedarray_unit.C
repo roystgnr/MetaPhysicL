@@ -80,8 +80,13 @@ int main(void)
   test_one.value().raw_data()[2] = 7;
   test_two.value().raw_data()[1] = 2;
 
+  auto test_three_val_val = test_one_val * test_two_val;
+  auto test_three_deriv_val = test_one_deriv * test_two_val;
+
   // Compilation Failure here:
-//  auto test_three = test_one * test_two;
+  // auto test_three_a = test_one * test_two_val;
+
+  // auto test_three = test_one * test_two;
 
 /*
   if (test_three.value().raw_sizes().template get<1>() != 5)
