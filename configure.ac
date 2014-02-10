@@ -72,6 +72,14 @@ dnl---------------------------------------------------------
 dnl Optional check for MASA
 AX_PATH_MASA(0.20,no)
 
+dnl Optional check for VexCL
+AX_PATH_VEXCL(0.0.0, no)
+if (test x$HAVE_VEXCL = x1); then
+  antioch_optional_test_INCLUDES="$VEXCL_CPPFLAGS $antioch_optional_test_INCLUDES"
+  antioch_optional_test_LDFLAGS="$VEXCL_LDFLAGS $antioch_optional_test_LDFLAGS"
+  antioch_optional_test_LIBS="$VEXCL_LIBS $antioch_optional_test_LIBS"
+fi
+
 dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
