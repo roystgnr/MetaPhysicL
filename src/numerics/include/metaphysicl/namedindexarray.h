@@ -167,7 +167,7 @@ inline \
 auto \
 operator opname (const NamedIndexArray<DataVector, SparseSizeVector>& a, \
                  const T2& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          NamedIndexArray<DataVector, SparseSizeVector>, \
          T2 \
        > \
@@ -184,7 +184,7 @@ inline \
 auto \
 operator opname (const T& a, \
                  const NamedIndexArray<DataVector, SparseSizeVector>& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          NamedIndexArray<DataVector, SparseSizeVector>, \
          T \
        > \
@@ -271,7 +271,7 @@ namespace std {
 using MetaPhysicL::NamedIndexArray;
 using MetaPhysicL::CompareTypes;
 using MetaPhysicL::enable_if_c;
-using MetaPhysicL::has_supertype;
+using MetaPhysicL::DefinesSupertype;
 
 #define NamedIndexArray_std_unary(funcname) \
 template <typename DataVector, typename SparseSizeVector> \
@@ -325,7 +325,7 @@ inline \
 auto \
 funcname (const NamedIndexArray<DataVector, SparseSizeVector>& a, \
           const T2& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          NamedIndexArray<DataVector, SparseSizeVector>, \
          T2 \
        > \
@@ -343,7 +343,7 @@ inline \
 auto \
 funcname (const T& a, \
           const NamedIndexArray<DataVector, SparseSizeVector>& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          NamedIndexArray<DataVector, SparseSizeVector>, \
          T \
        > \

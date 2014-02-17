@@ -245,7 +245,7 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 operator opname (const T& a, const DualExpression<T2,D>& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          DualExpression<T2,D>, \
          T \
        > \
@@ -262,7 +262,7 @@ template <typename T, typename D, typename T2> \
 inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const T2& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          DualExpression<T,D>, \
          T2 \
        > \
@@ -519,7 +519,7 @@ namespace std {
 using MetaPhysicL::DualExpression;
 using MetaPhysicL::CompareTypes;
 using MetaPhysicL::enable_if_c;
-using MetaPhysicL::has_supertype;
+using MetaPhysicL::DefinesSupertype;
 
 DualExpression<double, double> testexpr;
 
@@ -592,7 +592,7 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const T& a, const DualExpression<T2,D>& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          DualExpression<T2,D>, \
          T \
        > \
@@ -610,7 +610,7 @@ template <typename T, typename T2, typename D> \
 inline \
 auto \
 funcname (const DualExpression<T,D>& a, const T2& b) \
--> typename enable_if_c<has_supertype<CompareTypes< \
+-> typename enable_if_c<DefinesSupertype<CompareTypes< \
          DualExpression<T,D>, \
          T2 \
        > \
