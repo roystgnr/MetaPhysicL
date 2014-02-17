@@ -246,8 +246,8 @@ inline \
 auto \
 operator opname (const T& a, const DualExpression<T2,D>& b) \
 -> typename enable_if_c<has_supertype<CompareTypes< \
-         T, \
-         DualExpression<T2,D> \
+         DualExpression<T2,D>, \
+         T \
        > \
      >::value, \
      DualExpression<decltype(a opname b.value()), decltype(rightderiv)> \
@@ -593,8 +593,8 @@ inline \
 auto \
 funcname (const T& a, const DualExpression<T2,D>& b) \
 -> typename enable_if_c<has_supertype<CompareTypes< \
-         T, \
-         DualExpression<T2,D> \
+         DualExpression<T2,D>, \
+         T \
        > \
      >::value, \
      DualExpression<decltype(std::funcname(a, b.value())), \
