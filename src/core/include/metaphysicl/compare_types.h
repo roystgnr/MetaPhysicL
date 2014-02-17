@@ -99,12 +99,12 @@ namespace boostcopy {
 
 
 // List of scalar and builtin classes, useful for disambiguation
-template <typename T>
+template <typename T, typename Enable=void>
 struct ScalarTraits {
       static const bool value = false;
 };
 
-template <typename T>
+template <typename T, typename Enable=void>
 struct BuiltinTraits {
       static const bool value = false;
 };
@@ -115,6 +115,7 @@ struct ScalarTraits<type> { static const bool value = true; }; \
 template<> \
 struct BuiltinTraits<type> { static const bool value = true; }
 
+ScalarBuiltin_true(bool);
 ScalarBuiltin_true(char);
 ScalarBuiltin_true(short);
 ScalarBuiltin_true(int);
