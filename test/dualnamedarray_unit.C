@@ -1,14 +1,36 @@
 
 // MetaPhysicL
-#include "metaphysicl/sparsenumbervector.h"
-#include "metaphysicl/dualnamedarray.h"
-
 #include "metaphysicl_config.h"
 
 // VexCL
 #ifdef METAPHYSICL_HAVE_VEXCL
 #include "vexcl/vexcl.hpp"
 #endif
+
+// MetaPhysicL
+#include "metaphysicl/compare_types.h"
+
+// vex::vector doesn't nest anything except native types in this code,
+// so we can treat it as a native type.
+
+#ifdef METAPHYSICL_HAVE_VEXCL
+namespace MetaPhysicL {
+
+    template <typename T>
+            struct BuiltinTraits
+              <T, typename
+              std::enable_if<vex::is_vector_expression<T>::value>::type>
+              {
+                    static const bool value = true;
+              };
+
+} // namespace MetaPhysicL
+#endif
+
+#include "metaphysicl/sparsenumbervector.h"
+#include "metaphysicl/dualnamedarray.h"
+
+#include "metaphysicl_config.h"
 
 // C++
 #include <iostream>
@@ -35,6 +57,12 @@ int main(void)
   test_val.derivatives().raw_sizes().get<3>() = 1;
 
 #ifdef METAPHYSICL_HAVE_VEXCL
+  // Passes, as it should
+  ctassert<BuiltinTraits<vex::vector<double> >::value>::apply();
+
+  // Fails, as it should
+  // ctassert<BuiltinTraits<DualExpression<double,double> >::value>::apply();
+
   vex::Context ctx (vex::Filter::Env && vex::Filter::Count(1));
   std::cout << ctx << std::endl;
       
@@ -83,12 +111,10 @@ int main(void)
   auto test_three_val_val = test_one_val * test_two_val;
   auto test_three_deriv_val = test_one_deriv * test_two_val;
 
-  // Compilation Failure here:
-  // auto test_three_a = test_one * test_two_val;
+  auto test_three_a = test_one * test_two_val;
 
-  // auto test_three = test_one * test_two;
+  auto test_three = test_one * test_two;
 
-/*
   if (test_three.value().raw_sizes().template get<1>() != 5)
     return 1;
 
@@ -99,7 +125,6 @@ int main(void)
 
   if (test_output[7] != 14)
     return 1;
-*/
 #endif
 
   return 0;
