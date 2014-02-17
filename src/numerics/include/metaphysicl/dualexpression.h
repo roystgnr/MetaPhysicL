@@ -485,11 +485,7 @@ struct DividesType<DualExpression<T, D>, DualExpression<T, D>, true> {
 template<typename T, typename T2, typename D, bool reverseorder>
 struct CompareTypes<DualExpression<T, D>, T2, reverseorder,
                     typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
-  typedef DualExpression<typename SymmetricCompareTypes<T, T2>::supertype,
-                     typename SymmetricCompareTypes<
-                       typename SymmetricCompareTypes<D, T2>::supertype,
-                       T
-                     >::supertype> supertype;
+  typedef bool supertype;
 };
 
 template<typename T, typename D, typename T2, typename D2>
