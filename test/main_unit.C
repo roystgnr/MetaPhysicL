@@ -3,6 +3,7 @@
 #include "metaphysicl/dualshadowvector.h"
 #include "metaphysicl/dualshadowsparsevector.h"
 #include "metaphysicl/dualshadowsparsestruct.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 
 using namespace MetaPhysicL;
 
@@ -14,9 +15,10 @@ struct print_functor {
 int main(void)
 {
   const RawType<const ShadowNumber<double, long double> >::value_type testin = 0;
-  double testout = 0;
+  double testout = testin;
 
-  testout = testin;
+  if (testout)
+    metaphysicl_error();
 
   DualNumber<double, double> dndd = 1.;
   2. * dndd;
@@ -46,6 +48,8 @@ int main(void)
   std::cout << "sizeof(SType2)  = " << sizeof(SType2)  << std::endl;
   std::cout << "sizeof(SType3)  = " << sizeof(SType3) << std::endl;
   std::cout << "sizeof(SType4)  = " << sizeof(SType4) << std::endl;
+  std::cout << "sizeof(DumbType2)     = " << sizeof(DumbType2) << std::endl;
+  std::cout << "sizeof(IS2D)    = " << sizeof(IS2D) << std::endl;
 
   SType4 s4;
 
@@ -122,6 +126,8 @@ int main(void)
   typedef DualNumber<XFirstDerivType, XVector::rebind<XFirstDerivType>::other> XSecondDerivType;
   typedef DualNumber<FullFirstDerivType, FullVector::rebind<FullFirstDerivType>::other> FullSecondDerivType;
   typedef DualNumberConstructor<FullFirstDerivType, FullVector::rebind<FullFirstDerivType>::other> FSDTConstructor;
+
+  std::cout << "sizeof(FSDTC)   = " << sizeof(FSDTConstructor) << std::endl;
 
   FullFirstDerivType  ffdt = XFirstDerivType(1.,xvec);
   FullSecondDerivType fsdt = 0;
