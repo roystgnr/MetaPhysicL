@@ -328,6 +328,18 @@ struct CompareTypes<S, std::complex<T> > {
 };
 */
 
+#define CompareTypes_stripped(rawT1, rawT2) \
+template<typename T1, typename T2, bool reverseorder> \
+struct CompareTypes<rawT1, rawT2, reverseorder, \
+	            typename boostcopy::enable_if_c<DefinesSupertype<CompareTypes<T1,T2,reverseorder> >::value>::type> \
+{ \
+  typedef typename CompareTypes<T1,T2,reverseorder>::supertype supertype; \
+};
+
+CompareTypes_stripped(const T1&, T2)
+CompareTypes_stripped(T1, const T2&)
+CompareTypes_stripped(const T1&, const T2&)
+
 
 // We can define CompareTypes template specializations with user types
 // asymmetrically, to assist in disambiguation of templated functions
@@ -364,6 +376,7 @@ Symmetric_definition(DividesType);
 #undef CompareTypes_super
 #undef CompareTypes_all
 #undef CompareTypes_single
+#undef CompareTypes_stripped
 #undef Symmetric_definition
 
 // But keep macros that are used elsewhere
