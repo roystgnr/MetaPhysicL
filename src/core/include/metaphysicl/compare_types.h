@@ -91,6 +91,25 @@ namespace boostcopy {
       typedef T type;
     };
 
+  template <class T>
+    struct remove_const {
+      typedef T type;
+    };
+
+  template <class T>
+    struct remove_const<const T> {
+      typedef T type;
+    };
+
+  template <class T>
+    struct remove_reference {
+      typedef T type;
+    };
+
+  template <class T>
+    struct remove_reference<T&> {
+      typedef T type;
+    };
 }
 
 // We can pass commas for template arguments through one level of
@@ -338,37 +357,48 @@ struct CompareTypes<rawT1, rawT2, reverseorder, \
 { \
   typedef typename CompareTypes<T1,T2,reverseorder>::supertype supertype; \
 };
+*/
+
+template <typename T1, typename T2, bool reverseorder, typename Enable=void>
+struct CompareTypesEnabler {};
+
+template <typename T1, typename T2, bool reverseorder>
+struct CompareTypesEnabler<T1,T2,reverseorder,
+  typename boostcopy::enable_if_c<
+    DefinesSupertype<CompareTypes<T1,T2,reverseorder> >::value
+  >::type>
+{
+  typedef void type;
+};
 
 #define CompareType_stripped(rawT1) \
 template<typename T1, bool reverseorder> \
 struct CompareTypes<rawT1, rawT1, reverseorder, \
-	            typename boostcopy::enable_if_c<DefinesSupertype<CompareTypes<T1,T1,reverseorder> >::value>::type> \
+typename CompareTypesEnabler< \
+typename boostcopy::remove_const<typename boostcopy::remove_reference<rawT1>::type>::type, \
+typename boostcopy::remove_const<typename boostcopy::remove_reference<rawT1>::type>::type, \
+reverseorder>::type> \
 { \
   typedef typename CompareTypes<T1,T1,reverseorder>::supertype supertype; \
 };
-*/
 
 #define CompareTypes_stripped(rawT1, rawT2) \
-template<typename T1, typename T2, bool reverseorder, typename Enable> \
-struct CompareTypes<rawT1, rawT2, reverseorder, Enable> \
+template<typename T1, typename T2, bool reverseorder> \
+struct CompareTypes<rawT1, rawT2, reverseorder, \
+typename CompareTypesEnabler< \
+typename boostcopy::remove_const<typename boostcopy::remove_reference<rawT1>::type>::type, \
+typename boostcopy::remove_const<typename boostcopy::remove_reference<rawT2>::type>::type, \
+reverseorder>::type> \
 { \
-  typedef typename CompareTypes<T1,T2,reverseorder,Enable>::supertype supertype; \
+  typedef typename CompareTypes<T1,T2,reverseorder>::supertype supertype; \
 };
 
-#define CompareType_stripped(rawT1) \
-template<typename T1, bool reverseorder, typename Enable> \
-struct CompareTypes<rawT1, rawT1, reverseorder, Enable> \
-{ \
-  typedef typename CompareTypes<T1,T1,reverseorder,Enable>::supertype supertype; \
-};
-
-
-CompareTypes_stripped(const T1&,       T2 )
-CompareTypes_stripped(      T1 , const T2&)
-CompareTypes_stripped(const T1&, const T2&)
 CompareTypes_stripped(const T1 ,       T2 )
 CompareTypes_stripped(      T1 , const T2 )
 CompareTypes_stripped(const T1 , const T2 )
+CompareTypes_stripped(const T1&,       T2 )
+CompareTypes_stripped(      T1 , const T2&)
+CompareTypes_stripped(const T1&, const T2&)
 CompareTypes_stripped(const T1 , const T2&)
 CompareTypes_stripped(const T1&, const T2 )
 
