@@ -1,6 +1,7 @@
 BUILT_SOURCES   = .license.stamp
 
 check_PROGRAMS  =
+check_PROGRAMS += compare_types_unit
 check_PROGRAMS += derivs_unit
 check_PROGRAMS += dualnamedarray_unit
 check_PROGRAMS += identities_unit
@@ -37,6 +38,7 @@ AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
 # Sources for these tests
+compare_types_unit_SOURCES = compare_types_unit.C
 derivs_unit_SOURCES = derivs_unit.C
 dualnamedarray_unit_SOURCES = dualnamedarray_unit.C
 identities_unit_SOURCES = identities_unit.C
@@ -86,6 +88,7 @@ vector_pde_unit_SOURCES += testing.h
 
 #Define tests to actually be run
 TESTS  =
+TESTS += compare_types_unit
 TESTS += derivs_unit
 TESTS += dualnamedarray_unit
 TESTS += identities_unit
