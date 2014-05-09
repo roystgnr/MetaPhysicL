@@ -223,28 +223,28 @@ CompareTypes_default_Type(Multiplies,typenames,typename1,typename2, enabletype);
 CompareTypes_default_Type(Divides,typenames,typename1,typename2, enabletype) \
 
 
-template<bool reverseorder>
-struct CompareTypes<void, void, reverseorder> {
+template<bool reverseorder, typename Enable>
+struct CompareTypes<void, void, reverseorder, Enable> {
   typedef void supertype;
 };
 
-template<typename T, bool reverseorder>
-struct CompareTypes<T, void, reverseorder> {
+template<typename T, bool reverseorder, typename Enable>
+struct CompareTypes<T, void, reverseorder, Enable> {
   typedef T supertype;
 };
 
-template<typename T, bool reverseorder>
-struct CompareTypes<T, T, reverseorder> {
+template<typename T, bool reverseorder, typename Enable>
+struct CompareTypes<T, T, reverseorder, Enable> {
   typedef T supertype;
 };
 
-template<typename T, bool reverseorder>
-struct CompareTypes<T, std::complex<T>, reverseorder> {
+template<typename T, bool reverseorder, typename Enable>
+struct CompareTypes<T, std::complex<T>, reverseorder, Enable> {
   typedef std::complex<T> supertype;
 };
 
-template<typename T, bool reverseorder>
-struct CompareTypes<std::complex<T>, T, reverseorder> {
+template<typename T, bool reverseorder, typename Enable>
+struct CompareTypes<std::complex<T>, T, reverseorder, Enable> {
   typedef std::complex<T> supertype;
 };
 
@@ -253,8 +253,8 @@ struct CompareTypes<std::complex<T>, T, reverseorder> {
 // with older compilers
 
 #define CompareTypes_super(a,b,super) \
-	template<bool reverseorder> \
-	struct CompareTypes<a, b, reverseorder> { \
+	template<bool reverseorder, typename Enable> \
+	struct CompareTypes<a, b, reverseorder, Enable> { \
 	  typedef super supertype; \
 	}; \
         CompareTypes_default_Types(,a,b,void)
@@ -328,6 +328,9 @@ struct CompareTypes<S, std::complex<T> > {
 };
 */
 
+/*
+// These are ambiguous:
+
 #define CompareTypes_stripped(rawT1, rawT2) \
 template<typename T1, typename T2, bool reverseorder> \
 struct CompareTypes<rawT1, rawT2, reverseorder, \
@@ -336,9 +339,41 @@ struct CompareTypes<rawT1, rawT2, reverseorder, \
   typedef typename CompareTypes<T1,T2,reverseorder>::supertype supertype; \
 };
 
-CompareTypes_stripped(const T1&, T2)
-CompareTypes_stripped(T1, const T2&)
+#define CompareType_stripped(rawT1) \
+template<typename T1, bool reverseorder> \
+struct CompareTypes<rawT1, rawT1, reverseorder, \
+	            typename boostcopy::enable_if_c<DefinesSupertype<CompareTypes<T1,T1,reverseorder> >::value>::type> \
+{ \
+  typedef typename CompareTypes<T1,T1,reverseorder>::supertype supertype; \
+};
+*/
+
+#define CompareTypes_stripped(rawT1, rawT2) \
+template<typename T1, typename T2, bool reverseorder, typename Enable> \
+struct CompareTypes<rawT1, rawT2, reverseorder, Enable> \
+{ \
+  typedef typename CompareTypes<T1,T2,reverseorder,Enable>::supertype supertype; \
+};
+
+#define CompareType_stripped(rawT1) \
+template<typename T1, bool reverseorder, typename Enable> \
+struct CompareTypes<rawT1, rawT1, reverseorder, Enable> \
+{ \
+  typedef typename CompareTypes<T1,T1,reverseorder,Enable>::supertype supertype; \
+};
+
+
+CompareTypes_stripped(const T1&,       T2 )
+CompareTypes_stripped(      T1 , const T2&)
 CompareTypes_stripped(const T1&, const T2&)
+CompareTypes_stripped(const T1 ,       T2 )
+CompareTypes_stripped(      T1 , const T2 )
+CompareTypes_stripped(const T1 , const T2 )
+CompareTypes_stripped(const T1 , const T2&)
+CompareTypes_stripped(const T1&, const T2 )
+
+CompareType_stripped(const T1 )
+CompareType_stripped(const T1&)
 
 
 // We can define CompareTypes template specializations with user types
