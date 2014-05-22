@@ -38,6 +38,7 @@
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
 #include "metaphysicl/metaprogramming.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
