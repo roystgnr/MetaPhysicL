@@ -169,7 +169,7 @@ inline
 DualExpression<T,D>
 make_dual_expression(const T& t, const D& d)
 {
-  return DualExpression<T,D>(t,d);
+  return DualExpression<const T&, const D&>(t,d);
 }
 
 
