@@ -1,5 +1,6 @@
 
 // MetaPhysicL
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/sparsenumbervector.h"
 #include "metaphysicl/namedindexarray.h"
 
@@ -26,8 +27,11 @@ int main(void)
     indexed_by_three;
 
   indexed_by_three test_val;
-  test_val.raw_data() = 1;
+  test_val.raw_data() = 2;
   test_val.raw_sizes().get<3>() = 1;
+
+  auto test_val_2 = test_val * test_val;
+  metaphysicl_assert_equal_to(test_val_2.raw_data(), 4);
 
 #ifdef METAPHYSICL_HAVE_VEXCL
   vex::Context ctx (vex::Filter::Env && vex::Filter::Count(1));
@@ -70,6 +74,7 @@ int main(void)
 
   if (test_output[7] != 14)
     return 1;
+
 #endif
 
   return 0;
