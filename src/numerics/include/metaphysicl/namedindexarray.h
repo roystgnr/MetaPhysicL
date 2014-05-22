@@ -42,6 +42,34 @@
 
 namespace MetaPhysicL {
 
+template <typename DataType, typename SizeType, typename PermType>
+const typename boostcopy::enable_if<
+  BuiltinTraits<DataType>, DataType&>::type
+reshape(DataType& data,
+        const SizeType& sizes,
+        const PermType& /* perm */)
+{
+#ifndef NDEBUG
+  for (unsigned int i = 0; i != sizes.size(); ++i)
+    metaphysicl_assert_equal_to(sizes[i], 1);
+#endif
+  return data;
+}
+
+template <typename DataType, typename SizeType, typename PermType>
+const typename boostcopy::enable_if<
+  BuiltinTraits<DataType>, const DataType&>::type
+reshape(const DataType& data,
+        const SizeType& sizes,
+        const PermType& /* perm */)
+{
+#ifndef NDEBUG
+  for (unsigned int i = 0; i != sizes.size(); ++i)
+    metaphysicl_assert_equal_to(sizes[i], 1);
+#endif
+  return data;
+}
+
 template <typename DataVector, typename SparseSizeVector>
 class NamedIndexArray
 {
@@ -93,6 +121,7 @@ public:
       <decltype(-_data_vector), SparseSizeVector>
         (-_data_vector, _size_vector);
   }
+
 
 #define NamedIndexArray_opequals(opname) \
   template <typename DataVector2, typename SparseSizeVector2> \
