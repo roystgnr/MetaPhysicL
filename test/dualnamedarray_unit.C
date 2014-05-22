@@ -59,6 +59,17 @@ int main(void)
   test_val.value().raw_sizes().get<3>() = 1;
   test_val.derivatives().raw_sizes().get<3>() = 1;
 
+  indexed_by_three val;
+  val.raw_data() = 0.5;
+  val.raw_sizes().get<3>() = 1;
+
+  auto test_eight = make_dual_expression(val,val)*val;
+
+  double test_eight_output =
+    test_eight.derivatives().raw_data();
+
+  metaphysicl_assert_equal_to(test_eight_output, 0.25);
+
 #ifdef METAPHYSICL_HAVE_VEXCL
   // Passes, as it should
   ctassert<BuiltinTraits<vex::vector<double> >::value>::apply();
@@ -195,6 +206,15 @@ int main(void)
   for (unsigned int i = 0; i != 5; ++i)
     if (i != 2)
       test_assert_equal_to (test_output_seven[i], 0);
+
+  /*
+  auto test_nine =
+    make_dual_expression(test_one_val, test_one_val) * test_one_val;
+
+  // Segmentation fault
+  vex::vector<double> test_output_nine =
+    test_nine.derivatives().raw_data();
+  */
 
 #endif
 
