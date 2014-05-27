@@ -207,14 +207,20 @@ int main(void)
     if (i != 2)
       test_assert_equal_to (test_output_seven[i], 0);
 
-  /*
-  auto test_nine =
-    make_dual_expression(test_one_val, test_one_val) * test_one_val;
+  vex_indexed_by_one test_nine_val(vex::vector<double>(ctx, 1, zeros), 0);
+  test_nine_val.raw_sizes().template get<1>() = 1;
 
-  // Segmentation fault
   vex::vector<double> test_output_nine =
-    test_nine.derivatives().raw_data();
-  */
+    (make_dual_expression(test_nine_val, test_nine_val) +
+     test_nine_val).derivatives().raw_data();
+
+  vex_indexed_by_one test_ten_val(vex::vector<double>(ctx, 1, zeros), 0);
+
+  auto test_ten =
+    make_dual_expression(test_ten_val, test_ten_val) + test_ten_val;
+
+  vex::vector<double> test_output_ten =
+    test_ten.derivatives().raw_data();
 
 #endif
 
