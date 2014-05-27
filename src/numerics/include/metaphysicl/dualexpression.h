@@ -166,7 +166,7 @@ struct DualExpressionConstructor<DualExpression<T,D>, DD>
 
 template <typename T, typename D>
 inline
-DualExpression<T,D>
+DualExpression<const T&, const D&>
 make_dual_expression(const T& t, const D& d)
 {
   return DualExpression<const T&, const D&>(t,d);
