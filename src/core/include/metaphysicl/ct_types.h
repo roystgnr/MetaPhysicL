@@ -63,7 +63,10 @@ struct TypesEqual<T,T> {
 };
 
 // NullType is used as the equivalent of "NULL" in some compile-time algorithms
-struct NullType {};
+struct NullType {
+  template <typename T>
+  struct rebind { typedef NullType other; };
+};
 
 // TrueType is used as the equivalent of boolean true in some compile-time algorithms
 struct TrueType

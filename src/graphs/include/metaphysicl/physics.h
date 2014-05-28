@@ -323,10 +323,10 @@ struct DependencyInsert
   > type;
 };
 
-template <typename new_dependency>
-struct DependencyInsert<NullContainer, new_dependency>
+template <typename NullHeadType, typename new_dependency>
+struct DependencyInsert<NullContainer<NullHeadType>, new_dependency>
 {
-  typedef Container<new_dependency, NullContainer> type;
+  typedef Container<new_dependency, NullContainer<NullHeadType> > type;
 };
 
 
@@ -346,8 +346,8 @@ struct DependencyUnion
 };
 
 
-template <typename prev_dependencies>
-struct DependencyUnion<prev_dependencies, NullContainer>
+template <typename prev_dependencies, typename NullHeadType>
+struct DependencyUnion<prev_dependencies, NullContainer<NullHeadType> >
 {
   typedef prev_dependencies type;
 };
@@ -367,7 +367,7 @@ struct EquationDependencies
 template <>
 struct EquationDependencies<NullType>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedIntType<0> > type;
 };
 
 
@@ -382,7 +382,7 @@ struct GetOutputSet
 template <>
 struct GetOutputSet<NullType>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedIntType<0> > type;
 };
 
 
@@ -422,13 +422,11 @@ struct Equations
   struct FirstForwardSolvable
   {
     typedef typename IfElse<
-      (TypesEqual<
-         typename first_equation::inputset::template Difference<set_solved>::type,
-         NullContainer
+      (is_null_container<
+         typename first_equation::inputset::template Difference<set_solved>::type
        >::value &&
-       TypesEqual<
-         typename first_equation::outputset::template Intersection<set_solved>::type,
-         NullContainer
+       is_null_container<
+         typename first_equation::outputset::template Intersection<set_solved>::type
        >::value),
       first_equation,
       typename Equations<tail_equations>::template FirstForwardSolvable<set_solved>::next_to_solve
@@ -439,9 +437,11 @@ struct Equations
 
     typedef typename IfElse<
       (TypesEqual<next_to_solve, NullType>::value),
-      NullContainer,
+      NullContainer<typename set_solved::head_type>,
       typename equation_list::template Difference<
-        Container<next_to_solve, NullContainer, typename equation_list::comparison>
+        Container<next_to_solve, 
+                  NullContainer<typename set_solved::head_type>,
+                  typename equation_list::comparison>
       >::type
     >::type
       remaining_equations;
@@ -504,7 +504,9 @@ struct Equations
             typename set_to_solve>
   struct SolveList
   {
-    typedef typename DependencyFinder<set_solved, NullContainer, varset>::type
+    typedef typename DependencyFinder<
+      set_solved, NullContainer<typename set_solved::head_type>, varset
+    >::type
       var_dependency_set_of_sets;
 
     typedef typename var_dependency_set_of_sets::template Union<set_to_solve>::type
@@ -533,25 +535,25 @@ struct Equations
       type;
   };
 
-  template <typename set_solved_with_types>
-  struct SolveState<set_solved_with_types,NullContainer>
+  template <typename set_solved_with_types, typename NullHeadType>
+  struct SolveState<set_solved_with_types,NullContainer<NullHeadType> >
   {
     typedef set_solved_with_types type;
   };
 };
 
-template <>
-struct Equations<NullContainer>
+template <typename NullHeadType>
+struct Equations<NullContainer<NullHeadType> >
 {
-  typedef NullContainer outputset;
-  typedef NullContainer inputset;
-  typedef NullContainer varset;
+  typedef NullContainer<NullHeadType> outputset;
+  typedef NullContainer<NullHeadType> inputset;
+  typedef NullContainer<NullHeadType> varset;
 
   template <typename set_solved>
   struct FirstForwardSolvable {
     typedef NullType next_to_solve;
     typedef set_solved current_solved;
-    typedef NullContainer remaining_equations;
+    typedef NullContainer<NullHeadType> remaining_equations;
   };
 
   template <typename prev_solved,
@@ -567,18 +569,18 @@ struct Equations<NullContainer>
             typename set_intermediate>
   struct StrictSolveList
   {
-    typedef NullContainer type;
+    typedef NullContainer<NullHeadType> type;
   };
 
   template <typename set_solved,
             typename set_to_solve>
   struct SolveList
   {
-    typedef NullContainer var_dependency_set_of_sets;
+    typedef NullContainer<NullHeadType> var_dependency_set_of_sets;
 
     typedef set_to_solve vars_involved;
 
-    typedef NullContainer type;
+    typedef NullContainer<NullHeadType> type;
   };
 };
 

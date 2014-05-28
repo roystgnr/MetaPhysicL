@@ -43,8 +43,20 @@
 namespace MetaPhysicL {
 
 // Forward Declarations
+template <typename HeadType>
 struct NullContainer;
 
+template <typename T>
+struct is_null_container
+{
+  const static bool value = false;
+};
+
+template <typename HeadType>
+struct is_null_container<NullContainer<HeadType> >
+{
+  const static bool value = true;
+};
 
 // IntType is used as the equivalent of int i in a set<int> or
 // vector<int>, or as the equivalent of pair<int,DataType> in a
@@ -186,7 +198,7 @@ struct TypeLessThan
 // heterogenously indexed contents, so long as all the typenames it is
 // given have ::value data members comparable by operator<
 template <typename HeadType,
-          typename TailContainer=NullContainer,
+          typename TailContainer=NullContainer<HeadType>,
           typename Comparison=ValueLessThan>
 struct Container
 {
@@ -508,7 +520,7 @@ struct Container
   {
     typedef
       typename IfElse<
-        (TypesEqual<ValueType,NullContainer>::value),
+        (is_null_container<ValueType>::value),
         Sorted,
         typename IfElse<
           (Comparison::template LessThan<ValueType,typename Sorted::head_type>::value),
@@ -639,8 +651,10 @@ struct Container
 // real set.  It also represents an empty set.  It contains
 // specializations for many of the above "member classes" to make
 // their recursive magic work.
+template <typename HeadType>
 struct NullContainer
 {
+  typedef HeadType head_type;
 
   // If we need to return a reference to data from this set, then
   // that's a serious enough error that:
@@ -648,7 +662,9 @@ struct NullContainer
 
   template <typename DataType2>
   struct rebind {
-    typedef NullContainer other;
+    typedef 
+      NullContainer<typename HeadType::
+        template rebind<DataType2>::other> other;
   };
   
   static const std::size_t size = 0;
@@ -683,7 +699,7 @@ struct NullContainer
   {
     typedef
       typename IfElse<
-        (TypesEqual<ValueType,NullContainer>::value),
+        (is_null_container<ValueType>::value),
         NullContainer,
         Container<ValueType, NullContainer, NewComparison> 
       >::type type;
@@ -815,14 +831,14 @@ struct SetAsList
                >::type type;
 };
 
-template <>
-struct SetAsList<NullContainer, unsigned int>
+template <typename NullHeadType>
+struct SetAsList<NullContainer<NullHeadType>, unsigned int>
 {
   typedef UIntList<> type;
 };
 
-template <>
-struct SetAsList<NullContainer, long unsigned int>
+template <typename NullHeadType>
+struct SetAsList<NullContainer<NullHeadType>, long unsigned int>
 {
   typedef ULongList<> type;
 };
@@ -837,8 +853,8 @@ struct SetAsArray
   { return SetAsList<Set>::type::value(); }
 };
 
-template <>
-struct SetAsArray<NullContainer>
+template <typename NullHeadType>
+struct SetAsArray<NullContainer<NullHeadType> >
 {
   static constexpr
   std::array<bool, 0>
@@ -861,15 +877,15 @@ struct PermutationList
 };
 
 
-template <typename Set2>
-struct PermutationList<NullContainer, Set2, unsigned int>
+template <typename NullHeadType, typename Set2>
+struct PermutationList<NullContainer<NullHeadType>, Set2, unsigned int>
 {
   typedef UIntList<> type;
 };
 
 
-template <typename Set2>
-struct PermutationList<NullContainer, Set2, long unsigned int>
+template <typename NullHeadType, typename Set2>
+struct PermutationList<NullContainer<NullHeadType>, Set2, long unsigned int>
 {
   typedef ULongList<> type;
 };
@@ -897,10 +913,10 @@ struct SetOfSetsUnion
 };
 
 
-template <>
-struct SetOfSetsUnion<NullContainer>
+template <typename NullHeadType>
+struct SetOfSetsUnion<NullContainer<NullHeadType> >
 {
-  typedef NullContainer type;
+  typedef NullContainer<NullHeadType> type;
 };
 
 
@@ -913,17 +929,17 @@ struct SetOfSetsIntersection
 };
 
 
-template <typename T, typename Comparison>
-struct SetOfSetsIntersection<Container<T, NullContainer, Comparison> >
+template <typename T, typename NullHeadType, typename Comparison>
+struct SetOfSetsIntersection<Container<T, NullContainer<NullHeadType>, Comparison> >
 {
   typedef typename T::data_type type;
 };
 
 
-template <>
-struct SetOfSetsIntersection<NullContainer>
+template <typename NullHeadType>
+struct SetOfSetsIntersection<NullContainer<NullHeadType> >
 {
-  typedef NullContainer type;
+  typedef NullContainer<NullHeadType> type;
 };
 
 
@@ -945,8 +961,8 @@ struct ContainerSupertype
 };
 
 
-template <>
-struct ContainerSupertype<NullContainer>
+template <typename NullHeadType>
+struct ContainerSupertype<NullContainer<NullHeadType> >
 {
   typedef NullType type;
 };
@@ -956,22 +972,22 @@ struct ContainerSupertype<NullContainer>
 // manually construct short (16 element or less) set types.
 // I don't want to require C++11, so no variable-length template
 // argument lists here
-template <typename T0=NullContainer,
-          typename T1=NullContainer, 
-          typename T2=NullContainer, 
-          typename T3=NullContainer, 
-          typename T4=NullContainer, 
-          typename T5=NullContainer, 
-          typename T6=NullContainer, 
-          typename T7=NullContainer,
-          typename T8=NullContainer,
-          typename T9=NullContainer,
-          typename T10=NullContainer,
-          typename T11=NullContainer,
-          typename T12=NullContainer,
-          typename T13=NullContainer,
-          typename T14=NullContainer,
-          typename T15=NullContainer>
+template <typename T0=NullType,
+          typename T1=NullType,
+          typename T2=NullType,
+          typename T3=NullType,
+          typename T4=NullType,
+          typename T5=NullType,
+          typename T6=NullType,
+          typename T7=NullType,
+          typename T8=NullType,
+          typename T9=NullType,
+          typename T10=NullType,
+          typename T11=NullType,
+          typename T12=NullType,
+          typename T13=NullType,
+          typename T14=NullType,
+          typename T15=NullType >
 struct SetConstructor
 {
   typedef typename
@@ -983,7 +999,7 @@ struct SetConstructor
 template<>
 struct SetConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<NullType> type;
 };
 
 
@@ -1016,7 +1032,7 @@ struct ULongSetConstructor
 template<>
 struct ULongSetConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedLongType<0> > type;
 };
 
 
@@ -1050,7 +1066,7 @@ struct UIntSetConstructor
 template<>
 struct UIntSetConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedIntType<0> > type;
 };
 
 
@@ -1083,7 +1099,7 @@ struct UIntVectorConstructor
 template<>
 struct UIntVectorConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedIntType<0> > type;
 };
 
 
@@ -1133,27 +1149,26 @@ struct UIntStructConstructor
 template<>
 struct UIntStructConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<UnsignedIntType<0> > type;
 };
 
 
-template <typename T0=NullContainer,
-          typename T1=NullContainer, 
-          typename T2=NullContainer, 
-          typename T3=NullContainer, 
-          typename T4=NullContainer, 
-          typename T5=NullContainer, 
-          typename T6=NullContainer, 
-          typename T7=NullContainer,
-          typename T8=NullContainer,
-          typename T9=NullContainer,
-          typename T10=NullContainer,
-          typename T11=NullContainer,
-          typename T12=NullContainer,
-          typename T13=NullContainer,
-          typename T14=NullContainer,
-          typename T15=NullContainer>
-
+template <typename T0=NullType,
+          typename T1=NullType,
+          typename T2=NullType,
+          typename T3=NullType,
+          typename T4=NullType,
+          typename T5=NullType,
+          typename T6=NullType,
+          typename T7=NullType,
+          typename T8=NullType,
+          typename T9=NullType,
+          typename T10=NullType,
+          typename T11=NullType,
+          typename T12=NullType,
+          typename T13=NullType,
+          typename T14=NullType,
+          typename T15=NullType >
 struct VectorConstructor
 {
   typedef typename
@@ -1165,7 +1180,7 @@ struct VectorConstructor
 template<>
 struct VectorConstructor<>
 {
-  typedef NullContainer type;
+  typedef NullContainer<NullType> type;
 };
 
 
@@ -1236,11 +1251,11 @@ struct CompareTypes<MetaPhysicL::NullType,T,reverseorder,
 };
 
 
-template<typename T, bool reverseorder>
-struct CompareTypes<MetaPhysicL::NullContainer,T,reverseorder,
+template<typename NullHeadType, typename T, bool reverseorder>
+struct CompareTypes<MetaPhysicL::NullContainer<NullHeadType>,T,reverseorder,
                     typename boostcopy::enable_if<BuiltinTraits<T> >::type>
 {
-  typedef MetaPhysicL::NullContainer supertype;
+  typedef MetaPhysicL::NullContainer<NullHeadType> supertype;
 };
 
 
@@ -1273,16 +1288,20 @@ CompareTypes_default_Type(Divides,
                           typename T MacroComma, MetaPhysicL::NullType, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Plus,
-                          typename T MacroComma, MetaPhysicL::NullContainer, T,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Minus,
-                          typename T MacroComma, MetaPhysicL::NullContainer, T,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Multiplies,
-                          typename T MacroComma, MetaPhysicL::NullContainer, T,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Divides,
-                          typename T MacroComma, MetaPhysicL::NullContainer, T,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 
 } // namespace MetaPhysicL

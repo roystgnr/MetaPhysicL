@@ -57,9 +57,9 @@ struct templatename<MetaPhysicL::Container<HeadType,TailSet,Comparison>, ShadowN
       supertype; \
 }; \
  \
-template<typename T, typename S, bool reverseorder> \
-struct templatename<MetaPhysicL::NullContainer, ShadowNumber<T, S>, reverseorder> { \
-  typedef MetaPhysicL::NullContainer supertype; \
+template<typename NullHeadType, typename T, typename S, bool reverseorder> \
+struct templatename<MetaPhysicL::NullContainer<NullHeadType>, ShadowNumber<T, S>, reverseorder> { \
+  typedef MetaPhysicL::NullContainer<NullHeadType> supertype; \
 }
 
 namespace MetaPhysicL {

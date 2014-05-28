@@ -40,7 +40,7 @@ int main(void)
 
   typedef SetConstructor<UnsignedIntType<0>, UnsignedIntType<1> >::type IS2D;
 
-  std::cout << "sizeof(NullContainer) = " << sizeof(NullContainer) << std::endl;
+  std::cout << "sizeof(NullContainer) = " << sizeof(NullContainer<IntType<0> >) << std::endl;
   std::cout << "sizeof(IntType) = " << sizeof(IntType<0>) << std::endl;
   std::cout << "sizeof(IntDbl)  = " << sizeof(IntType<0,double>) << std::endl;
   std::cout << "sizeof(SType)   = " << sizeof(SType)  << std::endl;

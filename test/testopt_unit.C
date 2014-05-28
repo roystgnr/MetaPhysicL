@@ -51,7 +51,7 @@ int main(void)
     Container<UnsignedIntType<0u, NullType>,
       Container<UnsignedIntType<1u, NullType>,
         Container<UnsignedIntType<5u, NullType>,
-        NullContainer, ValueLessThan>,
+        NullContainer<UnsignedIntType<0> >, ValueLessThan>,
       ValueLessThan>,
     ValueLessThan> > max_test_1 = 0;
 
@@ -59,7 +59,7 @@ int main(void)
     Container<UnsignedIntType<1u, NullType>,
       Container<UnsignedIntType<2u, NullType>,
         Container<UnsignedIntType<6u, NullType>,
-        NullContainer, ValueLessThan>,
+        NullContainer<UnsignedIntType<0> >, ValueLessThan>,
       ValueLessThan>,
     ValueLessThan> > max_test_2 = 0;
 

@@ -149,8 +149,8 @@ struct SumType<SparseNumberStruct<IndexSet> >
 };
 
 
-template <>
-struct SumType<SparseNumberStruct<MetaPhysicL::NullContainer> >
+template <typename NullHeadType>
+struct SumType<SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType> > >
 {
   typedef MetaPhysicL::NullType supertype;
 };
@@ -179,25 +179,25 @@ struct DotType<SparseNumberStruct<Set1>, SparseNumberStruct<Set2> >
 };
 
 
-template <typename Set1>
+template <typename Set1, typename NullHeadType>
 struct DotType<SparseNumberStruct<Set1>,
-               SparseNumberStruct<MetaPhysicL::NullContainer> >
+               SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType> > >
 {
   typedef MetaPhysicL::NullType supertype;
 };
 
 
-template <typename Set2>
-struct DotType<SparseNumberStruct<MetaPhysicL::NullContainer>,
+template <typename NullHeadType, typename Set2>
+struct DotType<SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType> >,
                SparseNumberStruct<Set2> >
 {
   typedef MetaPhysicL::NullType supertype;
 };
 
 
-template <>
-struct DotType<SparseNumberStruct<MetaPhysicL::NullContainer>,
-               SparseNumberStruct<MetaPhysicL::NullContainer> >
+template <typename NullHeadType1, typename NullHeadType2>
+struct DotType<SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType1> >,
+               SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType2> > >
 {
   typedef MetaPhysicL::NullType supertype;
 };
@@ -222,11 +222,11 @@ struct OuterProductType<SparseNumberStruct<Set1>, SparseNumberStruct<Set2> >
 };
 
 
-template <typename Set2>
-struct OuterProductType<SparseNumberStruct<MetaPhysicL::NullContainer>,
+template <typename NullHeadType, typename Set2>
+struct OuterProductType<SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType> >,
                         SparseNumberStruct<Set2> >
 {
-  typedef SparseNumberStruct<MetaPhysicL::NullContainer> supertype;
+  typedef SparseNumberStruct<MetaPhysicL::NullContainer<NullHeadType> > supertype;
 };
 
 
@@ -237,7 +237,10 @@ struct SetDiagonalTensor
     MetaPhysicL::Container<
       typename Set1::head_type::template rebind<
         SparseNumberStruct<
-          MetaPhysicL::Container<typename Set1::head_type, MetaPhysicL::NullContainer>
+          MetaPhysicL::Container<
+            typename Set1::head_type,
+            MetaPhysicL::NullContainer<typename Set1::head_type>
+          >
         >
       >::other,
       typename SetDiagonalTensor<typename Set1::tail_set>::type
@@ -245,10 +248,10 @@ struct SetDiagonalTensor
 };
 
 
-template <>
-struct SetDiagonalTensor<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct SetDiagonalTensor<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
@@ -411,8 +414,13 @@ public:
     typename IndexSet::template Intersection<IndexSet2>::type::ForEach()
       (CopyFunctor<IndexSet2>(src.raw_data(), returnval.raw_data()));
     typename IndexSet::template Difference<IndexSet2>::type::ForEach()
-      (CopyFunctor<MetaPhysicL::NullContainer>
-        (MetaPhysicL::NullContainer(), returnval.raw_data()));
+      (CopyFunctor<MetaPhysicL::NullContainer<
+         typename IndexSet2::head_type
+       > >
+        (MetaPhysicL::NullContainer<
+           typename IndexSet2::head_type
+         >(),
+         returnval.raw_data()));
     return returnval;
   }
 
@@ -486,8 +494,11 @@ public:
       (OpEqualsFunctor<MultipliesSubfunctor, IndexSet2>
         (MultipliesSubfunctor(), a.raw_data(), _data));
     typename IndexSet::template Difference<IndexSet2>::type::ForEach()
-      (CopyFunctor<MetaPhysicL::NullContainer>
-        (MetaPhysicL::NullContainer(), _data));
+      (CopyFunctor<MetaPhysicL::NullContainer<
+         typename IndexSet2::head_type
+       > >
+        (MetaPhysicL::NullContainer<typename IndexSet2::head_type>(),
+         _data));
     return *this;
   }
 
@@ -583,7 +594,7 @@ struct SparseNumberStructUnitVector
 {
   typedef MetaPhysicL::Container<
     MetaPhysicL::UnsignedIntType<index, T>,
-    MetaPhysicL::NullContainer
+    MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<index, T> >
   > IndexSet;
 
   typedef SparseNumberStruct<IndexSet> type;
@@ -617,7 +628,7 @@ struct SparseNumberStructFullVector
 template <typename T>
 struct SparseNumberStructFullVector<0,T>
 {
-  typedef MetaPhysicL::NullContainer IndexSet;
+  typedef MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<0> > IndexSet;
 
   typedef SparseNumberStruct<IndexSet> type;
 
@@ -646,7 +657,7 @@ struct SparseNumberStructOf
 
   template <unsigned int i>
   struct UIntOrNullType<i, void> {
-    typedef MetaPhysicL::NullContainer type;
+    typedef MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<0> > type;
   };
 
   typedef SparseNumberStruct<
@@ -675,10 +686,10 @@ struct SetColumnValues
 };
 
 
-template <>
-struct SetColumnValues<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct SetColumnValues<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
@@ -700,10 +711,10 @@ struct SetColumn
 };
 
 
-template <typename ValueType>
-struct SetColumn<MetaPhysicL::NullContainer, ValueType>
+template <typename NullHeadType, typename ValueType>
+struct SetColumn<MetaPhysicL::NullContainer<NullHeadType>, ValueType>
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
@@ -730,17 +741,18 @@ struct SetTensorTranspose
 };
 
 
-template <typename TensorSet>
-struct SetTensorTranspose<TensorSet, MetaPhysicL::NullContainer>
+template <typename TensorSet, typename NullHeadType>
+struct SetTensorTranspose<TensorSet, MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
-template <>
-struct SetTensorTranspose<MetaPhysicL::NullContainer, MetaPhysicL::NullContainer>
+template <typename NullHeadType1, typename NullHeadType2>
+struct SetTensorTranspose<MetaPhysicL::NullContainer<NullHeadType1>,
+                          MetaPhysicL::NullContainer<NullHeadType2> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType1> type;
 };
 
 
@@ -1034,10 +1046,10 @@ struct RawSet
 };
 
 
-template <>
-struct RawSet<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct RawSet<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 

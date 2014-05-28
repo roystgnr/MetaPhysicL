@@ -63,17 +63,17 @@ struct DerivativesType<MetaPhysicL::Container<HeadType,TailSet,Comparison> >
 };
 
 
-template <>
-struct DerivativeType<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct DerivativeType<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
-template <>
-struct DerivativesType<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct DerivativesType<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
@@ -231,10 +231,10 @@ struct SetGradient
 };
 
 
-template <>
-struct SetGradient<MetaPhysicL::NullContainer>
+template <typename NullHeadType>
+struct SetGradient<MetaPhysicL::NullContainer<NullHeadType> >
 {
-  typedef MetaPhysicL::NullContainer type;
+  typedef MetaPhysicL::NullContainer<NullHeadType> type;
 };
 
 
@@ -285,9 +285,9 @@ struct templatename<MetaPhysicL::Container<HeadType,TailSet,Comparison>, DualNum
       supertype; \
 }; \
  \
-template<typename T, typename D, bool reverseorder> \
-struct templatename<MetaPhysicL::NullContainer, DualNumber<T, D>, reverseorder> { \
-  typedef MetaPhysicL::NullContainer supertype; \
+template<typename NullHeadType, typename T, typename D, bool reverseorder> \
+struct templatename<MetaPhysicL::NullContainer<NullHeadType>, DualNumber<T, D>, reverseorder> { \
+  typedef MetaPhysicL::NullContainer<NullHeadType> supertype; \
 }
 
 DualSparseNumberStruct_comparisons(CompareTypes);

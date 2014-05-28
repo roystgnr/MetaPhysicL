@@ -430,7 +430,7 @@ struct SparseNumberVectorOf
 
   template <unsigned int i>
   struct UIntOrNullType<i, void> {
-    typedef MetaPhysicL::NullContainer type;
+    typedef MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<0> > type;
   };
 
   typedef
@@ -470,7 +470,7 @@ struct SparseNumberVectorUnitVector
 {
   typedef MetaPhysicL::Container<
     MetaPhysicL::UnsignedIntType<index>,
-    MetaPhysicL::NullContainer
+    MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<0> >
   > IndexSet;
 
   typedef SparseNumberVector<T, IndexSet> type;
@@ -505,7 +505,7 @@ struct SparseNumberVectorFullVector
 template <typename T>
 struct SparseNumberVectorFullVector<0,T>
 {
-  typedef MetaPhysicL::NullContainer IndexSet;
+  typedef MetaPhysicL::NullContainer<MetaPhysicL::UnsignedIntType<0> > IndexSet;
 
   typedef SparseNumberVector<T,IndexSet> type;
 
