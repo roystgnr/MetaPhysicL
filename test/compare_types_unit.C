@@ -15,6 +15,8 @@ struct Instantiator {
   SubInstantiator<      T1 , T2> si1;
   SubInstantiator<const T1 , T2> si2;
   SubInstantiator<const T1&, T2> si4;
+
+  void foil_unused_variable_warning() {}
 };
 
 
@@ -24,5 +26,11 @@ int main (void)
   Instantiator<float, double> i2;
   Instantiator<double, double> i3;
   Instantiator<int, int> i4;
+
+  i1.foil_unused_variable_warning();
+  i2.foil_unused_variable_warning();
+  i3.foil_unused_variable_warning();
+  i4.foil_unused_variable_warning();
+
   return 0;
 }
