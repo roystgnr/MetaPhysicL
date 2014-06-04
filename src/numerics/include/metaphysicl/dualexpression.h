@@ -167,10 +167,19 @@ struct DualExpressionConstructor<DualExpression<T,D>, DD>
 template <typename T, typename D>
 inline
 DualExpression<const T&, const D&>
-make_dual_expression(const T& t, const D& d)
+make_dual_expression_reference(const T& t, const D& d)
 {
   return DualExpression<const T&, const D&>(t,d);
 }
+
+template <typename T, typename D>
+inline
+DualExpression<T, D>
+make_dual_expression_copy(const T& t, const D& d)
+{
+  return DualExpression<T, D>(t,d);
+}
+
 
 
 //
@@ -234,10 +243,10 @@ inline \
 auto \
 operator opname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
 -> DualExpression<decltype(a.value() opname b.value()), \
-                  decltype(fullderiv)> \
+                  typename boostcopy::remove_reference<decltype(fullderiv)>::type> \
 { \
   return DualExpression<decltype(a.value() opname b.value()), \
-                        decltype(fullderiv)> \
+                        typename boostcopy::remove_reference<decltype(fullderiv)>::type> \
     (a.value() opname b.value(), fullderiv); \
 } \
  \
@@ -250,11 +259,12 @@ operator opname (const T& a, const DualExpression<T2,D>& b) \
          T \
        > \
      >::value, \
-     DualExpression<decltype(a opname b.value()), decltype(rightderiv)> \
+     DualExpression<decltype(a opname b.value()), \
+                    typename boostcopy::remove_reference<decltype(rightderiv)>::type> \
    >::type \
 { \
   return DualExpression<decltype(a opname b.value()), \
-                        decltype(rightderiv)> \
+                        typename boostcopy::remove_reference<decltype(rightderiv)>::type> \
     (a opname b.value(), rightderiv); \
 } \
  \
@@ -267,11 +277,12 @@ operator opname (const DualExpression<T,D>& a, const T2& b) \
          T2 \
        > \
      >::value, \
-     DualExpression<decltype(a.value() opname b), decltype(leftderiv)> \
+     DualExpression<decltype(a.value() opname b), \
+                    typename boostcopy::remove_reference<decltype(leftderiv)>::type> \
    >::type \
 { \
   return DualExpression<decltype(a.value() opname b), \
-                        decltype(leftderiv)> \
+                        typename boostcopy::remove_reference<decltype(leftderiv)>::type> \
     (a.value() opname b, leftderiv); \
 }
 
@@ -565,10 +576,10 @@ inline \
 auto \
 funcname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
 -> DualExpression<decltype(std::funcname(a.value(), b.value())), \
-                  decltype(derivative)> \
+                  typename MetaPhysicL::boostcopy::remove_reference<decltype(derivative)>::type> \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b.value())), \
-                        decltype(derivative)> \
+                        typename MetaPhysicL::boostcopy::remove_reference<decltype(derivative)>::type> \
     (std::funcname(a.value(), b.value()), derivative); \
 } \
  \
@@ -577,10 +588,10 @@ inline \
 auto \
 funcname (const DualExpression<T,D>& a, const DualExpression<T,D>& b) \
 -> DualExpression<decltype(std::funcname(a.value(), b.value())), \
-                  decltype(derivative)> \
+                  typename MetaPhysicL::boostcopy::remove_reference<decltype(derivative)>::type> \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b.value())), \
-                        decltype(derivative)> \
+                        typename MetaPhysicL::boostcopy::remove_reference<decltype(derivative)>::type> \
     (std::funcname(a.value(), b.value()), derivative); \
 } \
  \
@@ -594,11 +605,11 @@ funcname (const T& a, const DualExpression<T2,D>& b) \
        > \
      >::value, \
      DualExpression<decltype(std::funcname(a, b.value())), \
-                    decltype(rightderiv)> \
+                    typename MetaPhysicL::boostcopy::remove_reference<decltype(rightderiv)>::type> \
    >::type \
 { \
   return DualExpression<decltype(std::funcname(a, b.value())), \
-                        decltype(rightderiv)> \
+                        typename MetaPhysicL::boostcopy::remove_reference<decltype(rightderiv)>::type> \
     (std::funcname(a, b.value()), rightderiv); \
 } \
  \
@@ -612,11 +623,11 @@ funcname (const DualExpression<T,D>& a, const T2& b) \
        > \
      >::value, \
      DualExpression<decltype(std::funcname(a.value(), b)), \
-                    decltype(leftderiv)> \
+                    typename MetaPhysicL::boostcopy::remove_reference<decltype(leftderiv)>::type> \
    >::type \
 { \
   return DualExpression<decltype(std::funcname(a.value(), b)), \
-                        decltype(leftderiv)> \
+                        typename MetaPhysicL::boostcopy::remove_reference<decltype(leftderiv)>::type> \
     (std::funcname(a.value(), b), leftderiv); \
 }
 

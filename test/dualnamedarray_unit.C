@@ -63,7 +63,7 @@ int main(void)
   val.raw_data() = 0.5;
   val.raw_sizes().get<3>() = 1;
 
-  auto test_eight = make_dual_expression(val,val)*val;
+  auto test_eight = make_dual_expression_copy(val,val)*val;
 
   double test_eight_output =
     test_eight.derivatives().raw_data();
@@ -211,13 +211,13 @@ int main(void)
   test_nine_val.raw_sizes().template get<1>() = 1;
 
   vex::vector<double> test_output_nine =
-    (make_dual_expression(test_nine_val, test_nine_val) +
+    (make_dual_expression_reference(test_nine_val, test_nine_val) +
      test_nine_val).derivatives().raw_data();
 
   vex_indexed_by_one test_ten_val(vex::vector<double>(ctx, 1, zeros), 0);
 
   auto test_ten =
-    make_dual_expression(test_ten_val, test_ten_val) + test_ten_val;
+    make_dual_expression_reference(test_ten_val, test_ten_val) + test_ten_val;
 
   vex::vector<double> test_output_ten =
     test_ten.derivatives().raw_data();
