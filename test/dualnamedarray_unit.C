@@ -10,19 +10,37 @@
 // MetaPhysicL
 #include "metaphysicl/compare_types.h"
 
-// vex::vector doesn't nest anything except native types in this code,
-// so we can treat it as a native type.
-
 #ifdef METAPHYSICL_HAVE_VEXCL
 namespace MetaPhysicL {
 
-    template <typename T>
-            struct BuiltinTraits
-              <T, typename
-              std::enable_if<vex::is_vector_expression<T>::value>::type>
-              {
-                    static const bool value = true;
-              };
+// vex::vector expressions don't nest anything except native types in
+// this code, so we can treat them as native types.
+
+  template <typename T>
+  struct BuiltinTraits
+    <T,typename std::enable_if<vex::is_vector_expression<T>::value>::type>
+  {
+    static const bool value = true;
+  };
+
+// vex::vector is the only expression in this code referring to
+// underlying storage
+
+  template <typename T>
+  struct copy_or_reference <vex::vector<T>&>
+  {
+    typedef vex::vector<T>& type;
+
+    static const bool copy = false;
+  };
+
+  template <typename T>
+  struct copy_or_reference <const vex::vector<T>&>
+  {
+    typedef const vex::vector<T>& type;
+
+    static const bool copy = false;
+  };
 
 } // namespace MetaPhysicL
 #endif
@@ -38,6 +56,7 @@ namespace MetaPhysicL {
 using namespace MetaPhysicL;
 
 #define test_assert_equal_to(expr1,expr2)  do { if (!(expr1 == expr2)) { std::cerr << "Assertion `" #expr1 " == " #expr2 "' failed.\n" #expr1 " = " << (expr1) << "\n" #expr2 " = " << (expr2) << std::endl; metaphysicl_error(); } } while(0)
+
 
 
 int main(void)
@@ -107,6 +126,8 @@ int main(void)
   for (unsigned int i = 0; i != 5; ++i)
     zeros[i] = 0;
 
+  vex::vector<double> raw_vex{ctx, 5, zeros};
+
   vex_indexed_by_one test_one_val(vex::vector<double>(ctx, 5, zeros),0);
   test_one_val.raw_sizes().template get<1>() = 5;
   test_one_val.raw_data()[2] = 7;
@@ -134,6 +155,22 @@ int main(void)
   for (unsigned int i = 0; i != 3; ++i)
     if (i != 1)
       test_assert_equal_to (test_two.value().raw_data()[i], 0);
+
+  auto test_make = make_dual_expression_reference(test_one_val,
+                                                  test_one_val);
+  auto test_multiply_raw = test_make * raw_vex;
+
+  auto test_lmultiply_raw = raw_vex * test_make;
+
+  auto test_make_deriv = (test_make.derivatives())/2.0;
+  vex::vector<double> test_make_deriv_output =
+    test_make_deriv.raw_data();
+
+  auto test_make_direct = (test_make-1.0)/2.0;
+
+  vex::vector<double> test_make_output =
+    test_make_direct.derivatives().raw_data();
+
 
   auto test_three_val_val = test_one_val * test_two_val;
   auto test_three_deriv_val = test_one_deriv * test_two_val;
