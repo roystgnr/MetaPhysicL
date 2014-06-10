@@ -112,6 +112,32 @@ namespace boostcopy {
     };
 }
 
+
+//
+// Should we store a value or a reference, in ``pass-through''
+// expression cases where we have the option?
+// 
+// Copying underlying storage unnecessarily is wasteful in the best
+// case, and leads to segfaults if we copy into a temporary that gets
+// just referenced in outer expressions.
+//
+// Creating references leads to segfaults if we create references to
+// expression template objects in temporaries.
+//
+// To determine what's got underlying storage and what's a expression
+// template, we'll try just enumerating ``underlying storage'' types
+// to reference, and default everything else to copy
+//
+
+template <typename T, typename Enable=void>
+struct copy_or_reference {
+  typedef typename boostcopy::remove_reference<T>::type type;
+
+  static const bool copy = true;
+};
+
+
+
 // We can pass commas for template arguments through one level of
 // macro expansion by "escaping" them this way:
 #define MacroComma ,

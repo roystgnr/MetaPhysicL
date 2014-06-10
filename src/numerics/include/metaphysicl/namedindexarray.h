@@ -292,6 +292,32 @@ struct CompareTypes<NamedIndexArray<DataVector, SparseSizeVector>,
 
 
 
+template <typename DataVector, typename SparseSizeVector>
+struct
+copy_or_reference<NamedIndexArray<DataVector, SparseSizeVector> &>
+{
+  typedef typename
+    IfElse<copy_or_reference<DataVector&>::copy,
+           NamedIndexArray<DataVector, SparseSizeVector>,
+           NamedIndexArray<DataVector, SparseSizeVector>&>::type type;
+
+  static const bool copy = copy_or_reference<DataVector&>::copy;
+};
+
+
+template <typename DataVector, typename SparseSizeVector>
+struct
+copy_or_reference<const NamedIndexArray<DataVector, SparseSizeVector> &>
+{
+  typedef typename
+    IfElse<copy_or_reference<DataVector&>::copy,
+           NamedIndexArray<DataVector, SparseSizeVector>,
+           const NamedIndexArray<DataVector, SparseSizeVector>&>::type type;
+
+  static const bool copy = copy_or_reference<DataVector&>::copy;
+};
+
+
 
 } // namespace MetaPhysicL
 
