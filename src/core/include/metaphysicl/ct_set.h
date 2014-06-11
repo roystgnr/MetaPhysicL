@@ -798,7 +798,7 @@ struct UIntList {
   static constexpr 
   std::array<unsigned int, sizeof...(Args)>
   value() 
-  { return {Args...}; }
+  { return {{Args...}}; }
 };
 
 template <long unsigned int... Args>
@@ -806,7 +806,7 @@ struct ULongList {
   static constexpr
   std::array<long unsigned int, sizeof...(Args)>
   value()
-  { return {Args...}; }
+  { return {{Args...}}; }
 };
 
 template <typename T, T i, class List>
