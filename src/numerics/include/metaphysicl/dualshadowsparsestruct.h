@@ -69,6 +69,8 @@ DualShadowSparseStruct_comparisons(PlusType);
 DualShadowSparseStruct_comparisons(MinusType);
 DualShadowSparseStruct_comparisons(MultipliesType);
 DualShadowSparseStruct_comparisons(DividesType);
+DualShadowSparseStruct_comparisons(AndType);
+DualShadowSparseStruct_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

@@ -315,6 +315,8 @@ NumberArray_operator_binary(>)
 NumberArray_operator_binary(>=)
 NumberArray_operator_binary(==)
 NumberArray_operator_binary(!=)
+NumberArray_operator_binary(&&)
+NumberArray_operator_binary(||)
 
 template <std::size_t N, typename T>
 inline
@@ -369,6 +371,8 @@ NumberArray_comparisons(PlusType);
 NumberArray_comparisons(MinusType);
 NumberArray_comparisons(MultipliesType);
 NumberArray_comparisons(DividesType);
+NumberArray_comparisons(AndType);
+NumberArray_comparisons(OrType);
 
 template <std::size_t N, typename T>
 struct RawType<NumberArray<N, T> >

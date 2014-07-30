@@ -49,6 +49,8 @@ DualShadowSparseVector_comparisons(PlusType);
 DualShadowSparseVector_comparisons(MinusType);
 DualShadowSparseVector_comparisons(MultipliesType);
 DualShadowSparseVector_comparisons(DividesType);
+DualShadowSparseVector_comparisons(AndType);
+DualShadowSparseVector_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

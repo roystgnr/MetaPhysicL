@@ -362,6 +362,8 @@ GPUVector_operator_binary(>)
 GPUVector_operator_binary(>=)
 GPUVector_operator_binary(==)
 GPUVector_operator_binary(!=)
+GPUVector_operator_binary(&&)
+GPUVector_operator_binary(||)
 
 template <typename T>
 inline
@@ -403,6 +405,8 @@ GPUVector_comparisons(PlusType);
 GPUVector_comparisons(MinusType);
 GPUVector_comparisons(MultipliesType);
 GPUVector_comparisons(DividesType);
+GPUVector_comparisons(AndType);
+GPUVector_comparisons(OrType);
 
 template <typename T>
 struct RawType<GPUVector<T> >

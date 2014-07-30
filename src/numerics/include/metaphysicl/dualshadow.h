@@ -48,6 +48,8 @@ DualShadow_comparisons(PlusType);
 DualShadow_comparisons(MinusType);
 DualShadow_comparisons(MultipliesType);
 DualShadow_comparisons(DividesType);
+DualShadow_comparisons(AndType);
+DualShadow_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

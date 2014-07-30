@@ -262,6 +262,7 @@ DualNumber_op(/, Divides, this->derivatives() /= in,
 )
 
 
+
 #define DualNumber_compare(opname) \
 template <typename T, typename D, typename T2, typename D2> \
 inline \
@@ -299,6 +300,8 @@ DualNumber_compare(<)
 DualNumber_compare(<=)
 DualNumber_compare(==)
 DualNumber_compare(!=)
+DualNumber_compare(&&)
+DualNumber_compare(||)
 
 template <typename T, typename D>
 inline
@@ -441,6 +444,43 @@ template<typename T, typename D>
 struct DividesType<DualNumber<T, D>, DualNumber<T, D>, true> {
   typedef typename DividesType<DualNumber<T, D>, DualNumber<T, D>, false>::supertype supertype;
 };
+
+template<typename T, typename T2, typename D, bool reverseorder>
+struct AndType<DualNumber<T, D>, T2, reverseorder,
+               typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
+  typedef DualNumber<typename SymmetricAndType<T, T2, reverseorder>::supertype, bool> supertype;
+};
+
+template<typename T, typename D, typename T2, typename D2, bool reverseorder>
+struct AndType<DualNumber<T, D>, DualNumber<T2, D2>, reverseorder> {
+  typedef DualNumber<typename SymmetricAndType<T, T2, reverseorder>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename D>
+struct AndType<DualNumber<T, D>, DualNumber<T, D> > {
+  typedef DualNumber<typename SymmetricAndType<T,T>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename T2, typename D, bool reverseorder>
+struct OrType<DualNumber<T, D>, T2, reverseorder,
+              typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
+  typedef DualNumber<typename SymmetricOrType<T, T2, reverseorder>::supertype, bool> supertype;
+};
+
+template<typename T, typename D, typename T2, typename D2, bool reverseorder>
+struct OrType<DualNumber<T, D>, DualNumber<T2, D2>, reverseorder> {
+  typedef DualNumber<typename SymmetricOrType<T, T2, reverseorder>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename D>
+struct OrType<DualNumber<T, D>, DualNumber<T, D> > {
+  typedef DualNumber<typename SymmetricOrType<T,T>::supertype,
+                     bool> supertype;
+};
+
 
 
 

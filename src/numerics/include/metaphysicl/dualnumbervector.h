@@ -137,6 +137,8 @@ DualNumberVector_comparisons(PlusType);
 DualNumberVector_comparisons(MinusType);
 DualNumberVector_comparisons(MultipliesType);
 DualNumberVector_comparisons(DividesType);
+DualNumberVector_comparisons(AndType);
+DualNumberVector_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

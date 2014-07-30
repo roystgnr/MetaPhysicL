@@ -686,6 +686,10 @@ SparseNumberArray_operator_binary(>, greater)
 // SparseNumberArray_operator_binary(==)
 SparseNumberArray_operator_binary(!=, not_equal_to)
 
+// FIXME - make && an intersection rather than a union for efficiency
+SparseNumberArray_operator_binary(&&, logical_and)
+SparseNumberArray_operator_binary(||, logical_or)
+
 // Making this a local struct seems to fail??
 template <typename T, typename IndexSet>
 struct SparseNumberArrayOutputFunctor {
@@ -753,6 +757,8 @@ SparseNumberArray_comparisons(PlusType, Union);
 SparseNumberArray_comparisons(MinusType, Union);
 SparseNumberArray_comparisons(MultipliesType, Intersection);
 SparseNumberArray_comparisons(DividesType, First);
+SparseNumberArray_comparisons(AndType, Intersection);
+SparseNumberArray_comparisons(OrType, Union);
 
 
 template <typename T, typename IndexSet>

@@ -324,6 +324,7 @@ DualExpression_op(/, Divides, this->derivatives() /= in,
   a.derivatives()/b)
 
 
+
 #define DualExpression_compare(opname) \
 template <typename T, typename D, typename T2, typename D2> \
 inline \
@@ -358,6 +359,8 @@ DualExpression_compare(<)
 DualExpression_compare(<=)
 DualExpression_compare(==)
 DualExpression_compare(!=)
+DualExpression_compare(&&)
+DualExpression_compare(||)
 
 template <typename T, typename D>
 inline
@@ -500,6 +503,43 @@ template<typename T, typename D>
 struct DividesType<DualExpression<T, D>, DualExpression<T, D>, true> {
   typedef typename DividesType<DualExpression<T, D>, DualExpression<T, D>, false>::supertype supertype;
 };
+
+template<typename T, typename T2, typename D, bool reverseorder>
+struct AndType<DualExpression<T, D>, T2, reverseorder,
+               typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
+  typedef DualExpression<typename SymmetricAndType<T, T2, reverseorder>::supertype, bool> supertype;
+};
+
+template<typename T, typename D, typename T2, typename D2, bool reverseorder>
+struct AndType<DualExpression<T, D>, DualExpression<T2, D2>, reverseorder> {
+  typedef DualExpression<typename SymmetricAndType<T, T2, reverseorder>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename D>
+struct AndType<DualExpression<T, D>, DualExpression<T, D> > {
+  typedef DualExpression<typename SymmetricAndType<T,T>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename T2, typename D, bool reverseorder>
+struct OrType<DualExpression<T, D>, T2, reverseorder,
+              typename boostcopy::enable_if<BuiltinTraits<T2> >::type> {
+  typedef DualExpression<typename SymmetricOrType<T, T2, reverseorder>::supertype, bool> supertype;
+};
+
+template<typename T, typename D, typename T2, typename D2, bool reverseorder>
+struct OrType<DualExpression<T, D>, DualExpression<T2, D2>, reverseorder> {
+  typedef DualExpression<typename SymmetricOrType<T, T2, reverseorder>::supertype,
+                     bool> supertype;
+};
+
+template<typename T, typename D>
+struct OrType<DualExpression<T, D>, DualExpression<T, D> > {
+  typedef DualExpression<typename SymmetricOrType<T,T>::supertype,
+                     bool> supertype;
+};
+
 
 
 // DualExpression CompareTypes supertypes can't be made accurate, but

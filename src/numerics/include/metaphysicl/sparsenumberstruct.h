@@ -96,6 +96,18 @@ class SparseNumberStruct;
     operator()(const T1& x, const T2& y) const { return x / y; }
   };
 
+  struct AndSubfunctor {
+    template <typename T1, typename T2>
+    typename SymmetricAndType<T1,T2>::supertype
+    operator()(const T1& x, const T2& y) const { return x && y; }
+  };
+
+  struct OrSubfunctor {
+    template <typename T1, typename T2>
+    typename SymmetricOrType<T1,T2>::supertype
+    operator()(const T1& x, const T2& y) const { return x || y; }
+  };
+
 
   template <typename SubFunctor, typename SetIn1, typename SetIn2, typename SetOut>
   struct BinaryFunctor {
@@ -948,6 +960,10 @@ SparseNumberStruct_operator_binary(>, greater)
 // SparseNumberStruct_operator_binary(==)
 SparseNumberStruct_operator_binary(!=, not_equal_to)
 
+// FIXME - make && an intersection rather than a union for efficiency
+SparseNumberStruct_operator_binary(&&, logical_and)
+SparseNumberStruct_operator_binary(||, logical_or)
+
 // Making this a local struct seems to fail??
 template <typename IndexSet>
 struct SparseNumberStructOutputFunctor {
@@ -1030,6 +1046,8 @@ SparseNumberStruct_comparisons(PlusType, Union);
 SparseNumberStruct_comparisons(MinusType, Union);
 SparseNumberStruct_comparisons(MultipliesType, Intersection);
 SparseNumberStruct_comparisons(DividesType, First);
+SparseNumberStruct_comparisons(AndType, Intersection);
+SparseNumberStruct_comparisons(OrType, Union);
 
 
 

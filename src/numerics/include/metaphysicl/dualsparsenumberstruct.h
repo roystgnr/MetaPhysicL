@@ -295,6 +295,8 @@ DualSparseNumberStruct_comparisons(PlusType);
 DualSparseNumberStruct_comparisons(MinusType);
 DualSparseNumberStruct_comparisons(MultipliesType);
 DualSparseNumberStruct_comparisons(DividesType);
+DualSparseNumberStruct_comparisons(AndType);
+DualSparseNumberStruct_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

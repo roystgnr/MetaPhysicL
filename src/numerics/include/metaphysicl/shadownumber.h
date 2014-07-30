@@ -230,6 +230,8 @@ ShadowNumber_comparisons(PlusType);
 ShadowNumber_comparisons(MinusType);
 ShadowNumber_comparisons(MultipliesType);
 ShadowNumber_comparisons(DividesType);
+ShadowNumber_comparisons(AndType);
+ShadowNumber_comparisons(OrType);
 
 
 

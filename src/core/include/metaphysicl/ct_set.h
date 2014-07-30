@@ -1275,6 +1275,14 @@ CompareTypes_default_Type(Divides,
                           typename T MacroComma typename HeadType MacroComma typename TailSet MacroComma typename Comparison MacroComma,
                           MetaPhysicL::Container<HeadType MacroComma TailSet MacroComma Comparison>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(And,
+                          typename T MacroComma typename HeadType MacroComma typename TailSet MacroComma typename Comparison MacroComma,
+                          MetaPhysicL::Container<HeadType MacroComma TailSet MacroComma Comparison>, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(Or,
+                          typename T MacroComma typename HeadType MacroComma typename TailSet MacroComma typename Comparison MacroComma,
+                          MetaPhysicL::Container<HeadType MacroComma TailSet MacroComma Comparison>, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Plus,
                           typename T MacroComma, MetaPhysicL::NullType, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
@@ -1287,6 +1295,12 @@ CompareTypes_default_Type(Multiplies,
 CompareTypes_default_Type(Divides,
                           typename T MacroComma, MetaPhysicL::NullType, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(And,
+                          typename T MacroComma, MetaPhysicL::NullType, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(Or,
+                          typename T MacroComma, MetaPhysicL::NullType, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Plus,
                           typename NullHeadType MacroComma typename T MacroComma,
                           MetaPhysicL::NullContainer<NullHeadType>, T,
@@ -1300,6 +1314,14 @@ CompareTypes_default_Type(Multiplies,
                           MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);
 CompareTypes_default_Type(Divides,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(And,
+                          typename NullHeadType MacroComma typename T MacroComma,
+                          MetaPhysicL::NullContainer<NullHeadType>, T,
+                          typename boostcopy::enable_if<BuiltinTraits<T> >::type);
+CompareTypes_default_Type(Or,
                           typename NullHeadType MacroComma typename T MacroComma,
                           MetaPhysicL::NullContainer<NullHeadType>, T,
                           typename boostcopy::enable_if<BuiltinTraits<T> >::type);

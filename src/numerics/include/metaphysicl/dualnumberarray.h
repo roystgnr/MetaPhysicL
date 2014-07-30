@@ -135,6 +135,8 @@ DualNumberArray_comparisons(PlusType);
 DualNumberArray_comparisons(MinusType);
 DualNumberArray_comparisons(MultipliesType);
 DualNumberArray_comparisons(DividesType);
+DualNumberArray_comparisons(AndType);
+DualNumberArray_comparisons(OrType);
 
 } // namespace MetaPhysicL
 

@@ -222,6 +222,7 @@ public:
 // PlusType, MinusType, MultipliesType, and DividesType are usually just the
 // same as CompareTypes, but user types may want to specialize further for
 // efficiency.
+// FIXME: AndType and OrType should probably be boolean types where possible.
 template<typename S, typename T, bool reverseorder=false, typename Enable=void>
 struct PlusType {
 };
@@ -236,6 +237,14 @@ struct MultipliesType {
 
 template<typename S, typename T, bool reverseorder=false, typename Enable=void>
 struct DividesType {
+};
+
+template<typename S, typename T, bool reverseorder=false, typename Enable=void>
+struct AndType {
+};
+
+template<typename S, typename T, bool reverseorder=false, typename Enable=void>
+struct OrType {
 };
 
 // DotType, OuterProductType, and SumType are only defined for vector
@@ -265,7 +274,9 @@ struct functor##Type<typename1, typename2, reverseorder, enabletype> \
 CompareTypes_default_Type(Plus,typenames,typename1,typename2, enabletype); \
 CompareTypes_default_Type(Minus,typenames,typename1,typename2, enabletype); \
 CompareTypes_default_Type(Multiplies,typenames,typename1,typename2, enabletype); \
-CompareTypes_default_Type(Divides,typenames,typename1,typename2, enabletype) \
+CompareTypes_default_Type(Divides,typenames,typename1,typename2, enabletype); \
+CompareTypes_default_Type(And,typenames,typename1,typename2, enabletype); \
+CompareTypes_default_Type(Or,typenames,typename1,typename2, enabletype) \
 
 
 template<bool reverseorder, typename Enable>
@@ -459,6 +470,8 @@ Symmetric_definition(PlusType);
 Symmetric_definition(MinusType);
 Symmetric_definition(MultipliesType);
 Symmetric_definition(DividesType);
+Symmetric_definition(AndType);
+Symmetric_definition(OrType);
 
 // Undefine our local macros to avoid polluting the namespace
 

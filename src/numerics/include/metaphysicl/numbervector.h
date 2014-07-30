@@ -326,6 +326,8 @@ NumberVector_operator_binary(>)
 NumberVector_operator_binary(>=)
 NumberVector_operator_binary(==)
 NumberVector_operator_binary(!=)
+NumberVector_operator_binary(&&)
+NumberVector_operator_binary(||)
 
 template <std::size_t N, typename T>
 inline
@@ -381,6 +383,8 @@ NumberVector_comparisons(PlusType);
 NumberVector_comparisons(MinusType);
 NumberVector_comparisons(MultipliesType);
 NumberVector_comparisons(DividesType);
+NumberVector_comparisons(AndType);
+NumberVector_comparisons(OrType);
 
 template <std::size_t N, typename T>
 struct RawType<NumberVector<N, T> >

@@ -156,6 +156,8 @@ DualSparseNumberVector_comparisons(PlusType);
 DualSparseNumberVector_comparisons(MinusType);
 DualSparseNumberVector_comparisons(MultipliesType);
 DualSparseNumberVector_comparisons(DividesType);
+DualSparseNumberVector_comparisons(AndType);
+DualSparseNumberVector_comparisons(OrType);
 
 } // namespace MetaPhysicL
 
