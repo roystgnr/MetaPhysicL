@@ -313,6 +313,9 @@ public:
     return returnval;
   }
 
+  // Not defineable since !0 != 0
+  // SparseNumberArray<T,IndexSet> operator! () const;
+
   template <typename T2, typename IndexSet2>
   SparseNumberArray<T,IndexSet>&
     operator+= (const SparseNumberArray<T2,IndexSet2>& a) { 

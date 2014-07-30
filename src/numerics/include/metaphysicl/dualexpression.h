@@ -82,6 +82,14 @@ public:
       (-_val, -_deriv);
   }
 
+  auto
+  operator! () 
+  -> DualExpression<decltype(!this->_val), decltype(!this->_deriv)>
+  const {
+    return DualExpression<decltype(!_val),decltype(!_deriv)>
+      (!_val, !_deriv);
+  }
+
   template <typename T2, typename D2>
   DualExpression<T,D>& operator+= (const DualExpression<T2,D2>& a);
 

@@ -479,6 +479,9 @@ public:
     return returnval;
   }
 
+  // Not defineable since !0 != 0
+  // SparseNumberStruct<IndexSet> operator- () const;
+
   template <typename IndexSet2>
   SparseNumberStruct<IndexSet>&
     operator+= (const SparseNumberStruct<IndexSet2>& a) { 

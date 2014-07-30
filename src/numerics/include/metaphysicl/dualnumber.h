@@ -67,6 +67,8 @@ public:
 
   DualNumber<T,D> operator- () const { return DualNumber<T,D>(-_val, -_deriv); }
 
+  DualNumber<T,D> operator! () const { return DualNumber<T,D>(!_val, !_deriv); }
+
   template <typename T2, typename D2>
   DualNumber<T,D>& operator+= (const DualNumber<T2,D2>& a);
 

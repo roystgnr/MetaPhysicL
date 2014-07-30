@@ -70,6 +70,8 @@ public:
 
   ShadowNumber<T,S> operator- () const { return ShadowNumber<T,S> (-_val, -_shadow); }
 
+  ShadowNumber<T,S> operator! () const { return ShadowNumber<T,S> (!_val, !_shadow); }
+
   template <typename T2, typename S2>
   ShadowNumber<T,S>& operator+= (const ShadowNumber<T2,S2>& a)
     { _val += a.value(); _shadow += a.shadow(); return *this; }

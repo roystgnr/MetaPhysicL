@@ -118,10 +118,10 @@ public:
   std::size_t size() const
     { return _data.size(); }
 
-  GPUVector<T> operator- () const {
+  GPUVector<T> operator! () const {
     return GPUVector<T>
-      (thrust::make_transform_iterator(_data.begin(), thrust::negate<T>()),
-       thrust::make_transform_iterator(_data.end(), thrust::negate<T>()));
+      (thrust::make_transform_iterator(_data.begin(), thrust::logical_not<T>()),
+       thrust::make_transform_iterator(_data.end(), thrust::logical_not<T>()));
   }
 
   template <typename T2>

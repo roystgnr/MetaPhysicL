@@ -113,6 +113,12 @@ public:
     return returnval;
   }
 
+  NumberArray<N,T> operator! () const {
+    NumberArray<N,T> returnval;
+    for (std::size_t i=0; i != N; ++i) returnval[i] = !_data[i];
+    return returnval;
+  }
+
   template <typename T2>
   NumberArray<N,T>& operator+= (const NumberArray<N,T2>& a)
     { for (std::size_t i=0; i != N; ++i) _data[i] += a[i]; return *this; }

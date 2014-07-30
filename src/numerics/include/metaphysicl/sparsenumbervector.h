@@ -310,6 +310,9 @@ public:
     return returnval;
   }
 
+  // Not defineable since !0 != 0
+  // SparseNumberVector<IndexSet> operator- () const;
+
   template <typename T2, typename IndexSet2>
   SparseNumberVector<T,IndexSet>&
     operator+= (const SparseNumberVector<T2,IndexSet2>& a) { 

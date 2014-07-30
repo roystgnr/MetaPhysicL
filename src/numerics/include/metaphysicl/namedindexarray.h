@@ -115,6 +115,15 @@ public:
     { return _size_vector; }
 
   auto
+  operator! () const 
+  -> NamedIndexArray <decltype(!this->raw_data()), SparseSizeVector>
+  {
+    return NamedIndexArray
+      <decltype(!_data_vector), SparseSizeVector>
+        (!_data_vector, _size_vector);
+  }
+
+  auto
   operator- () const 
   -> NamedIndexArray <decltype(-this->raw_data()), SparseSizeVector>
   {
