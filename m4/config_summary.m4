@@ -38,6 +38,14 @@ if test "x$HAVE_MASA" = "x1"; then
 else
   echo '  'MASA........................ : no
 fi
+if test "x$HAVE_VEXCL" = "x1"; then
+  echo '  'VEXCL....................... : yes
+  echo '  'VEXCL_CPPFLAGS.............. : $VEXCL_CPPFLAGS
+  echo '  'VEXCL_LDFLAGS............... : $VEXCL_LDFLAGS
+  echo '  'VEXCL_LIBS.................. : $VEXCL_LIBS
+else
+  echo '  'VEXCL....................... : no
+fi
 echo
 echo '-------------------------------------------------------------------------------'
 
