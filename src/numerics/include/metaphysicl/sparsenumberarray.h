@@ -857,7 +857,7 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
 }
 
 
-#define SparseNumberArray_std_binary_minmax(funcname) \
+#define SparseNumberArray_std_binary_union(funcname) \
 template <typename T, typename T2, typename IndexSet, typename IndexSet2> \
 inline \
 SparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, \
@@ -966,15 +966,15 @@ SparseNumberArray_std_unary(tan)
 SparseNumberArray_std_unary(asin)
 // SparseNumberArray_std_unary(acos)
 SparseNumberArray_std_unary(atan)
-SparseNumberArray_std_binary(atan2)
+SparseNumberArray_std_binary_union(atan2)
 SparseNumberArray_std_unary(sinh)
 // SparseNumberArray_std_unary(cosh)
 SparseNumberArray_std_unary(tanh)
 SparseNumberArray_std_unary(sqrt)
 SparseNumberArray_std_unary(abs)
 SparseNumberArray_std_unary(fabs)
-SparseNumberArray_std_binary_minmax(max)
-SparseNumberArray_std_binary_minmax(min)
+SparseNumberArray_std_binary_union(max)
+SparseNumberArray_std_binary_union(min)
 SparseNumberArray_std_unary(ceil)
 SparseNumberArray_std_unary(floor)
 SparseNumberArray_std_binary(fmod)

@@ -840,7 +840,7 @@ funcname (const T& a, const SparseNumberVector<T2, IndexSet>& b) \
 }
 
 
-#define SparseNumberVector_std_binary_minmax(funcname) \
+#define SparseNumberVector_std_binary_union(funcname) \
 template <typename T, typename T2, typename IndexSet, typename IndexSet2> \
 inline \
 SparseNumberVector<typename SymmetricCompareTypes<T,T2>::supertype, \
@@ -949,15 +949,15 @@ SparseNumberVector_std_unary(tan)
 SparseNumberVector_std_unary(asin)
 // SparseNumberVector_std_unary(acos)
 SparseNumberVector_std_unary(atan)
-SparseNumberVector_std_binary(atan2)
+SparseNumberVector_std_binary_union(atan2)
 SparseNumberVector_std_unary(sinh)
 // SparseNumberVector_std_unary(cosh)
 SparseNumberVector_std_unary(tanh)
 SparseNumberVector_std_unary(sqrt)
 SparseNumberVector_std_unary(abs)
 SparseNumberVector_std_unary(fabs)
-SparseNumberVector_std_binary_minmax(max)
-SparseNumberVector_std_binary_minmax(min)
+SparseNumberVector_std_binary_union(max)
+SparseNumberVector_std_binary_union(min)
 SparseNumberVector_std_unary(ceil)
 SparseNumberVector_std_unary(floor)
 SparseNumberVector_std_binary(fmod)
