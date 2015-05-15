@@ -36,6 +36,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
@@ -375,7 +376,7 @@ public:
 
     SparseNumberArray<TS, IndexSetS> returnval;
 
-#warning FIXME
+    metaphysicl_not_implemented();
 //    IndexSetS::ForEach()
 //      (BinaryVectorFunctor<std::binary_function<TS,TS,TS>, IndexSet,
 //       IndexSet2,IndexSetS,T,T2,TS>
@@ -395,7 +396,7 @@ public:
     typedef typename IndexSet::template Intersection<IndexSet2>::type IndexSetS;
     SparseNumberArray<TS, IndexSetS> returnval;
 
-#warning FIXME
+    metaphysicl_not_implemented();
 //    IndexSetS::ForEach()
 //      (BinaryVectorFunctor<std::pointer_to_binary_function<T,T2,TS>,
 //       IndexSet, IndexSet2, IndexSetS, T, T2, TS>
@@ -688,7 +689,7 @@ SparseNumberArray_operator_binary(>, greater)
 // SparseNumberArray_operator_binary(==)
 SparseNumberArray_operator_binary(!=, not_equal_to)
 
-// FIXME - make && an intersection rather than a union for efficiency
+// TODO - make && an intersection rather than a union for efficiency
 SparseNumberArray_operator_binary(&&, logical_and)
 SparseNumberArray_operator_binary(||, logical_or)
 
