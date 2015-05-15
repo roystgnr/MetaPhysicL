@@ -960,7 +960,7 @@ SparseNumberVector_std_binary_union(max)
 SparseNumberVector_std_binary_union(min)
 SparseNumberVector_std_unary(ceil)
 SparseNumberVector_std_unary(floor)
-SparseNumberVector_std_binary(fmod)
+SparseNumberVector_std_binary(fmod) // dangerous unless y is dense
 
 
 template <typename T, typename IndexSet>

@@ -1295,7 +1295,7 @@ SparseNumberStruct_std_binary_union(max)
 SparseNumberStruct_std_binary_union(min)
 SparseNumberStruct_std_unary(ceil)
 SparseNumberStruct_std_unary(floor)
-SparseNumberStruct_std_binary(fmod)
+SparseNumberStruct_std_binary(fmod) // dangerous unless y is dense
 
 
 // Defining numeric_limits for heterogenous containers is pretty much

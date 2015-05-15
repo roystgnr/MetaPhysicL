@@ -977,7 +977,7 @@ SparseNumberArray_std_binary_union(max)
 SparseNumberArray_std_binary_union(min)
 SparseNumberArray_std_unary(ceil)
 SparseNumberArray_std_unary(floor)
-SparseNumberArray_std_binary(fmod)
+SparseNumberArray_std_binary(fmod) // dangerous unless y is dense
 
 
 template <typename T, typename IndexSet>
