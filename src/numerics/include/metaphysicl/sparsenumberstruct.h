@@ -466,6 +466,7 @@ public:
     { return IndexSet::size; }
 
   bool boolean_test() const {
+    // FIXME - we need a short-circuitable for_each_datum
     bool is_nonzero = false;
     for_each_datum (UnaryIteratedFunctor<AccumulateOr, bool>
       (AccumulateOr(), _data, is_nonzero));

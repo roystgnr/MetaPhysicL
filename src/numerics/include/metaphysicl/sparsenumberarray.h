@@ -300,11 +300,10 @@ public:
   }
 
   bool boolean_test() const {
-    bool is_nonzero = false;
     for (unsigned int i=0; i != index_size; ++i)
       if (_data[i])
-        is_nonzero = true;
-    return is_nonzero;
+        return true;
+    return false;
   }
 
   SparseNumberArray<T,IndexSet> operator- () const {
