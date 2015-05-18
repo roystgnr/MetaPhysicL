@@ -5,6 +5,7 @@
 #include "metaphysicl_config.h"
 
 #include "metaphysicl/dualsparsenumberstruct.h"
+#include "metaphysicl/dualsparsenumberarray.h"
 #include "metaphysicl/dualsparsenumbervector.h"
 
 // Change the instantiations below iff changing this
@@ -182,6 +183,16 @@ int main(void)
     <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
         2, DualNumber<long double>, 3, DualNumber<long double> >::type >();
   */
+
+  returnval = returnval || vectester<SparseNumberArrayOf
+    <N, 0, DualNumber<float>, 1, DualNumber<float>,
+        2, DualNumber<float>, 3, DualNumber<float> >::type >();
+  returnval = returnval || vectester<SparseNumberArrayOf
+    <N, 0, DualNumber<double>, 1, DualNumber<double>,
+        2, DualNumber<double>, 3, DualNumber<double> >::type >();
+  returnval = returnval || vectester<SparseNumberArrayOf
+    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
+        2, DualNumber<long double>, 3, DualNumber<long double> >::type >();
 
   returnval = returnval || vectester<SparseNumberVectorOf
     <N, 0, DualNumber<float>, 1, DualNumber<float>,
