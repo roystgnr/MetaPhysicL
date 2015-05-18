@@ -934,7 +934,7 @@ pow (const SparseNumberVector<T, IndexSet>& a, const T2& b)
 
   typename IndexSet::ForEach()
     (UnaryVectorFunctor<unary_functype,IndexSet,IndexSet,T,TS>
-      (std::bind2nd(MetaPhysicL::binary_ptr_fun
+      (binary_bind2nd(MetaPhysicL::binary_ptr_fun
          (static_cast<TS (*)(TP, TP)>(std::pow)),b),
        a.raw_data(), returnval.raw_data()));
 
