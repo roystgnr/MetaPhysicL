@@ -7,6 +7,7 @@
 #include "metaphysicl/numberarray.h"
 #include "metaphysicl/numbervector.h"
 #include "metaphysicl/sparsenumberarray.h"
+#include "metaphysicl/sparsenumbervector.h"
 
 static const unsigned int N = 10; // test pts.
 
@@ -49,7 +50,7 @@ int test_error_vec (const Vector& random_vec,
 }
 
 template <typename Vector>
-int vectester (void)
+int vectester (Vector zerovec)
 {
   using std::abs;
   using std::acos;
@@ -63,9 +64,9 @@ int vectester (void)
 
   typedef typename Vector::value_type Scalar;
 
-  Vector random_vec;
+  Vector random_vec = zerovec;
 
-  Vector error_vec = 0;
+  Vector error_vec = zerovec;
 
   std::srand(12345); // Fixed seed for reproduceability of failures
 
@@ -97,29 +98,39 @@ int vectester (void)
 int main(void)
 {
   int returnval = 0;
-  returnval = returnval || vectester<NumberArray<N, float> >();
-  returnval = returnval || vectester<NumberArray<N, double> >();
-  returnval = returnval || vectester<NumberArray<N, long double> >();
+  returnval = returnval || vectester(NumberArray<N, float>());
+  returnval = returnval || vectester(NumberArray<N, double>());
+  returnval = returnval || vectester(NumberArray<N, long double>());
 
-  returnval = returnval || vectester<NumberVector<N, float> >();
-  returnval = returnval || vectester<NumberVector<N, double> >();
-  returnval = returnval || vectester<NumberVector<N, long double> >();
+  returnval = returnval || vectester(NumberVector<N, float>());
+  returnval = returnval || vectester(NumberVector<N, double>());
+  returnval = returnval || vectester(NumberVector<N, long double>());
 
-  returnval = returnval || vectester<SparseNumberArrayOf<4,
-                                                         0, float,
-                                                         1, float,
-                                                         2, float,
-                                                         3, float>::type >();
-  returnval = returnval || vectester<SparseNumberArrayOf<4,
-                                                         0, double,
-                                                         1, double,
-                                                         2, double,
-                                                         3, double>::type >();
-  returnval = returnval || vectester<SparseNumberArrayOf<4,
-                                                         0, long double,
-                                                         1, long double,
-                                                         2, long double,
-                                                         3, long double>::type >();
+  returnval = returnval ||
+              vectester(SparseNumberArrayOf
+                          <4, 0, float, 1, float,
+                              2, float, 3, float>::type());
+  returnval = returnval ||
+              vectester(SparseNumberArrayOf
+                          <4, 0, double, 1, double,
+                              2, double, 3, double>::type());
+  returnval = returnval ||
+              vectester(SparseNumberArrayOf
+                          <4, 0, long double, 1, long double,
+                              2, long double, 3, long double>::type());
+
+  returnval = returnval ||
+              vectester(SparseNumberVectorOf
+                          <4, 0, float, 1, float,
+                              2, float, 3, float>::type());
+  returnval = returnval ||
+              vectester(SparseNumberVectorOf
+                          <4, 0, double, 1, double,
+                              2, double, 3, double>::type());
+  returnval = returnval ||
+              vectester(SparseNumberVectorOf
+                          <4, 0, long double, 1, long double,
+                              2, long double, 3, long double>::type());
 
   return returnval;
 }
