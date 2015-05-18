@@ -852,7 +852,7 @@ operator<< (std::ostream& output, const DynamicSparseNumberArray<T, I>& a)
   // set
   for (unsigned int i = 1; i < index_size; ++i)
     {
-      _out << ", (" << a.raw_index(i) << ',' << a.raw_data(i) << ')';
+      _out << ", (" << a.raw_index(i) << ',' << a.raw_data()[i] << ')';
     }
   output << '}';
   return output;
