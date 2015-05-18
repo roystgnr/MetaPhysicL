@@ -29,6 +29,8 @@
 #ifndef METAPHYSICL_METAPROGRAMMING_H
 #define METAPHYSICL_METAPROGRAMMING_H
 
+#include "metaphysicl/compare_types.h" // for BuiltinTraits
+
 namespace MetaPhysicL
 {
   // Helper metafunctions
@@ -50,6 +52,35 @@ namespace MetaPhysicL
   public:
     const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
   };
+
+  template <typename T, typename Enable=void>
+  struct call_traits {
+    typedef const T& param_type;
+    typedef const T& pow_param_type; // pow doesn't play by the rules
+  };
+
+  template <typename T>
+  struct call_traits<T*> {
+    typedef T* const param_type;
+  };
+
+  template <typename T>
+  struct call_traits<T&> {
+    typedef T& param_type;
+  };
+
+  template <typename T>
+  struct call_traits<const T&> {
+    typedef const T& param_type;
+  };
+
+  template <typename T>
+  struct call_traits
+    <T, typename boostcopy::enable_if<BuiltinTraits<T> >::type> {
+    typedef T const param_type;
+    typedef T pow_param_type; // C++11 could have autodetected this...
+  };
+
 
 } // end namespace MetaPhysicL
 
