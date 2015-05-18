@@ -36,6 +36,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
+#include "metaphysicl/metaprogramming.h" // for call_traits
 #include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/sparsenumberutils.h"
@@ -793,6 +794,8 @@ using MetaPhysicL::SparseNumberArray;
 using MetaPhysicL::SymmetricCompareTypes;
 using MetaPhysicL::UnaryVectorFunctor;
 using MetaPhysicL::BinaryVectorFunctor;
+using MetaPhysicL::call_traits;
+using MetaPhysicL::binary_bind2nd;
 
 #define SparseNumberArray_std_unary(funcname) \
 template <typename T, typename IndexSet> \
@@ -942,11 +945,16 @@ SparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, IndexSet>
 pow (const SparseNumberArray<T, IndexSet>& a, const T2& b)
 {
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
+  typedef typename call_traits<TS>::pow_param_type TP;
   SparseNumberArray<TS, IndexSet> returnval;
 
+  typedef std::pointer_to_binary_function<TP, TP, TS> binary_functype;
+  typedef MetaPhysicL::bound_second<binary_functype> unary_functype;
+
   typename IndexSet::ForEach()
-    (UnaryVectorFunctor<std::unary_function<T,TS>,IndexSet,IndexSet,T,TS>
-      (std::bind2nd(MetaPhysicL::binary_ptr_fun(std::pow<T,T2>),b),
+    (UnaryVectorFunctor<unary_functype,IndexSet,IndexSet,T,TS>
+      (binary_bind2nd(MetaPhysicL::binary_ptr_fun
+         (static_cast<TS (*)(TP, TP)>(std::pow)),b),
        a.raw_data(), returnval.raw_data()));
 
   return returnval;
