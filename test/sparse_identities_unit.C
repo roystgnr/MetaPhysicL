@@ -81,8 +81,8 @@ int vectester (void)
   one_test((random_vec + random_vec)/2 - random_vec);
 
   one_test(sqrt(random_vec) * sqrt(random_vec) - random_vec);
-//  one_test(random_vec*random_vec - pow(random_vec,2));
-//  one_test(sqrt(random_vec) - pow(random_vec,Scalar(.5)));
+  one_test(random_vec*random_vec - pow(random_vec,2));
+  one_test(sqrt(random_vec) - pow(random_vec,Scalar(.5)));
 
   one_test(random_vec - sin(asin(random_vec)));
   one_test(random_vec - tan(atan(random_vec)));
