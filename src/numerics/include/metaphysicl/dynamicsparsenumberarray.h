@@ -1016,7 +1016,6 @@ funcname (const T& a, const DynamicSparseNumberArray<T2, I>& b) \
 
 // Pow needs its own specialization, both to avoid being confused by
 // pow<T1,T2> and because pow(x,0) isn't 0.
-
 template <typename T, typename T2, typename I>
 inline
 DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, I>

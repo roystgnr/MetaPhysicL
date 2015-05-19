@@ -936,25 +936,38 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
 }
 
 
+// We can't use decltype without requiring C++11, we can't infer
+// function types without decltype, and we can't declare a
+// pointer_to_binary_function without a function type.  So let's make
+// our own intermediate function.  This should allow us to use
+// std::pow(foo,int) without conversions.
+template <typename TP, typename TP2>
+inline
+typename SymmetricCompareTypes<TP,TP2>::supertype
+sna_pow(TP tp, TP2 tp2)
+{
+  return std::pow(tp, tp2);
+}
+
 // Pow needs its own specialization, both to avoid being confused by
 // pow<T1,T2> and because pow(x,0) isn't 0.
-
 template <typename T, typename T2, typename IndexSet>
 inline
 SparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, IndexSet>
 pow (const SparseNumberArray<T, IndexSet>& a, const T2& b)
 {
-  typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
-  typedef typename call_traits<TS>::pow_param_type TP;
+  typedef typename call_traits<T>::pow_param_type TP;
+  typedef typename call_traits<T2>::pow_param_type TP2;
+  typedef typename SymmetricCompareTypes<TP,TP2>::supertype TS;
   SparseNumberArray<TS, IndexSet> returnval;
 
-  typedef std::pointer_to_binary_function<TP, TP, TS> binary_functype;
+  typedef std::pointer_to_binary_function<TP, TP2, TS> binary_functype;
   typedef MetaPhysicL::bound_second<binary_functype> unary_functype;
 
   typename IndexSet::ForEach()
     (UnaryVectorFunctor<unary_functype,IndexSet,IndexSet,T,TS>
       (binary_bind2nd(MetaPhysicL::binary_ptr_fun
-         (static_cast<TS (*)(TP, TP)>(std::pow)),b),
+         (static_cast<TS (*)(TP, TP2)>(sna_pow)),b),
        a.raw_data(), returnval.raw_data()));
 
   return returnval;
