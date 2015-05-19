@@ -36,6 +36,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
@@ -43,9 +44,12 @@
 namespace MetaPhysicL {
 
 // Forward declarations
+
 // Data type T, index type I
 template <typename T, typename I>
 class DynamicSparseNumberArray;
+
+// Helper structs
 
 template<typename I1, typename I2, typename S, typename T, bool reverseorder>
 struct DotType<DynamicSparseNumberArray<S,I1>,
@@ -60,7 +64,7 @@ struct DotType<DynamicSparseNumberArray<S,I1>,
 template<typename I1, typename I2, typename S, typename T, bool reverseorder>
 struct OuterProductType<DynamicSparseNumberArray<S, I1>,
                         DynamicSparseNumberArray<T, I2>, reverseorder> {
-  typedef 
+  typedef
     DynamicSparseNumberArray
       <typename OuterProductType<S,T,reverseorder>::supertype,
        typename CompareTypes<I1, I2>::supertype>
@@ -96,7 +100,7 @@ public:
     { metaphysicl_assert_equal_to(_data.size(), _indices.size());
       return _data.size(); }
 
-  void resize(std::size_t s) const
+  void resize(std::size_t s)
     { metaphysicl_assert_equal_to(_data.size(), _indices.size());
       _data.resize(s);
       _indices.resize(s); }
@@ -127,121 +131,6 @@ public:
       std::copy(src._data.begin(), src._data.end(), _data.begin());
       std::copy(src._indices.begin(), src._indices.end(), _indices.begin()); }
 
-  template <bool, typename ValueType, typename IndexSet2>
-  struct SubCopyFunctor {
-    template<typename Tin, typename Tout>
-    inline static void apply(const Tin *in, Tout* out) {
-      const unsigned int
-        indexin  = IndexSet2::template IndexOf<ValueType>::index,
-        indexout = IndexSet::template IndexOf<ValueType>::index;
-      out[indexout] = in[indexin];
-    }
-  };
-
-  template <typename ValueType, typename IndexSet2>
-  struct SubCopyFunctor<false, ValueType, IndexSet2> {
-    template<typename Tin, typename Tout>
-    inline static void apply(const Tin *, Tout* out) {
-      const unsigned int
-        indexout = IndexSet::template IndexOf<ValueType>::index;
-      out[indexout] = 0;
-    }
-  };
-
-  template <typename IndexSet2, typename Tin>
-  struct CopyFunctor {
-    CopyFunctor(const Tin* in, T* out) : _datain(in), _dataout(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      SubCopyFunctor<IndexSet2::template Contains<ValueType>::value,
-               ValueType, IndexSet2>::apply(_datain, _dataout);
-    }
-
-  private:
-    const Tin* _datain;
-    T* _dataout;
-  };
-
-  template <typename SubFunctor, typename IndexSet2, typename Tin>
-  struct OpEqualsFunctor {
-    OpEqualsFunctor(SubFunctor f, const Tin* in, T* out) :
-      _subfunctor(f), _datain(in), _dataout(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      const unsigned int
-        indexin  = IndexSet2::template IndexOf<ValueType>::index,
-        indexout = IndexSet::template IndexOf<ValueType>::index;
-      _dataout[indexout] = _subfunctor(_dataout[indexout], _datain[indexin]);
-    }
-
-  private:
-    SubFunctor _subfunctor;
-    const Tin* _datain;
-    T* _dataout;
-  };
-
-  template <typename SubFunctor, typename Tout>
-  struct UnaryIteratedFunctor {
-    UnaryIteratedFunctor(SubFunctor f, const T* in, Tout& out) :
-      _subfunctor(f), _in(in), _out(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      const unsigned int
-        indexin = IndexSet::template IndexOf<ValueType>::index;
-      _subfunctor(_out, _in[indexin]);
-    }
-
-  private:
-    SubFunctor _subfunctor;
-    const T* _in;
-    Tout& _out;
-  };
-
-
-  template <typename SubFunctor, typename IndexSet2, typename T2, typename Tout>
-  struct BinaryIteratedFunctor {
-    BinaryIteratedFunctor(SubFunctor f, const T* in1, const T2* in2, Tout& out) :
-      _subfunctor(f), _datain1(in1), _datain2(in2), _out(out) {}
-
-    template <typename ValueType>
-    inline void operator()() const {
-      const unsigned int
-        indexin1 = IndexSet::template IndexOf<ValueType>::index,
-        indexin2 = IndexSet2::template IndexOf<ValueType>::index;
-      _subfunctor(_datain1[indexin1], _datain2[indexin2], _out);
-    }
-
-  private:
-    SubFunctor _subfunctor;
-    const T* _datain1;
-    const T2* _datain2;
-    Tout& _out;
-  };
-
-  template <typename T1, typename T2>
-  struct AccumulateDot {
-    inline void operator()(const T1& in1, const T2& in2,
-                           typename SymmetricMultipliesType<T1,T2>::supertype& out) const
-      { out += in1 * in2; }
-  };
-
-  struct SetZeroFunctor {
-    SetZeroFunctor(T* out) : _dataout(out) {}
-
-    template <typename ValueType>
-    inline void operator()() {
-      const unsigned int
-        indexout = IndexSet::template IndexOf<ValueType>::index;
-      _dataout[indexout] = 0;
-    }
-
-  private:
-    T* _dataout;
-  };
-
   T* raw_data()
     { return size()?&_data[0]:NULL; }
 
@@ -260,12 +149,26 @@ public:
   const I& raw_index(unsigned int i) const
     { return _indices[i]; }
 
+  // FIXME: these encapsulation violations are necessary for std::pow
+  // until I can figure out the right friend declaration.
+  const std::vector<T>& nude_data() const
+    { return _data; }
+
+  std::vector<T>& nude_data()
+    { return _data; }
+
+  const std::vector<I>& nude_indices() const
+    { return _indices; }
+
+  std::vector<I>& nude_indices()
+    { return _indices; }
+
   std::size_t runtime_index_of(index_value_type i) const
     {
-      std::vector<T>::const_iterator it =
-        std::lower_bound(_indices.begin(), _indices.end(), i)
+      typename std::vector<I>::const_iterator it =
+        std::lower_bound(_indices.begin(), _indices.end(), i);
       metaphysicl_assert(it != _indices.end());
-      std::size_t offset = it - indices.begin();
+      std::size_t offset = it - _indices.begin();
       metaphysicl_assert_equal_to(_indices[offset], i);
       return offset;
     }
@@ -311,10 +214,10 @@ public:
   // increase it as needed to support e.g. operator+=
   template <typename I2>
   void sparsity_union (std::vector<I2> new_indices) {
-    std::vector<I>::iterator index_it = _indices.begin();
-    std::vector<I2>::const_iterator index2_it = new_indices.begin();
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<I2>::const_iterator index2_it = new_indices.begin();
 
-    typedef CompareTypes<I,I2>::supertype max_index_type;
+    typedef typename CompareTypes<I,I2>::supertype max_index_type;
     max_index_type unseen_indices = 0;
 
     I maxI = std::numeric_limits<I>::max();
@@ -322,7 +225,7 @@ public:
     while (index2_it != new_indices.end()) {
       I idx1 = (index_it == _indices.end()) ? maxI : *index_it;
       I2 idx2 = *index2_it;
-      
+
       while (idx1 < idx2) {
         ++index_it;
         idx1 = (index_it == _indices.end()) ? maxI : *index_it;
@@ -352,12 +255,12 @@ public:
     std::vector<T> merged_data(_data.size() + unseen_indices);
     std::vector<I> merged_indices(_indices.size() + unseen_indices);
 
-    std::vector<T>::iterator md_it = merged_data.begin();
-    std::vector<I>::iterator mi_it = merged_indices.begin();
- 
-    std::vector<T>::iterator d_it = _data.begin();
-    std::vector<I>::iterator i_it = _indices.begin();
-    std::vector<I2>::const_iterator i2_it = new_indices.begin();
+    typename std::vector<T>::iterator md_it = merged_data.begin();
+    typename std::vector<I>::iterator mi_it = merged_indices.begin();
+
+    typename std::vector<T>::iterator d_it = _data.begin();
+    typename std::vector<I>::iterator i_it = _indices.begin();
+    typename std::vector<I2>::const_iterator i2_it = new_indices.begin();
 
     for (; i_it != _indices.end(); ++md_it, ++mi_it) {
       if (i2_it == new_indices.end()) {
@@ -379,25 +282,99 @@ public:
   }
 
 
+  // Since this is a dynamically allocated sparsity pattern, we can
+  // decrease it when possible for efficiency
+  template <typename I2>
+  void sparsity_intersection (std::vector<I2> new_indices) {
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<I2>::const_iterator index2_it = new_indices.begin();
+
+    typedef typename CompareTypes<I,I2>::supertype max_index_type;
+    max_index_type shared_indices = 0;
+
+    I maxI = std::numeric_limits<I>::max();
+
+    while (index2_it != new_indices.end()) {
+      I idx1 = (index_it == _indices.end()) ? maxI : *index_it;
+      I2 idx2 = *index2_it;
+
+      while (idx1 < idx2) {
+        ++index_it;
+        idx1 = (index_it == _indices.end()) ? maxI : *index_it;
+      }
+
+      while ((idx1 == idx2) &&
+             (idx1 != maxI)) {
+        ++index_it;
+        idx1 = (index_it == _indices.end()) ? maxI : *index_it;
+        ++index2_it;
+        idx2 = (index2_it == new_indices.end()) ? maxI : *index2_it;
+        ++shared_indices;
+      }
+
+      while (idx2 < idx1) {
+        ++index2_it;
+        if (index2_it == new_indices.end())
+          break;
+        idx2 = *index2_it;
+      }
+    }
+
+    std::vector<T> merged_data(shared_indices);
+    std::vector<I> merged_indices(shared_indices);
+
+    typename std::vector<T>::iterator md_it = merged_data.begin();
+    typename std::vector<I>::iterator mi_it = merged_indices.begin();
+
+    typename std::vector<T>::iterator d_it = _data.begin();
+    typename std::vector<I>::iterator i_it = _indices.begin();
+    typename std::vector<I2>::const_iterator i2_it = new_indices.begin();
+
+    for (; i_it != _indices.end() && i2_it != new_indices.end();
+         ++md_it, ++mi_it, ++d_it, ++i_it, ++i2_it) {
+      while (*i2_it < *i_it) {
+        ++i2_it;
+        if (i2_it == new_indices.end())
+          break;
+      }
+      if (i2_it == new_indices.end())
+        break;
+      while (*i2_it > *i_it) {
+          ++i_it;
+        if (i_it == _indices.end())
+          break;
+      }
+      if (i_it == _indices.end())
+        break;
+
+      *md_it = *d_it;
+      *mi_it = *i_it;
+    }
+
+    _indices.swap(merged_indices);
+    _data.swap(merged_data);
+  }
+
+
   // Not defineable since !0 != 0
   // DynamicSparseNumberArray<T,I> operator! () const;
 
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray<T,I>&
-    operator+= (const DynamicSparseNumberArray<T2,I2>& a) { 
+    operator+= (const DynamicSparseNumberArray<T2,I2>& a) {
     // Resize if necessary
     this->sparsity_union(a._indices);
 
-    std::vector<T>::iterator data_it  = _data.begin();
-    std::vector<I>::iterator index_it = _indices.begin();
-    std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != _data2.end(); ++data2_it, ++index2_it)
+    typename std::vector<T>::iterator data_it  = _data.begin();
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
+    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
+    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
-        
+
         while (idx1 < idx2) {
           ++index_it;
           ++data_it;
@@ -408,24 +385,26 @@ public:
 
         *data_it += *data2_it;
       }
+
+    return *this;
   }
 
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray<T,I>&
-    operator-= (const DynamicSparseNumberArray<T2,I2>& a) { 
+    operator-= (const DynamicSparseNumberArray<T2,I2>& a) {
     // Resize if necessary
     this->sparsity_union(a._indices);
 
-    std::vector<T>::iterator data_it  = _data.begin();
-    std::vector<I>::iterator index_it = _indices.begin();
-    std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != _data2.end(); ++data2_it, ++index2_it)
+    typename std::vector<T>::iterator data_it  = _data.begin();
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
+    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
+    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
-        
+
         while (idx1 < idx2) {
           ++index_it;
           ++data_it;
@@ -436,24 +415,26 @@ public:
 
         *data_it -= *data2_it;
       }
+
+    return *this;
   }
 
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray<T,I>&
-    operator*= (const DynamicSparseNumberArray<T2,I2>& a) { 
+    operator*= (const DynamicSparseNumberArray<T2,I2>& a) {
     // Resize if possible
     this->sparsity_intersection(a._indices);
 
-    std::vector<T>::iterator data_it  = _data.begin();
-    std::vector<I>::iterator index_it = _indices.begin();
-    std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != _data2.end(); ++data2_it, ++index2_it)
+    typename std::vector<T>::iterator data_it  = _data.begin();
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
+    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
+    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
-        
+
         while (idx1 < idx2) {
           ++index_it;
           ++data_it;
@@ -464,21 +445,23 @@ public:
         if (idx1 == idx2)
           *data_it *= *data2_it;
       }
+
+    return *this;
   }
 
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray<T,I>&
-    operator/= (const DynamicSparseNumberArray<T2,I2>& a) { 
-    std::vector<T>::iterator data_it  = _data.begin();
-    std::vector<I>::iterator index_it = _indices.begin();
-    std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != _data2.end(); ++data2_it, ++index2_it)
+    operator/= (const DynamicSparseNumberArray<T2,I2>& a) {
+    typename std::vector<T>::iterator data_it  = _data.begin();
+    typename std::vector<I>::iterator index_it = _indices.begin();
+    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
+    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
+    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
-        
+
         while (idx1 < idx2) {
           ++index_it;
           ++data_it;
@@ -489,11 +472,13 @@ public:
         if (idx1 == idx2)
           *data_it /= *data2_it;
       }
+
+    return *this;
   }
 
 
   template <typename T2>
-  DynamicSparseNumberArray<T,IndexSet>& operator*= (const T2& a) {
+  DynamicSparseNumberArray<T,I>& operator*= (const T2& a) {
     std::size_t index_size = size();
     for (unsigned int i=0; i != index_size; ++i)
       _data[i] *= a;
@@ -501,7 +486,7 @@ public:
   }
 
   template <typename T2>
-  DynamicSparseNumberArray<T,IndexSet>& operator/= (const T2& a) {
+  DynamicSparseNumberArray<T,I>& operator/= (const T2& a) {
     std::size_t index_size = size();
     for (unsigned int i=0; i != index_size; ++i)
       _data[i] /= a;
@@ -511,15 +496,15 @@ public:
   template <typename T2, typename I2>
   DynamicSparseNumberArray
     <typename DotType<T,T2>::supertype,
-     typename CompareTypes<I1, I2>::supertype>
+     typename CompareTypes<I, I2>::supertype>
   dot (const DynamicSparseNumberArray<T2,I2>& a) const
   {
     typedef typename DotType<T,T2>::supertype TS;
-    typedef typename CompareTypes<I1, I2>::supertype IS;
+    typedef typename CompareTypes<I, I2>::supertype IS;
 
     DynamicSparseNumberArray<TS, IS> returnval;
 
-#warning FIXME
+    // FIXME
     metaphysicl_not_implemented();
 
     return returnval;
@@ -528,21 +513,21 @@ public:
   template <typename T2, typename I2>
   DynamicSparseNumberArray<
     typename OuterProductType<T,T2>::supertype,
-    typename CompareTypes<I1, I2>::supertype>
-  outerproduct (const DynamicSparseNumberArray<T2, IndexSet2>& a) const
+    typename CompareTypes<I, I2>::supertype>
+  outerproduct (const DynamicSparseNumberArray<T2, I2>& a) const
   {
     typedef typename OuterProductType<T,T2>::supertype TS;
-    typedef typename CompareTypes<I1, I2>::supertype> IS;
+    typedef typename CompareTypes<I, I2>::supertype IS;
     DynamicSparseNumberArray<TS, IS> returnval;
 
-#warning FIXME
+    // FIXME
     metaphysicl_not_implemented();
 
     return returnval;
   }
 
 // Not defined, because size is not fixed at compile time
-//  static DynamicSparseNumberArray<DynamicSparseNumberArray<T, I>, IndexSet> identity()
+//  static DynamicSparseNumberArray<DynamicSparseNumberArray<T, I>, I> identity()
 
 private:
 
@@ -746,13 +731,13 @@ operator opname (const DynamicSparseNumberArray<T,I>& a, \
   returnval._data.resize(a._indices.size()); \
   returnval.sparsity_union(b._indices); \
  \
-  std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
-  std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
-  std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
+  typename std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
+  typename std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
+  typename std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
  \
-  std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
-  std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
-  std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
+  typename std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
+  typename std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
+  typename std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
  \
   IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
@@ -791,7 +776,7 @@ operator opname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
 { \
   DynamicSparseNumberArray<bool, I> returnval; \
  \
-  std::size_t index_size = size(); \
+  std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
   returnval._indices = a._indices; \
  \
@@ -807,7 +792,7 @@ operator opname (const T& a, const DynamicSparseNumberArray<T2,I>& b) \
 { \
   DynamicSparseNumberArray<bool, I> returnval; \
  \
-  std::size_t index_size = size(); \
+  std::size_t index_size = a.size(); \
   returnval._indices = a._indices; \
   returnval._data.resize(index_size); \
  \
@@ -834,13 +819,13 @@ DynamicSparseNumberArray_operator_binary(||, logical_or)
 
 template <typename T, typename I>
 inline
-std::ostream&      
+std::ostream&
 operator<< (std::ostream& output, const DynamicSparseNumberArray<T, I>& a)
 {
   // Enclose the entire output in braces
   output << '{';
 
-  std::size_t index_size = size();
+  std::size_t index_size = a.size();
 
   // Output the first value from a non-empty set
   // All values are given as ordered (index, value) pairs
@@ -852,7 +837,7 @@ operator<< (std::ostream& output, const DynamicSparseNumberArray<T, I>& a)
   // set
   for (unsigned int i = 1; i < index_size; ++i)
     {
-      _out << ", (" << a.raw_index(i) << ',' << a.raw_data()[i] << ')';
+      output << ", (" << a.raw_index(i) << ',' << a.raw_data()[i] << ')';
     }
   output << '}';
   return output;
@@ -867,7 +852,7 @@ struct templatename<DynamicSparseNumberArray<T,I>, DynamicSparseNumberArray<T,I>
   typedef DynamicSparseNumberArray<T,I> supertype; \
 }; \
  \
-template<typename T, typename T2, typename I, typename I, bool reverseorder> \
+template<typename T, typename T2, typename I, typename I2, bool reverseorder> \
 struct templatename<DynamicSparseNumberArray<T,I>, DynamicSparseNumberArray<T2,I2>, reverseorder> { \
   typedef DynamicSparseNumberArray<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
                             typename CompareTypes<I,I2>::supertype> supertype; \
@@ -898,7 +883,7 @@ struct RawType<DynamicSparseNumberArray<T, I> >
       value_type returnval;
       returnval._indices = a._indices;
 
-      std::size_t index_size = size();
+      std::size_t index_size = a.size();
       returnval._data.resize(index_size);
 
       for (unsigned int i=0; i != index_size; ++i)
@@ -918,10 +903,9 @@ struct ValueType<DynamicSparseNumberArray<T, I> >
 
 namespace std {
 
+using MetaPhysicL::CompareTypes;
 using MetaPhysicL::DynamicSparseNumberArray;
 using MetaPhysicL::SymmetricCompareTypes;
-using MetaPhysicL::UnaryVectorFunctor;
-using MetaPhysicL::BinaryVectorFunctor;
 
 #define DynamicSparseNumberArray_std_unary(funcname) \
 template <typename T, typename I> \
@@ -929,7 +913,7 @@ inline \
 DynamicSparseNumberArray<T, I> \
 funcname (DynamicSparseNumberArray<T, I> a) \
 { \
-  std::size_t index_size = size(); \
+  std::size_t index_size = a.size(); \
   for (unsigned int i=0; i != index_size; ++i) \
     a.raw_at(i) = std::funcname(a.raw_at(i)); \
  \
@@ -954,13 +938,13 @@ funcname (const DynamicSparseNumberArray<T, I>& a, \
   returnval._data.resize(index_size); \
   returnval.sparsity_union(b._indices); \
  \
-  std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
-  std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
-  std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
+  typename std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
+  typename std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
+  typename std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
  \
-  std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
-  std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
-  std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
+  typename std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
+  typename std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
+  typename std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
  \
   IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
@@ -1001,7 +985,7 @@ funcname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   DynamicSparseNumberArray<TS, I> returnval; \
  \
-  std::size_t index_size = size(); \
+  std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
   returnval._indices = a._indices; \
  \
@@ -1014,12 +998,12 @@ funcname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
 template <typename T, typename T2, typename I> \
 inline \
 DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const T& a, const DynamicSparseNumberArray<T2, IndexSet>& b) \
+funcname (const T& a, const DynamicSparseNumberArray<T2, I>& b) \
 { \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   DynamicSparseNumberArray<TS, I> returnval; \
  \
-  std::size_t index_size = size(); \
+  std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
   returnval._indices = b._indices; \
  \
@@ -1041,9 +1025,9 @@ pow (const DynamicSparseNumberArray<T, I>& a, const T2& b)
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
   DynamicSparseNumberArray<TS, I> returnval;
 
-  std::size_t index_size = size();
-  returnval._indices = a._indices;
-  returnval._data.resize(index_size);
+  std::size_t index_size = a.size();
+  returnval.nude_indices() = a.nude_indices();
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = std::pow(a.raw_at(i), b);
@@ -1073,15 +1057,15 @@ DynamicSparseNumberArray_std_unary(tanh)
 DynamicSparseNumberArray_std_unary(sqrt)
 DynamicSparseNumberArray_std_unary(abs)
 DynamicSparseNumberArray_std_unary(fabs)
-DynamicSparseNumberArray_std_binary_minmax(max)
-DynamicSparseNumberArray_std_binary_minmax(min)
+DynamicSparseNumberArray_std_binary_union(max)
+DynamicSparseNumberArray_std_binary_union(min)
 DynamicSparseNumberArray_std_unary(ceil)
 DynamicSparseNumberArray_std_unary(floor)
 DynamicSparseNumberArray_std_binary_union(fmod) // TODO: optimize this
 
 
 template <typename T, typename I>
-class numeric_limits<DynamicSparseNumberArray<T, I> > : 
+class numeric_limits<DynamicSparseNumberArray<T, I> > :
   public MetaPhysicL::raw_numeric_limits<DynamicSparseNumberArray<T, I>, T> {};
 
 } // namespace std
