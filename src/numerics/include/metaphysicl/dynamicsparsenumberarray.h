@@ -881,10 +881,10 @@ struct RawType<DynamicSparseNumberArray<T, I> >
   static value_type value(const DynamicSparseNumberArray<T, I>& a)
     {
       value_type returnval;
-      returnval._indices = a._indices;
+      returnval.nude_indices() = a.nude_indices();
 
       std::size_t index_size = a.size();
-      returnval._data.resize(index_size);
+      returnval.nude_data().resize(index_size);
 
       for (unsigned int i=0; i != index_size; ++i)
         returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
