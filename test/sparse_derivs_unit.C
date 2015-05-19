@@ -4,6 +4,7 @@
 
 #include "metaphysicl_config.h"
 
+#include "metaphysicl/dualdynamicsparsenumberarray.h"
 #include "metaphysicl/dualsparsenumberstruct.h"
 #include "metaphysicl/dualsparsenumberarray.h"
 #include "metaphysicl/dualsparsenumbervector.h"
@@ -50,7 +51,7 @@ int test_error_vec (const DualVector& random_vec,
 }
 
 template <typename Vector>
-int vectester (void)
+int vectester (Vector zerovec)
 {
   using std::abs;
   using std::acos;
@@ -74,7 +75,7 @@ int vectester (void)
   typedef typename ValueType<Vector>::type DualScalar;
   typedef typename DualScalar::value_type Scalar;
 
-  Vector random_vec;
+  Vector random_vec = zerovec;
 
   typename DerivativeType<Vector>::type error_vec = 0;
 
@@ -184,25 +185,46 @@ int main(void)
         2, DualNumber<long double>, 3, DualNumber<long double> >::type >();
   */
 
-  returnval = returnval || vectester<SparseNumberArrayOf
+  returnval = returnval || vectester(SparseNumberArrayOf
     <N, 0, DualNumber<float>, 1, DualNumber<float>,
-        2, DualNumber<float>, 3, DualNumber<float> >::type >();
-  returnval = returnval || vectester<SparseNumberArrayOf
+        2, DualNumber<float>, 3, DualNumber<float> >::type());
+  returnval = returnval || vectester(SparseNumberArrayOf
     <N, 0, DualNumber<double>, 1, DualNumber<double>,
-        2, DualNumber<double>, 3, DualNumber<double> >::type >();
-  returnval = returnval || vectester<SparseNumberArrayOf
+        2, DualNumber<double>, 3, DualNumber<double> >::type());
+  returnval = returnval || vectester(SparseNumberArrayOf
     <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
-        2, DualNumber<long double>, 3, DualNumber<long double> >::type >();
+        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
 
-  returnval = returnval || vectester<SparseNumberVectorOf
+  returnval = returnval || vectester(SparseNumberVectorOf
     <N, 0, DualNumber<float>, 1, DualNumber<float>,
-        2, DualNumber<float>, 3, DualNumber<float> >::type >();
-  returnval = returnval || vectester<SparseNumberVectorOf
+        2, DualNumber<float>, 3, DualNumber<float> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
     <N, 0, DualNumber<double>, 1, DualNumber<double>,
-        2, DualNumber<double>, 3, DualNumber<double> >::type >();
-  returnval = returnval || vectester<SparseNumberVectorOf
+        2, DualNumber<double>, 3, DualNumber<double> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
     <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
-        2, DualNumber<long double>, 3, DualNumber<long double> >::type >();
+        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
+
+  DynamicSparseNumberArray<DualNumber<float>, unsigned int> float_dsna;
+    float_dsna.resize(4);
+    float_dsna.raw_index(1) = 1;
+    float_dsna.raw_index(2) = 2;
+    float_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(float_dsna);
+
+  DynamicSparseNumberArray<DualNumber<double>, unsigned int> double_dsna;
+    double_dsna.resize(4);
+    double_dsna.raw_index(1) = 1;
+    double_dsna.raw_index(2) = 2;
+    double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(double_dsna);
+
+  DynamicSparseNumberArray<DualNumber<long double>, unsigned int> long_double_dsna;
+    long_double_dsna.resize(4);
+    long_double_dsna.raw_index(1) = 1;
+    long_double_dsna.raw_index(2) = 2;
+    long_double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(long_double_dsna);
 
   return returnval;
 }

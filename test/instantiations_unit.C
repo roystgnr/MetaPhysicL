@@ -4,6 +4,7 @@
 #include "metaphysicl/dualshadowsparsestruct.h"
 #include "metaphysicl/dualshadowsparsevector.h"
 #include "metaphysicl/dualshadowvector.h"
+#include "metaphysicl/dynamicsparsenumberarray.h"
 #include "metaphysicl/namedindexarray.h"
 #include "metaphysicl/sparsenumberarray.h"
 
@@ -16,6 +17,8 @@ struct Instantiator {
   ShadowNumber<T1, T2> test_shadow;
   NumberArray<5, T1> test_na;
   NumberVector<5, T1> test_nv;
+  typename DynamicSparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
+          test_dsna;
   typename SparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
           test_sna;
   typename SparseNumberVectorOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type

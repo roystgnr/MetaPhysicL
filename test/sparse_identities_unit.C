@@ -4,6 +4,7 @@
 
 #include "metaphysicl_config.h"
 
+#include "metaphysicl/dynamicsparsenumberarray.h"
 #include "metaphysicl/numberarray.h"
 #include "metaphysicl/numbervector.h"
 #include "metaphysicl/sparsenumberarray.h"
@@ -131,6 +132,27 @@ int main(void)
               vectester(SparseNumberVectorOf
                           <4, 0, long double, 1, long double,
                               2, long double, 3, long double>::type());
+
+  DynamicSparseNumberArray<float, unsigned int> float_dsna;
+    float_dsna.resize(4);
+    float_dsna.raw_index(1) = 1;
+    float_dsna.raw_index(2) = 2;
+    float_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(float_dsna);
+
+  DynamicSparseNumberArray<double, unsigned int> double_dsna;
+    double_dsna.resize(4);
+    double_dsna.raw_index(1) = 1;
+    double_dsna.raw_index(2) = 2;
+    double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(double_dsna);
+
+  DynamicSparseNumberArray<long double, unsigned int> long_double_dsna;
+    long_double_dsna.resize(4);
+    long_double_dsna.raw_index(1) = 1;
+    long_double_dsna.raw_index(2) = 2;
+    long_double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(long_double_dsna);
 
   return returnval;
 }
