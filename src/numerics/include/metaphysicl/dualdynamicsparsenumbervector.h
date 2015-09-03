@@ -59,7 +59,7 @@ derivative (const DynamicSparseNumberVector<T, I>& a,
 
   typename DerivativeType<DynamicSparseNumberVector<T, I> >::type returnval;
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = derivative(a.raw_at(i),derivativeindex);
@@ -119,8 +119,9 @@ divergence(const DynamicSparseNumberVector<T, I>& a)
 {
   typename DerivativeType<T>::type returnval = 0;
 
-  // FIXME
-  metaphysicl_not_implemented();
+  std::size_t size = a.size();
+  for (unsigned int i=0; i != size; ++i)
+    returnval += derivative(a.raw_at(i), a.raw_index(i));
 
   return returnval;
 }
