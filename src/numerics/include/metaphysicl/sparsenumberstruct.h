@@ -574,7 +574,8 @@ public:
     return returnval;
   }
 
-  static SparseNumberStruct<typename SetDiagonalTensor<IndexSet>::type> identity()
+  static SparseNumberStruct<typename SetDiagonalTensor<IndexSet>::type>
+  identity(std::size_t n=0)
   {
     typedef 
       SparseNumberStruct<typename SetDiagonalTensor<IndexSet>::type> DiagonalStruct;

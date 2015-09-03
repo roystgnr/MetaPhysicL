@@ -407,16 +407,6 @@ public:
     return returnval;
   }
 
-  static SparseNumberArray<SparseNumberArray<T, IndexSet>, IndexSet> identity()
-  {
-    SparseNumberArray<SparseNumberArray<T, IndexSet>, IndexSet > returnval(0);
-  
-    for (unsigned int i=0; i != index_size; ++i)
-      returnval.raw_at(i).raw_at(i) = 1;
-
-    return returnval;
-  }
-
 private:
 #if  __cplusplus >= 201103L
   std::array<T,index_size> _data;

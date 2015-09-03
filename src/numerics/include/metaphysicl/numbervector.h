@@ -35,6 +35,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_types.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
@@ -175,8 +176,11 @@ public:
     return returnval;
   }
 
-  static NumberVector<N, NumberVector<N, T> > identity()
+  static NumberVector<N, NumberVector<N, T> >
+  identity(std::size_t n = N)
   {
+    metaphysicl_assert_equal_to(n, N);
+
     NumberVector<N, NumberVector<N, T> > returnval(0);
   
     for (std::size_t i=0; i != N; ++i)
