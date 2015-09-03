@@ -462,6 +462,10 @@ public:
   const typename entry_type<i>::type& get() const
     { return _data.template data<MetaPhysicL::UnsignedIntType<i> >(); }
 
+  template <unsigned int i>
+  typename entry_type<i>::type& insert()
+    { return _data.template data<MetaPhysicL::UnsignedIntType<i> >(); }
+
   std::size_t size() const
     { return IndexSet::size; }
 

@@ -183,6 +183,28 @@ public:
     return _data[runtime_index_of(i)];
   }
 
+  template <unsigned int i>
+  typename entry_type<i>::type& insert() {
+    typename std::vector<I>::const_iterator upper_it =
+      std::lower_bound(_indices.begin(), _indices.end(), i);
+    std::size_t offset = upper_it - _indices.begin();
+
+    // If we don't have entry i, insert it.  Yes this is O(N).
+    if ((upper_it == _indices.end()) ||
+        *upper_it != i)
+      {
+        std::size_t old_size = this->size();
+        this->resize(old_size+1);
+        std::copy_backward(_indices.begin()+offset, _indices.begin()+old_size, _indices.end());
+        std::copy_backward(_data.begin()+offset, _data.begin()+old_size, _data.end());
+        _indices[offset] = i;
+        _data[offset] = 0;
+      }
+
+    // We have entry i now; return it
+    return _data[offset];
+  }
+
   template <unsigned int i, typename T2>
   void set(const T2& val) {
     _data[runtime_index_of(i)] = val;

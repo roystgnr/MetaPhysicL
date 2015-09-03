@@ -296,6 +296,11 @@ public:
     return _data[IndexSet::template IndexOf<MetaPhysicL::UnsignedIntType<i> >::index];
   }
 
+  template <unsigned int i>
+  typename entry_type<i>::type& insert() {
+    return _data[IndexSet::template IndexOf<MetaPhysicL::UnsignedIntType<i> >::index];
+  }
+
   template <unsigned int i, typename T2>
   void set(const T2& val) {
     _data[IndexSet::template IndexOf<MetaPhysicL::UnsignedIntType<i> >::index] = val;

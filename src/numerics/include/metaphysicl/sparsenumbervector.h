@@ -288,6 +288,11 @@ public:
   }
 
   template <unsigned int i>
+  typename entry_type<i>::type& insert() {
+    return _data[IndexSet::template IndexOf<MetaPhysicL::UnsignedIntType<i> >::index];
+  }
+
+  template <unsigned int i>
   const typename entry_type<i>::type& get() const {
     return _data[IndexSet::template IndexOf<MetaPhysicL::UnsignedIntType<i> >::index];
   }
