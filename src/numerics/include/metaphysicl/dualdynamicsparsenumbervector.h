@@ -138,7 +138,7 @@ gradient(const DynamicSparseNumberVector<T, I>& a)
   DynamicSparseNumberVector<typename T::derivatives_type, I> returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = gradient(a.raw_at(i));
