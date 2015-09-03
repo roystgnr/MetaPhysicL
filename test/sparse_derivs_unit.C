@@ -5,6 +5,7 @@
 #include "metaphysicl_config.h"
 
 #include "metaphysicl/dualdynamicsparsenumberarray.h"
+#include "metaphysicl/dualdynamicsparsenumbervector.h"
 #include "metaphysicl/dualsparsenumberstruct.h"
 #include "metaphysicl/dualsparsenumberarray.h"
 #include "metaphysicl/dualsparsenumbervector.h"
@@ -225,6 +226,27 @@ int main(void)
     long_double_dsna.raw_index(2) = 2;
     long_double_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsna);
+
+  DynamicSparseNumberVector<DualNumber<float>, unsigned int> float_dsnv;
+    float_dsnv.resize(4);
+    float_dsnv.raw_index(1) = 1;
+    float_dsnv.raw_index(2) = 2;
+    float_dsnv.raw_index(3) = 3;
+  returnval = returnval || vectester(float_dsnv);
+
+  DynamicSparseNumberVector<DualNumber<double>, unsigned int> double_dsnv;
+    double_dsnv.resize(4);
+    double_dsnv.raw_index(1) = 1;
+    double_dsnv.raw_index(2) = 2;
+    double_dsnv.raw_index(3) = 3;
+  returnval = returnval || vectester(double_dsnv);
+
+  DynamicSparseNumberVector<DualNumber<long double>, unsigned int> long_double_dsnv;
+    long_double_dsnv.resize(4);
+    long_double_dsnv.raw_index(1) = 1;
+    long_double_dsnv.raw_index(2) = 2;
+    long_double_dsnv.raw_index(3) = 3;
+  returnval = returnval || vectester(long_double_dsnv);
 
   return returnval;
 }
