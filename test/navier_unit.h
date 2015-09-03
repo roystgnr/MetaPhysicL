@@ -240,7 +240,7 @@ double evaluate_q (const Vector& xyz, const int ret)
 
   // The shear stress tensor
   // Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*Identity);
-  Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*RawVector::identity());
+  Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*RawVector::identity(2));
 
   // Temperature flux
   FullVector q = -k * T.derivatives();
