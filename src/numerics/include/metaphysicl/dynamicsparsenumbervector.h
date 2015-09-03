@@ -183,8 +183,8 @@ public:
     return _data[runtime_index_of(i)];
   }
 
-  template <unsigned int i>
-  typename entry_type<i>::type& insert() {
+  value_type& insert(unsigned int i)
+  {
     typename std::vector<I>::const_iterator upper_it =
       std::lower_bound(_indices.begin(), _indices.end(), i);
     std::size_t offset = upper_it - _indices.begin();
@@ -204,6 +204,13 @@ public:
     // We have entry i now; return it
     return _data[offset];
   }
+
+
+  template <unsigned int i>
+  typename entry_type<i>::type& insert() {
+    return this->insert(i);
+  }
+
 
   template <unsigned int i, typename T2>
   void set(const T2& val) {
