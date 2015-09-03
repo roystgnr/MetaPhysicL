@@ -32,17 +32,24 @@ include_HEADERS += graphs/include/metaphysicl/physics.h
 
 # numerics
 include_HEADERS += numerics/include/metaphysicl/dualderivatives.h
+include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumberarray.h
+include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dualexpression.h
 include_HEADERS += numerics/include/metaphysicl/dualnamedarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h
 include_HEADERS += numerics/include/metaphysicl/dualnumberarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadow.h
+include_HEADERS += numerics/include/metaphysicl/dualshadowdynamicsparsearray.h
+include_HEADERS += numerics/include/metaphysicl/dualshadowdynamicsparsevector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadowsparsestruct.h
 include_HEADERS += numerics/include/metaphysicl/dualshadowsparsevector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadowvector.h
+include_HEADERS += numerics/include/metaphysicl/dualsparsenumberarray.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumberstruct.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumbervector.h
+include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberarray.h
+include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumbervector.h
 include_HEADERS += numerics/include/metaphysicl/namedindexarray.h
 include_HEADERS += numerics/include/metaphysicl/numberarray.h
 include_HEADERS += numerics/include/metaphysicl/numbervector.h
