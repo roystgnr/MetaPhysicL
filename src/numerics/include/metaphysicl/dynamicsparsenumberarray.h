@@ -284,20 +284,29 @@ public:
     typename std::vector<I>::iterator i_it = _indices.begin();
     typename std::vector<I2>::const_iterator i2_it = new_indices.begin();
 
-    for (; i_it != _indices.end(); ++md_it, ++mi_it) {
-      if (i2_it == new_indices.end()) {
-        std::copy(i_it, _indices.end(), mi_it);
-        std::copy(d_it, _data.end(), md_it);
-      }
-      if (*i2_it < *i_it) {
-          ++i2_it;
+    for (; mi_it != merged_indices.end(); ++md_it, ++mi_it) {
+      if ((i_it == _indices.end()) ||
+          ((i2_it != new_indices.end()) &&
+           (*i2_it < *i_it))) {
+        *mi_it = *i2_it;
+        ++i2_it;
       } else {
-          *md_it = *d_it;
-          *mi_it = *i_it;
-          ++d_it;
-          ++i_it;
+        if ((i2_it != new_indices.end()) &&
+            (*i2_it == *i_it))
+          ++i2_it;
+        metaphysicl_assert(d_it < _data.end());
+        metaphysicl_assert(md_it < merged_data.end());
+        *md_it = *d_it;
+        *mi_it = *i_it;
+        ++d_it;
+        ++i_it;
       }
     }
+
+    metaphysicl_assert(i_it  == _indices.end());
+    metaphysicl_assert(i2_it == new_indices.end());
+    metaphysicl_assert(d_it  == _data.end());
+    metaphysicl_assert(md_it == merged_data.end());
 
     _indices.swap(merged_indices);
     _data.swap(merged_data);
