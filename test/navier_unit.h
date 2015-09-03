@@ -32,8 +32,8 @@ int main(void)
   enorm_max = 0;
 
   RawVector xvecinit(0), yvecinit(0);
-  xvecinit.get<0>() = 1.;
-  yvecinit.get<1>() = 1.;
+  xvecinit.insert<0>() = 1.;
+  yvecinit.insert<1>() = 1.;
 
   typedef VectorUnitVector<NDIM,0,RawScalar>::type XVector;
   XVector xvec = VectorUnitVector<NDIM,0,RawScalar>::value();
@@ -84,8 +84,8 @@ int main(void)
   // When main() says "xy[0] = ADType(1., xvec);", that's saying "x = 1, and 
   // the gradient of f(x,y)=x is the constant vector xvec={1,0}"  
   // Likewise "xy[1] = ADType(1., yvec);" means "y = 1, and the gradient of f(x,y)=y 
-  xy.get<0>() = XADType(1., xvec);
-  xy.get<1>() = YADType(1., yvec);
+  xy.insert<0>() = XADType(1., xvec);
+  xy.insert<1>() = YADType(1., yvec);
 
   // For getting second derivatives, the way to set up a
   // twice-differentiable independent variable used to be more
@@ -217,8 +217,8 @@ double evaluate_q (const Vector& xyz, const int ret)
   FullVector U;
 
   // Arbitrary manufactured solution
-  U.template get<0>() = u_0 + u_x * std::sin(a_ux * PI * x / L) + u_y * std::cos(a_uy * PI * y / L);
-  U.template get<1>() = v_0 + v_x * std::cos(a_vx * PI * x / L) + v_y * std::sin(a_vy * PI * y / L);
+  U.template insert<0>() = u_0 + u_x * std::sin(a_ux * PI * x / L) + u_y * std::cos(a_uy * PI * y / L);
+  U.template insert<1>() = v_0 + v_x * std::cos(a_vx * PI * x / L) + v_y * std::sin(a_vy * PI * y / L);
   ADScalar RHO = rho_0 + rho_x * std::sin(a_rhox * PI * x / L) + rho_y * std::cos(a_rhoy * PI * y / L);
   ADScalar P = p_0 + p_x * std::cos(a_px * PI * x / L) + p_y * std::sin(a_py * PI * y / L);
 

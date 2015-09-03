@@ -11,32 +11,40 @@ const unsigned int NDIM = 2;
 
 #ifdef USE_SPARSE
   #ifdef USE_SHADOW
-    #ifdef USE_STRUCT
+    #if defined(USE_STRUCT)
       #include "metaphysicl/dualshadowsparsestruct.h"
-    #else // USE_STRUCT
+    #elif defined(USE_DYNAMIC)
+      #include "metaphysicl/dualshadowdynamicsparsevector.h"
+    #else // !USE_STRUCT && !USE_DYNAMIC
       #include "metaphysicl/dualshadowsparsevector.h"
-    #endif // USE_STRUCT
+    #endif // USE_STRUCT, USE_DYNAMIC
     typedef MetaPhysicL::ShadowNumber<double, long double> RawScalar;
   #else // USE_SHADOW
-    #ifdef USE_STRUCT
+    #if defined(USE_STRUCT)
       #include "metaphysicl/dualsparsenumberstruct.h"
-    #else // USE_STRUCT
+    #elif defined(USE_DYNAMIC)
+      #include "metaphysicl/dualdynamicsparsenumbervector.h"
+    #else // !USE_STRUCT && !USE_DYNAMIC
       #include "metaphysicl/dualsparsenumbervector.h"
-    #endif // USE_STRUCT
+    #endif // USE_STRUCT, USE_DYNAMIC
     typedef double RawScalar;
   #endif // USE_SHADOW
-  #ifdef USE_STRUCT
+  #if defined(USE_STRUCT)
     typedef
     MetaPhysicL::SetConstructor<MetaPhysicL::UnsignedIntType<0,RawScalar>, MetaPhysicL::UnsignedIntType<1,RawScalar> >::type IndexSet;
     typedef MetaPhysicL::SparseNumberStruct<IndexSet> RawVector;
     #define VectorUnitVector SparseNumberStructUnitVector
     #define VectorOf SparseNumberStructOf
-  #else // USE_STRUCT
+  #elif defined(USE_DYNAMIC)
+    typedef MetaPhysicL::DynamicSparseNumberVector<RawScalar, unsigned int> RawVector;
+    #define VectorUnitVector DynamicSparseNumberVectorUnitVector
+    #define VectorOf DynamicSparseNumberVectorOf
+  #else // !USE_STRUCT && !USE_DYNAMIC
     typedef MetaPhysicL::SetConstructor<MetaPhysicL::UnsignedIntType<0>, MetaPhysicL::UnsignedIntType<1> >::type IndexSet;
     typedef MetaPhysicL::SparseNumberVector<RawScalar, IndexSet> RawVector;
     #define VectorUnitVector SparseNumberVectorUnitVector
     #define VectorOf SparseNumberVectorOf
-  #endif // USE_STRUCT
+  #endif // USE_STRUCT, USE_DYNAMIC
 #else // USE_SPARSE
   #ifdef USE_SHADOW
     #include "metaphysicl/dualshadowvector.h"
