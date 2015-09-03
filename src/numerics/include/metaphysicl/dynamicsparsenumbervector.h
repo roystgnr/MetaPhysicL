@@ -121,10 +121,9 @@ public:
 
   template <typename T2, typename I2>
   DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> src)
-    { _data.resize(src._data.size());
-      _indices.resize(src._indices.size());
-      std::copy(src._data.begin(), src._data.end(), _data.begin());
-      std::copy(src._indices.begin(), src._indices.end(), _indices.begin()); }
+    { this->resize(src.size());
+      std::copy(src.nude_data().begin(), src.nude_data().end(), _data.begin());
+      std::copy(src.nude_indices().begin(), src.nude_indices().end(), _indices.begin()); }
 
   T* raw_data()
     { return size()?&_data[0]:NULL; }
@@ -144,7 +143,7 @@ public:
   const I& raw_index(unsigned int i) const
     { return _indices[i]; }
 
-  // FIXME: these encapsulation violations are necessary for std::pow
+  // FIXME: these encapsulation violations are necessary
   // until I can figure out the right friend declaration.
   const std::vector<T>& nude_data() const
     { return _data; }
@@ -359,13 +358,13 @@ public:
   DynamicSparseNumberVector<T,I>&
     operator+= (const DynamicSparseNumberVector<T2,I2>& a) {
     // Resize if necessary
-    this->sparsity_union(a._indices);
+    this->sparsity_union(a.nude_indices());
 
     typename std::vector<T>::iterator data_it  = _data.begin();
     typename std::vector<I>::iterator index_it = _indices.begin();
-    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
+    typename std::vector<T2>::const_iterator data2_it  = a.nude_data().begin();
+    typename std::vector<I2>::const_iterator index2_it = a.nude_indices().begin();
+    for (; data2_it != a.nude_data().end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
@@ -389,13 +388,15 @@ public:
   DynamicSparseNumberVector<T,I>&
     operator-= (const DynamicSparseNumberVector<T2,I2>& a) {
     // Resize if necessary
-    this->sparsity_union(a._indices);
+    this->sparsity_union(a.nude_indices());
 
     typename std::vector<T>::iterator data_it  = _data.begin();
     typename std::vector<I>::iterator index_it = _indices.begin();
-    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
+    typename std::vector<T2>::const_iterator data2_it  =
+      a.nude_data().begin();
+    typename std::vector<I2>::const_iterator index2_it =
+      a.nude_indices().begin();
+    for (; data2_it != a.nude_data().end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
@@ -419,13 +420,15 @@ public:
   DynamicSparseNumberVector<T,I>&
     operator*= (const DynamicSparseNumberVector<T2,I2>& a) {
     // Resize if possible
-    this->sparsity_intersection(a._indices);
+    this->sparsity_intersection(a.nude_indices());
 
     typename std::vector<T>::iterator data_it  = _data.begin();
     typename std::vector<I>::iterator index_it = _indices.begin();
-    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
+    typename std::vector<T2>::const_iterator data2_it  =
+      a.nude_data().begin();
+    typename std::vector<I2>::const_iterator index2_it =
+      a.nude_indices().begin();
+    for (; data2_it != a.nude_data().end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
@@ -450,9 +453,9 @@ public:
     operator/= (const DynamicSparseNumberVector<T2,I2>& a) {
     typename std::vector<T>::iterator data_it  = _data.begin();
     typename std::vector<I>::iterator index_it = _indices.begin();
-    typename std::vector<T2>::const_iterator data2_it  = a._data.begin();
-    typename std::vector<I2>::const_iterator index2_it = a._indices.begin();
-    for (; data2_it != a._data.end(); ++data2_it, ++index2_it)
+    typename std::vector<T2>::const_iterator data2_it  = a.nude_data().begin();
+    typename std::vector<I2>::const_iterator index2_it = a.nude_indices().begin();
+    for (; data2_it != a.nude_data().end(); ++data2_it, ++index2_it)
       {
         I idx1 = *index_it;
         I2 idx2 = *index2_it;
@@ -497,14 +500,15 @@ public:
     for (I i1 = 0; i1 != _indices.size(); ++i1)
       {
         typename std::vector<I2>::const_iterator it2 =
-          std::lower_bound(a._indices.begin(), a._indices.end(),
+          std::lower_bound(a.nude_indices().begin(),
+                           a.nude_indices().end(),
                            _indices[i1]);
 
-        if (it2 != a._indices.end())
+        if (it2 != a.nude_indices().end())
           {
-            std::size_t i2 = it2 - a._indices.begin();
+            std::size_t i2 = it2 - a.nude_indices().begin();
 
-            returnval += _data[i1] * a._data[i2];
+            returnval += _data[i1] * a.raw_at(i2);
           }
       }
 
@@ -521,26 +525,38 @@ public:
       typename MultipliesType<T,T2>::supertype,
       I2>, I> returnval;
 
-    returnval._indices = this->_indices;
+    returnval.nude_indices() = this->_indices;
 
     std::size_t index_size = size();
     std::size_t index2_size = a.size();
 
-    returnval._data.resize(index_size);
+    returnval.nude_data().resize(index_size);
     for (unsigned int i=0; i != index_size; ++i)
       {
-        returnval._data[i]._indices = a._indices;
+        returnval.raw_at(i).nude_indices() = a.nude_indices();
 
-        returnval._data[i]._data.resize(index2_size);
+        returnval.raw_at(i).nude_data().resize(index2_size);
         for (unsigned int j=0; j != index2_size; ++j)
-          returnval._data[i]._data[j] = this._data[i] * a._data[j];
+          returnval.raw_at(i).raw_at(j) = _data[i] * a.raw_at(j);
       }
 
     return returnval;
   }
 
-// Not defined, because size is not fixed at compile time
-//  static DynamicSparseNumberVector<DynamicSparseNumberVector<T, I>, I> identity()
+  static DynamicSparseNumberVector<DynamicSparseNumberVector<T, I>, I>
+  identity(std::size_t n = 0)
+  {
+    DynamicSparseNumberVector<DynamicSparseNumberVector<T, I>, I>
+      returnval;
+    returnval.resize(n);
+    for (unsigned int i=0; i != n; ++i)
+      {
+        returnval.raw_index(i) = i;
+        returnval.raw_at(i).nude_indices().resize(1, i);
+        returnval.raw_at(i).nude_data().resize(1, 1);
+      }
+    return returnval;
+  }
 
 private:
 
@@ -737,26 +753,26 @@ operator opname (const DynamicSparseNumberVector<T,I>& a, \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   typedef typename CompareTypes<I,I2>::supertype IS; \
   DynamicSparseNumberVector<bool, IS> returnval; \
-  returnval._indices = a._indices; \
-  returnval._data.resize(a._indices.size()); \
-  returnval.sparsity_union(b._indices); \
+  returnval.nude_indices() = a.nude_indices(); \
+  returnval.nude_data().resize(a.nude_indices().size()); \
+  returnval.sparsity_union(b.nude_indices()); \
  \
-  typename std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
-  typename std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
-  typename std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
+  typename std::vector<I>::const_iterator  index_a_it = a.nude_indices().begin(); \
+  typename std::vector<I2>::const_iterator index_b_it = b.nude_indices().begin(); \
+  typename std::vector<IS>::iterator     index_out_it = returnval.nude_indices().begin(); \
  \
-  typename std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
-  typename std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
-  typename std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
+  typename std::vector<T>::const_iterator  data_a_it = a.nude_data().begin(); \
+  typename std::vector<T2>::const_iterator data_b_it = b.nude_data().begin(); \
+  typename std::vector<TS>::iterator     data_out_it = returnval.nude_data().begin(); \
  \
   IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
-  for (; index_out_it != returnval._indices.end(); ++index_out_it, ++data_out_it) { \
-    const IS index_a = (index_a_it == a._indices.end()) ? maxIS : *index_a_it; \
-    const IS index_b = (index_b_it == b._indices.end()) ? maxIS : *index_b_it; \
+  for (; index_out_it != returnval.nude_indices().end(); ++index_out_it, ++data_out_it) { \
+    const IS index_a = (index_a_it == a.nude_indices().end()) ? maxIS : *index_a_it; \
+    const IS index_b = (index_b_it == b.nude_indices().end()) ? maxIS : *index_b_it; \
     const IS index_out = *index_out_it; \
-    const TS data_a  = (index_a_it == a._indices.end()) ? 0: *data_a_it; \
-    const TS data_b  = (index_b_it == b._indices.end()) ? 0: *data_b_it; \
+    const TS data_a  = (index_a_it == a.nude_indices().end()) ? 0: *data_a_it; \
+    const TS data_b  = (index_b_it == b.nude_indices().end()) ? 0: *data_b_it; \
     TS &   data_out  = *data_out_it; \
  \
     if (index_a == index_out) { \
@@ -788,7 +804,7 @@ operator opname (const DynamicSparseNumberVector<T, I>& a, const T2& b) \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
-  returnval._indices = a._indices; \
+  returnval.nude_indices() = a.nude_indices(); \
  \
   for (unsigned int i=0; i != index_size; ++i) \
     returnval.raw_at(i) = (a.raw_at(i) opname b); \
@@ -803,8 +819,8 @@ operator opname (const T& a, const DynamicSparseNumberVector<T2,I>& b) \
   DynamicSparseNumberVector<bool, I> returnval; \
  \
   std::size_t index_size = a.size(); \
-  returnval._indices = a._indices; \
-  returnval._data.resize(index_size); \
+  returnval.nude_indices() = a.nude_indices(); \
+  returnval.nude_data().resize(index_size); \
  \
   for (unsigned int i=0; i != index_size; ++i) \
     returnval.raw_at(i) = (a opname b.raw_at(i)); \
@@ -943,27 +959,27 @@ funcname (const DynamicSparseNumberVector<T, I>& a, \
   typedef typename CompareTypes<I,I2>::supertype IS; \
   DynamicSparseNumberVector<TS, IS> returnval; \
  \
-  std::size_t index_size = a._indices.size(); \
-  returnval._indices = a._indices; \
-  returnval._data.resize(index_size); \
-  returnval.sparsity_union(b._indices); \
+  std::size_t index_size = a.nude_indices().size(); \
+  returnval.nude_indices() = a.nude_indices(); \
+  returnval.nude_data().resize(index_size); \
+  returnval.sparsity_union(b.nude_indices()); \
  \
-  typename std::vector<I>::const_iterator  index_a_it = a._indices.begin(); \
-  typename std::vector<I2>::const_iterator index_b_it = b._indices.begin(); \
-  typename std::vector<IS>::iterator     index_out_it = returnval._indices.begin(); \
+  typename std::vector<I>::const_iterator  index_a_it = a.nude_indices().begin(); \
+  typename std::vector<I2>::const_iterator index_b_it = b.nude_indices().begin(); \
+  typename std::vector<IS>::iterator     index_out_it = returnval.nude_indices().begin(); \
  \
-  typename std::vector<T>::const_iterator  data_a_it = a._data.begin(); \
-  typename std::vector<T2>::const_iterator data_b_it = b._data.begin(); \
-  typename std::vector<TS>::iterator     data_out_it = returnval._data.begin(); \
+  typename std::vector<T>::const_iterator  data_a_it = a.nude_data().begin(); \
+  typename std::vector<T2>::const_iterator data_b_it = b.nude_data().begin(); \
+  typename std::vector<TS>::iterator     data_out_it = returnval.nude_data().begin(); \
  \
   IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
-  for (; index_out_it != returnval._indices.end(); ++index_out_it, ++data_out_it) { \
-    const IS index_a = (index_a_it == a._indices.end()) ? maxIS : *index_a_it; \
-    const IS index_b = (index_b_it == b._indices.end()) ? maxIS : *index_b_it; \
+  for (; index_out_it != returnval.nude_indices().end(); ++index_out_it, ++data_out_it) { \
+    const IS index_a = (index_a_it == a.nude_indices().end()) ? maxIS : *index_a_it; \
+    const IS index_b = (index_b_it == b.nude_indices().end()) ? maxIS : *index_b_it; \
     const IS index_out = *index_out_it; \
-    const TS data_a  = (index_a_it == a._indices.end()) ? 0: *data_a_it; \
-    const TS data_b  = (index_b_it == b._indices.end()) ? 0: *data_b_it; \
+    const TS data_a  = (index_a_it == a.nude_indices().end()) ? 0: *data_a_it; \
+    const TS data_b  = (index_b_it == b.nude_indices().end()) ? 0: *data_b_it; \
     TS &   data_out  = *data_out_it; \
  \
     if (index_a == index_out) { \
@@ -997,7 +1013,7 @@ funcname (const DynamicSparseNumberVector<T, I>& a, const T2& b) \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
-  returnval._indices = a._indices; \
+  returnval.nude_indices() = a.nude_indices(); \
  \
   for (unsigned int i=0; i != index_size; ++i) \
     returnval.raw_at(i) = std::funcname(a.raw_at(i), b); \
@@ -1015,7 +1031,7 @@ funcname (const T& a, const DynamicSparseNumberVector<T2, I>& b) \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
-  returnval._indices = b._indices; \
+  returnval.nude_indices() = b.nude_indices(); \
  \
   for (unsigned int i=0; i != index_size; ++i) \
     returnval.raw_at(i) = std::funcname(a, b.raw_at(i)); \
