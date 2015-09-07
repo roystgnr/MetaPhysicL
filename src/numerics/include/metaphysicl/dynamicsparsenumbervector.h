@@ -278,6 +278,7 @@ public:
     std::vector<T> merged_data(_data.size() + unseen_indices);
     std::vector<I> merged_indices(_indices.size() + unseen_indices);
 
+/*
     typename std::vector<T>::iterator md_it = merged_data.begin();
     typename std::vector<I>::iterator mi_it = merged_indices.begin();
 
@@ -303,11 +304,45 @@ public:
         ++i_it;
       }
     }
+*/
 
-    metaphysicl_assert(i_it  == _indices.end());
-    metaphysicl_assert(i2_it == new_indices.end());
-    metaphysicl_assert(d_it  == _data.end());
-    metaphysicl_assert(md_it == merged_data.end());
+    typename std::vector<T>::reverse_iterator md_it = merged_data.rbegin();
+    typename std::vector<I>::reverse_iterator mi_it = merged_indices.rbegin();
+
+    typename std::vector<T>::const_reverse_iterator d_it = _data.rbegin();
+    typename std::vector<I>::const_reverse_iterator i_it = _indices.rbegin();
+    typename std::vector<I2>::const_reverse_iterator i2_it = new_indices.rbegin();
+
+    typename std::vector<I>::const_reverse_iterator  rend  = _indices.rend();
+    typename std::vector<I2>::const_reverse_iterator rend2 = new_indices.rend();
+#ifndef NDEBUG
+    typename std::vector<T>::const_reverse_iterator  drend  = _data.rend();
+    typename std::vector<T>::const_reverse_iterator mdrend  = merged_data.rend();
+#endif
+
+    for (; mi_it != merged_indices.rend(); ++md_it, ++mi_it) {
+      if ((i_it == rend) ||
+          ((i2_it != rend2) &&
+           (*i2_it > *i_it))) {
+        *mi_it = *i2_it;
+        ++i2_it;
+      } else {
+        if ((i2_it != rend2) &&
+            (*i2_it == *i_it))
+          ++i2_it;
+        metaphysicl_assert(d_it < drend);
+        metaphysicl_assert(md_it < mdrend);
+        *md_it = *d_it;
+        *mi_it = *i_it;
+        ++d_it;
+        ++i_it;
+      }
+    }
+
+    metaphysicl_assert(i_it  == rend);
+    metaphysicl_assert(i2_it == rend2);
+    metaphysicl_assert(d_it  == drend);
+    metaphysicl_assert(md_it == mdrend);
 
     _indices.swap(merged_indices);
     _data.swap(merged_data);
