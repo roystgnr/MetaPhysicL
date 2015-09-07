@@ -356,14 +356,18 @@ public:
       }
     }
 
-    std::vector<T> merged_data(shared_indices);
-    std::vector<I> merged_indices(shared_indices);
+    // We'll loop up through the arrays, copying indices (and
+    // corresponding data) that should be there downward into place.
 
-    typename std::vector<T>::iterator md_it = merged_data.begin();
-    typename std::vector<I>::iterator mi_it = merged_indices.begin();
+    // Merged values:
+    typename std::vector<T>::iterator md_it = _data.begin();
+    typename std::vector<I>::iterator mi_it = _indices.begin();
 
-    typename std::vector<T>::iterator d_it = _data.begin();
-    typename std::vector<I>::iterator i_it = _indices.begin();
+    // Our old values:
+    typename std::vector<T>::const_iterator d_it = _data.begin();
+    typename std::vector<I>::const_iterator i_it = _indices.begin();
+
+    // Values to merge with:
     typename std::vector<I2>::const_iterator i2_it = new_indices.begin();
 
     for (; i_it != _indices.end() && i2_it != new_indices.end();
@@ -387,8 +391,13 @@ public:
       *mi_it = *i_it;
     }
 
-    _indices.swap(merged_indices);
-    _data.swap(merged_data);
+    metaphysicl_assert_equal_to(md_it - _data.begin(),
+                                shared_indices);
+    metaphysicl_assert_equal_to(mi_it - _indices.begin(),
+                                shared_indices);
+
+    _indices.resize(shared_indices);
+    _data.resize(shared_indices);
   }
 
 
