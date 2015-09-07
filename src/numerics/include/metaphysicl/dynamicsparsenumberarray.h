@@ -322,10 +322,13 @@ public:
   // decrease it when possible for efficiency
   template <typename I2>
   void sparsity_intersection (std::vector<I2> new_indices) {
+
+    typedef typename CompareTypes<I,I2>::supertype max_index_type;
+
+#ifndef NDEBUG
     typename std::vector<I>::iterator index_it = _indices.begin();
     typename std::vector<I2>::const_iterator index2_it = new_indices.begin();
 
-    typedef typename CompareTypes<I,I2>::supertype max_index_type;
     max_index_type shared_indices = 0;
 
     I maxI = std::numeric_limits<I>::max();
@@ -355,6 +358,7 @@ public:
         idx2 = *index2_it;
       }
     }
+#endif
 
     // We'll loop up through the arrays, copying indices (and
     // corresponding data) that should be there downward into place.
@@ -396,8 +400,10 @@ public:
     metaphysicl_assert_equal_to(mi_it - _indices.begin(),
                                 shared_indices);
 
-    _indices.resize(shared_indices);
-    _data.resize(shared_indices);
+    const std::size_t n_indices = md_it - _data.begin();
+
+    _indices.resize(n_indices);
+    _data.resize(n_indices);
   }
 
 
