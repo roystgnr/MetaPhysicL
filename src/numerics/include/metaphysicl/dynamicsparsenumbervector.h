@@ -236,7 +236,7 @@ public:
   // Since this is a dynamically allocated sparsity pattern, we can
   // increase it as needed to support e.g. operator+=
   template <typename I2>
-  void sparsity_union (std::vector<I2> new_indices) {
+  void sparsity_union (const std::vector<I2>& new_indices) {
     typename std::vector<I>::iterator index_it = _indices.begin();
     typename std::vector<I2>::const_iterator index2_it = new_indices.begin();
 
@@ -275,52 +275,28 @@ public:
     if (!unseen_indices)
       return;
 
-    std::vector<T> merged_data(_data.size() + unseen_indices);
-    std::vector<I> merged_indices(_indices.size() + unseen_indices);
+    std::size_t old_size = this->size();
 
-/*
-    typename std::vector<T>::iterator md_it = merged_data.begin();
-    typename std::vector<I>::iterator mi_it = merged_indices.begin();
+    this->resize(old_size + unseen_indices);
 
-    typename std::vector<T>::iterator d_it = _data.begin();
-    typename std::vector<I>::iterator i_it = _indices.begin();
-    typename std::vector<I2>::const_iterator i2_it = new_indices.begin();
+    typename std::vector<T>::reverse_iterator md_it = _data.rbegin();
+    typename std::vector<I>::reverse_iterator mi_it = _indices.rbegin();
 
-    for (; mi_it != merged_indices.end(); ++md_it, ++mi_it) {
-      if ((i_it == _indices.end()) ||
-          ((i2_it != new_indices.end()) &&
-           (*i2_it < *i_it))) {
-        *mi_it = *i2_it;
-        ++i2_it;
-      } else {
-        if ((i2_it != new_indices.end()) &&
-            (*i2_it == *i_it))
-          ++i2_it;
-        metaphysicl_assert(d_it < _data.end());
-        metaphysicl_assert(md_it < merged_data.end());
-        *md_it = *d_it;
-        *mi_it = *i_it;
-        ++d_it;
-        ++i_it;
-      }
-    }
-*/
-
-    typename std::vector<T>::reverse_iterator md_it = merged_data.rbegin();
-    typename std::vector<I>::reverse_iterator mi_it = merged_indices.rbegin();
-
-    typename std::vector<T>::const_reverse_iterator d_it = _data.rbegin();
-    typename std::vector<I>::const_reverse_iterator i_it = _indices.rbegin();
+    typename std::vector<T>::const_reverse_iterator d_it =
+      _data.rbegin() + unseen_indices;
+    typename std::vector<I>::const_reverse_iterator i_it =
+      _indices.rbegin() + unseen_indices;
     typename std::vector<I2>::const_reverse_iterator i2_it = new_indices.rbegin();
 
-    typename std::vector<I>::const_reverse_iterator  rend  = _indices.rend();
+    typename std::vector<I>::reverse_iterator      mirend  = _indices.rend();
+    typename std::vector<I>::const_reverse_iterator  rend  = mirend;
     typename std::vector<I2>::const_reverse_iterator rend2 = new_indices.rend();
 #ifndef NDEBUG
-    typename std::vector<T>::const_reverse_iterator  drend  = _data.rend();
-    typename std::vector<T>::const_reverse_iterator mdrend  = merged_data.rend();
+    typename std::vector<T>::reverse_iterator      mdrend = _data.rend();
+    typename std::vector<T>::const_reverse_iterator drend = mdrend;
 #endif
 
-    for (; mi_it != merged_indices.rend(); ++md_it, ++mi_it) {
+    for (; mi_it != mirend; ++md_it, ++mi_it) {
       if ((i_it == rend) ||
           ((i2_it != rend2) &&
            (*i2_it > *i_it))) {
@@ -343,16 +319,13 @@ public:
     metaphysicl_assert(i2_it == rend2);
     metaphysicl_assert(d_it  == drend);
     metaphysicl_assert(md_it == mdrend);
-
-    _indices.swap(merged_indices);
-    _data.swap(merged_data);
   }
 
 
   // Since this is a dynamically allocated sparsity pattern, we can
   // decrease it when possible for efficiency
   template <typename I2>
-  void sparsity_intersection (std::vector<I2> new_indices) {
+  void sparsity_intersection (const std::vector<I2>& new_indices) {
 
 #ifndef NDEBUG
     typename std::vector<I>::iterator index_it = _indices.begin();
