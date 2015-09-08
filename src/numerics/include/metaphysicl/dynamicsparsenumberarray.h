@@ -640,7 +640,7 @@ struct DynamicSparseNumberArrayUnitVector
 {
   typedef DynamicSparseNumberArray<T, unsigned int> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.resize(1);
     returnval.raw_at(0) = 1;
@@ -655,7 +655,7 @@ struct DynamicSparseNumberArrayFullVector
 {
   typedef DynamicSparseNumberArray<T,unsigned int> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.resize(N);
     for (unsigned int i=0; i != N; ++i)
@@ -730,7 +730,7 @@ inline
 typename MultipliesType<DynamicSparseNumberArray<T2,I>,T,true>::supertype
 operator * (const T& a, const DynamicSparseNumberArray<T2,I>& b)
 {
-  static const unsigned int index_size = b.size();
+  const unsigned int index_size = b.size();
 
   typename MultipliesType<DynamicSparseNumberArray<T2,I>,T,true>::supertype
     returnval;
@@ -749,7 +749,7 @@ inline
 typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
 operator * (const DynamicSparseNumberArray<T,I>& a, const T2& b)
 {
-  static const unsigned int index_size = a.size();
+  const unsigned int index_size = a.size();
 
   typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
     returnval;
@@ -767,7 +767,7 @@ inline
 typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype
 operator / (const DynamicSparseNumberArray<T,I>& a, const T2& b)
 {
-  static const unsigned int index_size = a.size();
+  const unsigned int index_size = a.size();
 
   typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype returnval;
   returnval.resize(index_size);

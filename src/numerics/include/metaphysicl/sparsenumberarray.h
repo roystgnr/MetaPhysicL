@@ -488,7 +488,7 @@ struct SparseNumberArrayUnitVector
 
   typedef SparseNumberArray<T, IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.raw_at(0) = 1;
     return returnval;
@@ -506,7 +506,7 @@ struct SparseNumberArrayFullVector
 
   typedef SparseNumberArray<T,IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     for (unsigned int i=0; i != N; ++i)
       returnval[i] = 1;
@@ -522,7 +522,7 @@ struct SparseNumberArrayFullVector<0,T>
 
   typedef SparseNumberArray<T,IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     return returnval;
   }
@@ -536,8 +536,8 @@ inline
 SparseNumberArray<SparseNumberArray<T, IndexSet>, IndexSet2>
 transpose(const SparseNumberArray<SparseNumberArray<T, IndexSet2>, IndexSet>& a)
 {
-  static const unsigned int size  = IndexSet::size;
-  static const unsigned int size2 = IndexSet2::size;
+  const unsigned int size  = IndexSet::size;
+  const unsigned int size2 = IndexSet2::size;
 
   SparseNumberArray<SparseNumberArray<T, IndexSet>, IndexSet2> returnval;
 
@@ -592,7 +592,7 @@ inline
 typename MultipliesType<SparseNumberArray<T2,IndexSet>,T,true>::supertype
 operator * (const T& a, const SparseNumberArray<T2,IndexSet>& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename MultipliesType<SparseNumberArray<T2,IndexSet>,T,true>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)
@@ -605,7 +605,7 @@ inline
 typename MultipliesType<SparseNumberArray<T,IndexSet>,T2>::supertype
 operator * (const SparseNumberArray<T,IndexSet>& a, const T2& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename MultipliesType<SparseNumberArray<T,IndexSet>,T2>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)
@@ -618,7 +618,7 @@ inline
 typename DividesType<SparseNumberArray<T,IndexSet>,T2>::supertype
 operator / (const SparseNumberArray<T,IndexSet>& a, const T2& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename DividesType<SparseNumberArray<T,IndexSet>,T2>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)

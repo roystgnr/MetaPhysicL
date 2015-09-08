@@ -620,7 +620,7 @@ struct SparseNumberStructUnitVector
 
   typedef SparseNumberStruct<IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.raw_data().template data<MetaPhysicL::UnsignedIntType<index> >() = 1;
     return returnval;
@@ -637,7 +637,7 @@ struct SparseNumberStructFullVector
 
   typedef SparseNumberStruct<IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.for_each_datum
       (type::template CopyFunctor<ConstantDataSet<int> >
@@ -653,7 +653,7 @@ struct SparseNumberStructFullVector<0,T>
 
   typedef SparseNumberStruct<IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     return returnval;
   }

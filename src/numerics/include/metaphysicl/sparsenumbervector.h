@@ -388,7 +388,7 @@ public:
       typename SymmetricMultipliesType<T,T2>::supertype, IndexSet2
     >, IndexSet > returnval;
 
-    static const unsigned int size2 = IndexSet2::size;
+    const unsigned int size2 = IndexSet2::size;
 
     for (unsigned int i=0; i != index_size; ++i)
       for (unsigned int j=0; j != size2; ++j)
@@ -484,7 +484,7 @@ struct SparseNumberVectorUnitVector
 
   typedef SparseNumberVector<T, IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     returnval.raw_at(0) = 1;
     return returnval;
@@ -502,7 +502,7 @@ struct SparseNumberVectorFullVector
 
   typedef SparseNumberVector<T,IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     for (unsigned int i=0; i != N; ++i)
       returnval[i] = 1;
@@ -518,7 +518,7 @@ struct SparseNumberVectorFullVector<0,T>
 
   typedef SparseNumberVector<T,IndexSet> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     return returnval;
   }
@@ -532,8 +532,8 @@ inline
 SparseNumberVector<SparseNumberVector<T, IndexSet>, IndexSet2>
 transpose(const SparseNumberVector<SparseNumberVector<T, IndexSet2>, IndexSet>& a)
 {
-  static const unsigned int size  = IndexSet::size;
-  static const unsigned int size2 = IndexSet2::size;
+  const unsigned int size  = IndexSet::size;
+  const unsigned int size2 = IndexSet2::size;
 
   SparseNumberVector<SparseNumberVector<T, IndexSet>, IndexSet2> returnval;
 
@@ -585,7 +585,7 @@ inline
 typename MultipliesType<SparseNumberVector<T2,IndexSet>,T,true>::supertype
 operator * (const T& a, const SparseNumberVector<T2,IndexSet>& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename MultipliesType<SparseNumberVector<T2,IndexSet>,T,true>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)
@@ -598,7 +598,7 @@ inline
 typename MultipliesType<SparseNumberVector<T,IndexSet>,T2>::supertype
 operator * (const SparseNumberVector<T,IndexSet>& a, const T2& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename MultipliesType<SparseNumberVector<T,IndexSet>,T2>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)
@@ -611,7 +611,7 @@ inline
 typename DividesType<SparseNumberVector<T,IndexSet>,T2>::supertype
 operator / (const SparseNumberVector<T,IndexSet>& a, const T2& b)
 {
-  static const unsigned int size = IndexSet::size;
+  const unsigned int size = IndexSet::size;
 
   typename DividesType<SparseNumberVector<T,IndexSet>,T2>::supertype returnval;
   for (unsigned int i=0; i != size; ++i)

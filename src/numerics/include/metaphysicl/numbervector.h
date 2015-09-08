@@ -240,7 +240,7 @@ struct NumberVectorUnitVector
 {
   typedef NumberVector<N, T> type;
 
-  static const type value() {
+  static type value() {
     type returnval = 0;
     returnval[index] = 1;
     return returnval;
@@ -253,7 +253,7 @@ struct NumberVectorFullVector
 {
   typedef NumberVector<N,T> type;
 
-  static const type value() {
+  static type value() {
     type returnval;
     for (std::size_t i=0; i != N; ++i)
       returnval[i] = 1;
