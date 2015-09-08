@@ -124,6 +124,32 @@ public:
 #endif
   }
 
+#if __cplusplus >= 201103L
+  // Move constructors are useful when all your data is on the heap
+  DynamicSparseNumberArray(DynamicSparseNumberArray<T, I> && src) :
+    _data(src._data),
+    _indices(src._indices) {}
+
+  // Move assignment avoids heap operations too
+  DynamicSparseNumberArray& operator= (DynamicSparseNumberArray<T, I> && src)
+    { _data = std::move(src._data);
+      _indices = std::move(src._indices);
+      return *this;
+    }
+
+  // Standard copy operations get implicitly deleted upon move
+  // constructor definition, so we redefine them.
+  DynamicSparseNumberArray(const DynamicSparseNumberArray<T, I> & src) :
+    _data(src._data),
+    _indices(src._indices) {}
+
+  DynamicSparseNumberArray& operator= (const DynamicSparseNumberArray<T, I> & src)
+    { _data = src._data;
+      _indices = src._indices;
+      return *this;
+    }
+#endif
+
   template <typename T2, typename I2>
   DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src)
     { _data.resize(src._data.size());
