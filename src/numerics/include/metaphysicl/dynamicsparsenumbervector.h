@@ -750,8 +750,32 @@ operator opname (const atype& a, const btype& b) \
   return returnval; \
 }
 
+
+#if __cplusplus >= 201103L
+
+#define DynamicSparseNumberVector_op(opname, functorname) \
+DynamicSparseNumberVector_op_ab(opname, DynamicSparseNumberVector<T MacroComma I>, DynamicSparseNumberVector<T2 MacroComma I2>, functorname) \
+ \
+template <typename T, typename T2, typename I, typename I2> \
+inline \
+typename Symmetric##functorname##Type<DynamicSparseNumberVector<T,I>,DynamicSparseNumberVector<T2,I2> >::supertype \
+operator opname (DynamicSparseNumberVector<T,I>&& a, \
+                 const DynamicSparseNumberVector<T2,I2>& b) \
+{ \
+  typedef typename \
+    Symmetric##functorname##Type<DynamicSparseNumberVector<T,I>,DynamicSparseNumberVector<T2,I2> >::supertype \
+    type; \
+  type returnval = std::move(a); \
+  returnval opname##= b; \
+  return returnval; \
+}
+
+#else
+
 #define DynamicSparseNumberVector_op(opname, functorname) \
 DynamicSparseNumberVector_op_ab(opname, DynamicSparseNumberVector<T MacroComma I>, DynamicSparseNumberVector<T2 MacroComma I2>, functorname)
+
+#endif
 
 DynamicSparseNumberVector_op(+, Plus)       // Union)
 DynamicSparseNumberVector_op(-, Minus)      // Union)
@@ -815,6 +839,36 @@ operator / (const DynamicSparseNumberVector<T,I>& a, const T2& b)
 
   return returnval;
 }
+
+#if __cplusplus >= 201103L
+template <typename T, typename T2, typename I>
+inline
+typename MultipliesType<DynamicSparseNumberVector<T,I>,T2>::supertype
+operator * (DynamicSparseNumberVector<T,I>&& a, const T2& b)
+{
+  typename MultipliesType<DynamicSparseNumberVector<T,I>,T2>::supertype
+    returnval = std::move(a);
+
+  returnval *= b;
+
+  return returnval;
+}
+
+template <typename T, typename T2, typename I>
+inline
+typename DividesType<DynamicSparseNumberVector<T,I>,T2>::supertype
+operator / (DynamicSparseNumberVector<T,I>&& a, const T2& b)
+{
+  const unsigned int index_size = a.size();
+
+  typename DividesType<DynamicSparseNumberVector<T,I>,T2>::supertype returnval;
+  returnval = std::move(a);
+
+  returnval /= b;
+
+  return returnval;
+}
+#endif
 
 
 #define DynamicSparseNumberVector_operator_binary(opname, functorname) \

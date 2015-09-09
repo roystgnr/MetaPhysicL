@@ -728,8 +728,32 @@ operator opname (const atype& a, const btype& b) \
   return returnval; \
 }
 
+
+#if __cplusplus >= 201103L
+
+#define DynamicSparseNumberArray_op(opname, functorname) \
+DynamicSparseNumberArray_op_ab(opname, DynamicSparseNumberArray<T MacroComma I>, DynamicSparseNumberArray<T2 MacroComma I2>, functorname) \
+ \
+template <typename T, typename T2, typename I, typename I2> \
+inline \
+typename Symmetric##functorname##Type<DynamicSparseNumberArray<T,I>,DynamicSparseNumberArray<T2,I2> >::supertype \
+operator opname (DynamicSparseNumberArray<T,I>&& a, \
+                 const DynamicSparseNumberArray<T2,I2>& b) \
+{ \
+  typedef typename \
+    Symmetric##functorname##Type<DynamicSparseNumberArray<T,I>,DynamicSparseNumberArray<T2,I2> >::supertype \
+    type; \
+  type returnval = std::move(a); \
+  returnval opname##= b; \
+  return returnval; \
+}
+
+#else
+
 #define DynamicSparseNumberArray_op(opname, functorname) \
 DynamicSparseNumberArray_op_ab(opname, DynamicSparseNumberArray<T MacroComma I>, DynamicSparseNumberArray<T2 MacroComma I2>, functorname)
+
+#endif
 
 DynamicSparseNumberArray_op(+, Plus)       // Union)
 DynamicSparseNumberArray_op(-, Minus)      // Union)
@@ -793,6 +817,36 @@ operator / (const DynamicSparseNumberArray<T,I>& a, const T2& b)
 
   return returnval;
 }
+
+#if __cplusplus >= 201103L
+template <typename T, typename T2, typename I>
+inline
+typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
+operator * (DynamicSparseNumberArray<T,I>&& a, const T2& b)
+{
+  const unsigned int index_size = a.size();
+
+  typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
+    returnval = std::move(a);
+
+  returnval *= b;
+
+  return returnval;
+}
+
+template <typename T, typename T2, typename I>
+inline
+typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype
+operator / (DynamicSparseNumberArray<T,I>&& a, const T2& b)
+{
+  typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype returnval;
+  returnval = std::move(a);
+
+  returnval /= b;
+
+  return returnval;
+}
+#endif
 
 
 #define DynamicSparseNumberArray_operator_binary(opname, functorname) \
