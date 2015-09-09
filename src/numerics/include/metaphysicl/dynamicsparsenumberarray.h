@@ -306,6 +306,8 @@ public:
       _indices.rbegin() + unseen_indices;
     typename std::vector<I2>::const_reverse_iterator i2_it = new_indices.rbegin();
 
+    // Duplicate copies of rend() to work around
+    // http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#179
     typename std::vector<I>::reverse_iterator      mirend  = _indices.rend();
     typename std::vector<I>::const_reverse_iterator  rend  = mirend;
     typename std::vector<I2>::const_reverse_iterator rend2 = new_indices.rend();
