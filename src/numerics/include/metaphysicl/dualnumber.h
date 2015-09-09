@@ -203,7 +203,7 @@ DualNumber<T,D>::DualNumber(const T2& val,
 // subtle run-time user errors would turn into compile-time user
 // errors.
 
-#define DualNumber_op(opname, functorname, simplecalc, dualcalc) \
+#define DualNumber_preop(opname, functorname, simplecalc, dualcalc) \
 template <typename T, typename D> \
 template <typename T2> \
 inline \
@@ -263,6 +263,45 @@ operator opname (const DualNumber<T,D>& a, const T2& b) \
   return returnval; \
 }
 
+
+
+// With C++11, define "move operations" where possible.  We should be
+// more complete and define the move-from-b alternatives as well, but
+// those would require additional support to correctly handle
+// division, subtraction, or non-commutative addition/multiplication
+#if __cplusplus >= 201103L
+#define DualNumber_op(opname, functorname, simplecalc, dualcalc) \
+        DualNumber_preop(opname, functorname, simplecalc, dualcalc) \
+ \
+template <typename T, typename D, typename T2, typename D2> \
+inline \
+typename functorname##Type<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
+operator opname (DualNumber<T,D>&& a, const DualNumber<T2,D2>& b) \
+{ \
+  typedef typename \
+    functorname##Type<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
+    DS; \
+  DS returnval = std::move(a); \
+  returnval opname##= b; \
+  return returnval; \
+} \
+ \
+template <typename T, typename D, typename T2> \
+inline \
+typename functorname##Type<DualNumber<T,D>,T2,false>::supertype \
+operator opname (DualNumber<T,D>&& a, const T2& b) \
+{ \
+  typedef typename \
+    functorname##Type<DualNumber<T,D>,T2,false>::supertype DS; \
+  DS returnval = std::move(a); \
+  returnval opname##= b; \
+  return returnval; \
+}
+
+#else
+#define DualNumber_op(opname, functorname, simplecalc, dualcalc) \
+        DualNumber_preop(opname, functorname, simplecalc, dualcalc)
+#endif
 
 
 DualNumber_op(+, Plus, , this->derivatives() += in.derivatives())
@@ -545,18 +584,49 @@ using MetaPhysicL::CompareTypes;
 
 // Some forward declarations necessary for recursive DualNumbers
 
-template <typename T, typename D>
-inline DualNumber<T,D> cos   (DualNumber<T,D> a);
+#if __cplusplus >= 201103L
 
 template <typename T, typename D>
-inline DualNumber<T,D> cosh  (DualNumber<T,D> a);
+inline DualNumber<T,D> cos  (const DualNumber<T,D> & a);
+
+template <typename T, typename D>
+inline DualNumber<T,D> cos  (DualNumber<T,D> && a);
+
+template <typename T, typename D>
+inline DualNumber<T,D> cosh (const DualNumber<T,D> & a);
+
+template <typename T, typename D>
+inline DualNumber<T,D> cosh (DualNumber<T,D> && a);
+
+#else
+
+template <typename T, typename D>
+inline DualNumber<T,D> cos  (DualNumber<T,D> a);
+
+template <typename T, typename D>
+inline DualNumber<T,D> cosh (DualNumber<T,D> a);
+
+#endif
 
 // Now just combined declaration/definitions
 
+#if __cplusplus >= 201103L
 #define DualNumber_std_unary(funcname, derivative, precalc) \
 template <typename T, typename D> \
 inline \
-DualNumber<T,D> funcname   (DualNumber<T,D> in) \
+DualNumber<T,D> funcname (const DualNumber<T,D> & in) \
+{ \
+  DualNumber<T,D> returnval = in; \
+  T funcval = std::funcname(in.value()); \
+  precalc; \
+  returnval.derivatives() *= derivative; \
+  returnval.value() = funcval; \
+  return returnval; \
+} \
+ \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname (DualNumber<T,D> && in) \
 { \
   T funcval = std::funcname(in.value()); \
   precalc; \
@@ -564,6 +634,24 @@ DualNumber<T,D> funcname   (DualNumber<T,D> in) \
   in.value() = funcval; \
   return in; \
 }
+
+
+
+#else
+
+#define DualNumber_std_unary(funcname, derivative, precalc) \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname (DualNumber<T,D> in) \
+{ \
+  T funcval = std::funcname(in.value()); \
+  precalc; \
+  in.derivatives() *= derivative; \
+  in.value() = funcval; \
+  return in; \
+}
+
+#endif
 
 DualNumber_std_unary(sqrt, 1 / (2 * funcval),)
 DualNumber_std_unary(exp, funcval,)
