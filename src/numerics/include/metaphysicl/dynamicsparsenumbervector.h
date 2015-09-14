@@ -257,7 +257,7 @@ public:
     typedef typename CompareTypes<I,I2>::supertype max_index_type;
     max_index_type unseen_indices = 0;
 
-    I maxI = std::numeric_limits<I>::max();
+    const I maxI = std::numeric_limits<I>::max();
 
     while (index2_it != new_indices.end()) {
       I idx1 = (index_it == _indices.end()) ? maxI : *index_it;
@@ -350,7 +350,7 @@ public:
     typedef typename CompareTypes<I,I2>::supertype max_index_type;
     max_index_type shared_indices = 0;
 
-    I maxI = std::numeric_limits<I>::max();
+    const I maxI = std::numeric_limits<I>::max();
 
     while (index2_it != new_indices.end()) {
       I idx1 = (index_it == _indices.end()) ? maxI : *index_it;
@@ -895,7 +895,7 @@ operator opname (const DynamicSparseNumberVector<T,I>& a, \
   typename std::vector<T2>::const_iterator data_b_it = b.nude_data().begin(); \
   typename std::vector<TS>::iterator     data_out_it = returnval.nude_data().begin(); \
  \
-  IS  maxIS  = std::numeric_limits<IS>::max(); \
+  const IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
   for (; index_out_it != returnval.nude_indices().end(); ++index_out_it, ++data_out_it) { \
     const IS index_a = (index_a_it == a.nude_indices().end()) ? maxIS : *index_a_it; \
@@ -1102,7 +1102,7 @@ funcname (const DynamicSparseNumberVector<T, I>& a, \
   typename std::vector<T2>::const_iterator data_b_it = b.nude_data().begin(); \
   typename std::vector<TS>::iterator     data_out_it = returnval.nude_data().begin(); \
  \
-  IS  maxIS  = std::numeric_limits<IS>::max(); \
+  const IS  maxIS  = std::numeric_limits<IS>::max(); \
  \
   for (; index_out_it != returnval.nude_indices().end(); ++index_out_it, ++data_out_it) { \
     const IS index_a = (index_a_it == a.nude_indices().end()) ? maxIS : *index_a_it; \
