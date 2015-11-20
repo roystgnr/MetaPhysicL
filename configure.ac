@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(metaphysicl, 0.0.0, roystgnr@ices.utexas.edu)
+AC_INIT(metaphysicl, 0.1.0, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADER(metaphysicl_config.h.tmp)
@@ -132,4 +132,6 @@ AC_OUTPUT()
 dnl------------------------------
 dnl Final summary
 dnl------------------------------
+AX_SUMMARIZE_ENV
+
 AX_SUMMARIZE_CONFIG
