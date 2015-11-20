@@ -132,4 +132,6 @@ AC_OUTPUT()
 dnl------------------------------
 dnl Final summary
 dnl------------------------------
+AX_SUMMARIZE_ENV
+
 AX_SUMMARIZE_CONFIG
