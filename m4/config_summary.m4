@@ -28,7 +28,7 @@ echo Build user.................... : $USER
 echo Build host.................... : $BUILD_HOST
 echo Configure date................ : $BUILD_DATE
 echo Build architecture............ : $BUILD_ARCH
-echo SVN revision number........... : $BUILD_VERSION
+echo Git revision number........... : $BUILD_VERSION
 echo
 echo Optional Packages for Testing:
 if test "x$HAVE_MASA" = "x1"; then
