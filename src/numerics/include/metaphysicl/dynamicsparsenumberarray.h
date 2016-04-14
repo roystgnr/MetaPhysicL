@@ -247,7 +247,11 @@ public:
     std::size_t index_size = size();
     DynamicSparseNumberArray<T,I> returnval;
     returnval.resize(index_size);
-    for (unsigned int i=0; i != index_size; ++i) returnval.raw_at(i) = -_data[i];
+    for (unsigned int i=0; i != index_size; ++i)
+      {
+        returnval.raw_index(i) = _indices[i];
+        returnval.raw_at(i) = -_data[i];
+      }
     return returnval;
   }
 
