@@ -320,6 +320,7 @@ public:
       if ((i_it == rend) ||
           ((i2_it != rend2) &&
            (*i2_it > *i_it))) {
+        *md_it = 0;
         *mi_it = *i2_it;
         ++i2_it;
       } else {
