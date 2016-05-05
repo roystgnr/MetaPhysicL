@@ -33,6 +33,7 @@
 #include <functional>
 #include <stdexcept>
 #include <ostream>
+#include <vector>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
