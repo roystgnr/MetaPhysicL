@@ -867,8 +867,6 @@ inline
 typename DividesType<DynamicSparseNumberVector<T,I>,T2>::supertype
 operator / (DynamicSparseNumberVector<T,I>&& a, const T2& b)
 {
-  const unsigned int index_size = a.size();
-
   typename DividesType<DynamicSparseNumberVector<T,I>,T2>::supertype returnval;
   returnval = std::move(a);
 
