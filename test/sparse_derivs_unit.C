@@ -102,6 +102,11 @@ int vectester (Vector zerovec)
 
   one_test((random_vec + random_vec)/2 - random_vec);
 
+  // We had a problem in user code with the mixing of long double and
+  // DualNumber<double, DynamicSparseNumberArray>
+
+  one_test(2.L*random_vec - random_vec - 1.f*random_vec);
+
   // pow() is still having problems with sparse vectors?  Disabling it
   // for now.
 
