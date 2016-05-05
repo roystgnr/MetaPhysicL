@@ -141,10 +141,9 @@ public:
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src)
-    { _data.resize(src._data.size());
-      _indices.resize(src._indices.size());
-      std::copy(src._data.begin(), src._data.end(), _data.begin());
-      std::copy(src._indices.begin(), src._indices.end(), _indices.begin()); }
+    { this->resize(src.size());
+      std::copy(src.nude_data().begin(), src.nude_data().end(), _data.begin());
+      std::copy(src.nude_indices().begin(), src.nude_indices().end(), _indices.begin()); }
 
   T* raw_data()
     { return size()?&_data[0]:NULL; }
