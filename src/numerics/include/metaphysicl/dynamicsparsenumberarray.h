@@ -177,6 +177,17 @@ public:
   std::vector<I>& nude_indices()
     { return _indices; }
 
+  std::size_t runtime_index_query(index_value_type i) const
+    {
+      typename std::vector<I>::const_iterator it =
+        std::lower_bound(_indices.begin(), _indices.end(), i);
+      if (it == _indices.end())
+        return std::numeric_limits<std::size_t>::max();
+      std::size_t offset = it - _indices.begin();
+      metaphysicl_assert_equal_to(_indices[offset], i);
+      return offset;
+    }
+
   std::size_t runtime_index_of(index_value_type i) const
     {
       typename std::vector<I>::const_iterator it =
@@ -192,6 +203,14 @@ public:
 
   const T& operator[](index_value_type i) const
     { return _data[runtime_index_of(i)]; }
+
+  T query(index_value_type i) const
+    {
+      std::size_t rq = runtime_index_query(i);
+      if (rq == std::numeric_limits<std::size_t>::max())
+        return 0;
+      return _data[rq];
+    }
 
   template <unsigned int i>
   typename entry_type<i>::type& get() {
