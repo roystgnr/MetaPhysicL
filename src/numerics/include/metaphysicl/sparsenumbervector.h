@@ -859,17 +859,20 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T2,
   typedef typename IndexSet::template Union<IndexSet2>::type IndexSetS; \
   SparseNumberVector<TS, IndexSetS> returnval; \
  \
+  const TS& (*unambiguous) (const TS&, const TS&); \
+  unambiguous = std::funcname<TS>; \
+ \
   typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
     (BinaryVectorFunctor<std::pointer_to_binary_function<const TS&,const TS&,const TS&>,IndexSet,IndexSet2,IndexSetS,T,T2,TS> \
-      (MetaPhysicL::binary_ptr_fun(std::funcname<TS>), \
+      (MetaPhysicL::binary_ptr_fun(unambiguous), \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
     (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSetS,T,TS> \
-      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(0)), \
+      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(unambiguous),TS(0)), \
        a.raw_data(), returnval.raw_data())); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
     (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet2,IndexSetS,T2,TS> \
-      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(0)), \
+      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(unambiguous),TS(0)), \
        b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -882,9 +885,12 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const SparseNumberVector<T, 
 { \
   SparseNumberVector<T, IndexSet> returnval; \
  \
+  const T& (*unambiguous) (const T&, const T&); \
+  unambiguous = std::funcname<T>; \
+ \
   typename IndexSet::ForEach() \
     (BinaryVectorFunctor<std::pointer_to_binary_function<const T&,const T&,const T&>,IndexSet,IndexSet,IndexSet,T,T,T> \
-      (MetaPhysicL::binary_ptr_fun(std::funcname<T>), \
+      (MetaPhysicL::binary_ptr_fun(unambiguous), \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -898,9 +904,12 @@ funcname (const SparseNumberVector<T, IndexSet>& a, const T2& b) \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
+  const TS& (*unambiguous) (const TS&, const TS&); \
+  unambiguous = std::funcname<TS>; \
+ \
   typename IndexSet::ForEach() \
     (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T,TS> \
-      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(b)), \
+      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(unambiguous),TS(b)), \
        a.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -914,9 +923,12 @@ funcname (const T& a, const SparseNumberVector<T2, IndexSet>& b) \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   SparseNumberVector<TS, IndexSet> returnval; \
  \
+  const TS& (*unambiguous) (const TS&, const TS&); \
+  unambiguous = std::funcname<TS>; \
+ \
   typename IndexSet::ForEach() \
     (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T2,TS> \
-      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),TS(a)), \
+      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(unambiguous),TS(a)), \
        b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
