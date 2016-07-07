@@ -638,14 +638,14 @@ operator opname (const SparseNumberArray<T,IndexSet>& a, const SparseNumberArray
   SparseNumberArray<bool, IndexSetS> returnval; \
  \
   typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryVectorFunctor<std::binary_function<TS,TS,bool>,IndexSet,IndexSet2,IndexSetS,T,T2,bool> \
-      (a.raw_data(), b.raw_data(), returnval.raw_data(), std::functorname<TS>())); \
+    (BinaryVectorFunctor<std::functorname<TS>,IndexSet,IndexSet2,IndexSetS,T,T2,bool> \
+      (std::functorname<TS>(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
     (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,IndexSetS,T,bool> \
-      (a.raw_data(), returnval.raw_data(), std::bind2nd(std::functorname<T>(),TS(0)))); \
+      (std::bind2nd(std::functorname<T>(),TS(0)), a.raw_data(), returnval.raw_data())); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
     (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,IndexSetS,T2,bool> \
-      (b.raw_data(), returnval.raw_data(), std::bind1st(std::functorname<T2>(),T2(0)))); \
+      (std::bind1st(std::functorname<T2>(),T2(0)), b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
 } \
