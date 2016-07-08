@@ -35,7 +35,10 @@ int test_error_vec (const DualVector& random_vec,
     {
       max_abs_error = max(max_abs_error, fabs(error_vec[i]));
 
-      if (max_abs_error > tol)
+      // Handle NaNs properly.  Testing max_abs_error for NaN is
+      // impossible because IEEE sucks:
+      // https://en.wikipedia.org/wiki/IEEE_754_revision#min_and_max
+      if (max_abs_error > tol || error_vec[i] != error_vec[i])
         {
 	  std::cerr << "Value " << random_vec[i] <<
 		       "\nError " << error_vec[i] <<
