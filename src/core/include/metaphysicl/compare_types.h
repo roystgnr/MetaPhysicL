@@ -488,6 +488,23 @@ Symmetric_definition(OrType);
 // #undef MacroComma
 // #undef CompareTypes_default_Type
 
+// Define an overloadable "ternary" operator.  No short-circuiting
+// here I'm afraid.
+
+template <typename B, typename T, typename T2>
+inline
+typename boostcopy::enable_if_c<
+  ScalarTraits<B>::value,
+  typename CompareTypes<T,T2>::supertype
+>::type
+if_else (const B & condition, const T & if_true, const T2 & if_false)
+{
+  if (condition)
+    return if_true;
+  return if_false;
+}
+
+
 } // namespace MetaPhysicL
 
 #endif // METAPHYSICL_COMPARE_TYPES_H
