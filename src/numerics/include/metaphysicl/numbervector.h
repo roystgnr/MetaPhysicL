@@ -204,6 +204,21 @@ private:
 // Non-member functions
 //
 
+template <std::size_t N, typename B, typename T, typename T2>
+inline
+typename CompareTypes<T,T2>::supertype
+if_else (const NumberVector<N,B> & condition, const T & if_true, const T2 & if_false)
+{
+  typename CompareTypes<T,T2>::supertype returnval(if_true);
+  for (std::size_t i = 0; i != N; ++i)
+    if (!condition[i])
+      returnval[i] = if_false[i];
+
+  return returnval;
+}
+
+
+
 template <std::size_t N,
           unsigned int index1=0, typename Data1=void,
           unsigned int index2=0, typename Data2=void,

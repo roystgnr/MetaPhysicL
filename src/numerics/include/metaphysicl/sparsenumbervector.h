@@ -421,6 +421,31 @@ private:
 // Non-member functions
 //
 
+/*
+template <typename B, typename T, typename T2,
+	  typename IndexSetB, typename IndexSet, typename IndexSet2>
+inline
+SparseNumberVector<typename SymmetricCompareTypes<T,T2>::supertype,
+                   typename IndexSetB::template Union<IndexSet>::type::Union
+                     <typename IndexSet2::template Difference<IndexSetB>::type >::type>
+if_else (const SparseNumberVector<IndexSetB,B> & condition,
+         const SparseNumberVector<IndexSet,T> & if_true,
+         const SparseNumberVector<IndexSet2,T2> & if_false)
+{
+  typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
+  typedef typename IndexSetB::template Union<IndexSet>::type::Union
+    <typename IndexSet2::template Difference<IndexSetB>::type >::type IndexSetS;
+
+  SparseNumberVector<TS, IndexSetS> returnval;
+
+  FIXME
+
+  return returnval;
+}
+*/
+
+
+
 template <unsigned int N,
           unsigned int index1=0, typename Data1=void,
           unsigned int index2=0, typename Data2=void,
