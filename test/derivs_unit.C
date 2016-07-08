@@ -130,7 +130,7 @@ int vectester (void)
   // And now for derivatives tests
 
   one_test(derivatives(pow(sin(random_vec-2),2)) -
-	   2*sin(random_vec)*cos(random_vec));
+	   2*sin(random_vec-2)*cos(random_vec-2));
 
   one_test(derivatives(cos(2*random_vec)) + 2*sin(2*random_vec));
   one_test(derivatives(tan(.5*random_vec)) - .5/pow(cos(.5*random_vec),2));
