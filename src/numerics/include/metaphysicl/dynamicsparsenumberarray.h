@@ -478,9 +478,63 @@ public:
   }
 
 
+
+  // Since this is a dynamically allocated sparsity pattern, we can
+  // decrease it when possible for efficiency
+  void sparsity_trim () {
+
+    metaphysicl_assert
+      (std::adjacent_find(_indices.begin(), _indices.end()) ==
+       _indices.end());
+#ifdef METAPHYSICL_HAVE_CXX11
+    metaphysicl_assert(std::is_sorted(_indices.begin(), _indices.end()));
+#endif
+
+#ifndef NDEBUG
+    I used_indices = 0;
+
+    {
+      typename std::vector<I>::iterator index_it = _indices.begin();
+      typename std::vector<T>::iterator data_it = _data.begin();
+      for (; index_it != _indices.end(); ++index_it, ++data_it)
+        if (*data_it)
+          ++used_indices;
+    }
+#endif
+
+    // We'll loop up through the arrays, copying indices (and
+    // corresponding data) that should be there downward into place.
+
+    // Downward-merged values:
+    typename std::vector<T>::iterator md_it = _data.begin();
+    typename std::vector<I>::iterator mi_it = _indices.begin();
+
+    // Our old values:
+    typename std::vector<T>::const_iterator d_it = _data.begin();
+
+    for (typename std::vector<I>::const_iterator i_it = _indices.begin();
+         i_it != _indices.end(); ++i_it, ++d_it)
+      if (*d_it)
+        {
+          *mi_it = *i_it;
+          *md_it = *d_it;
+          ++mi_it;
+          ++md_it;
+        }
+
+    const std::size_t n_indices = md_it - _data.begin();
+
+    metaphysicl_assert_equal_to(n_indices, used_indices);
+    metaphysicl_assert_equal_to(mi_it - _indices.begin(),
+                                used_indices);
+
+    _indices.resize(n_indices);
+    _data.resize(n_indices);
+  }
+
+
   // Not defineable since !0 != 0
   // DynamicSparseNumberArray<T,I> operator! () const;
-
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray<T,I>&
