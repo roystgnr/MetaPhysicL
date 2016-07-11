@@ -151,10 +151,10 @@ public:
   const T* raw_data() const
     { return size()?&_data[0]:NULL; }
 
-  T& raw_at(unsigned int i)
+  typename std::vector<T>::reference raw_at(unsigned int i)
     { return _data[i]; }
 
-  const T& raw_at(unsigned int i) const
+  typename std::vector<T>::const_reference raw_at(unsigned int i) const
     { return _data[i]; }
 
   I& raw_index(unsigned int i)
@@ -905,7 +905,7 @@ operator opname (const DynamicSparseNumberArray<T,I>& a, \
     const IS index_out = *index_out_it; \
     const TS data_a  = (index_a_it == a.nude_indices().end()) ? 0: *data_a_it; \
     const TS data_b  = (index_b_it == b.nude_indices().end()) ? 0: *data_b_it; \
-    TS &   data_out  = *data_out_it; \
+    typename std::vector<TS>::reference data_out = *data_out_it; \
  \
     if (index_a == index_out) { \
       if (index_b == index_out) { \
@@ -1112,7 +1112,7 @@ funcname (const DynamicSparseNumberArray<T, I>& a, \
     const IS index_out = *index_out_it; \
     const TS data_a  = (index_a_it == a.nude_indices.end()) ? 0: *data_a_it; \
     const TS data_b  = (index_b_it == b.nude_indices.end()) ? 0: *data_b_it; \
-    TS &   data_out  = *data_out_it; \
+    typename std::vector<TS>::reference data_out = *data_out_it; \
  \
     if (index_a == index_out) { \
       if (index_b == index_out) { \
