@@ -278,6 +278,18 @@ public:
   // increase it as needed to support e.g. operator+=
   template <typename I2>
   void sparsity_union (const std::vector<I2>& new_indices) {
+
+    metaphysicl_assert
+      (std::adjacent_find(_indices.begin(), _indices.end()) ==
+       _indices.end());
+    metaphysicl_assert
+      (std::adjacent_find(new_indices.begin(), new_indices.end()) ==
+       new_indices.end());
+#ifdef METAPHYSICL_HAVE_CXX11
+    metaphysicl_assert(std::is_sorted(_indices.begin(), _indices.end()));
+    metaphysicl_assert(std::is_sorted(new_indices.begin(), new_indices.end()));
+#endif
+
     typename std::vector<I>::iterator index_it = _indices.begin();
     typename std::vector<I2>::const_iterator index2_it = new_indices.begin();
 
@@ -370,6 +382,17 @@ public:
   // decrease it when possible for efficiency
   template <typename I2>
   void sparsity_intersection (const std::vector<I2>& new_indices) {
+
+    metaphysicl_assert
+      (std::adjacent_find(_indices.begin(), _indices.end()) ==
+       _indices.end());
+    metaphysicl_assert
+      (std::adjacent_find(new_indices.begin(), new_indices.end()) ==
+       new_indices.end());
+#ifdef METAPHYSICL_HAVE_CXX11
+    metaphysicl_assert(std::is_sorted(_indices.begin(), _indices.end()));
+    metaphysicl_assert(std::is_sorted(new_indices.begin(), new_indices.end()));
+#endif
 
     typedef typename CompareTypes<I,I2>::supertype max_index_type;
 
