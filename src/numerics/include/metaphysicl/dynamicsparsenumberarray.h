@@ -712,7 +712,7 @@ struct DynamicSparseNumberArrayFullVector
 template <typename T, typename I, typename I2>
 inline
 DynamicSparseNumberArray<DynamicSparseNumberArray<T, I>, I2>
-transpose(const DynamicSparseNumberArray<DynamicSparseNumberArray<T, I2>, I>& a)
+transpose(const DynamicSparseNumberArray<DynamicSparseNumberArray<T, I2>, I>& /*a*/)
 {
   DynamicSparseNumberArray<DynamicSparseNumberArray<T, I>, I2> returnval;
 

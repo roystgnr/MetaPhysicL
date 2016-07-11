@@ -738,7 +738,7 @@ struct DynamicSparseNumberVectorFullVector
 template <typename T, typename I, typename I2>
 inline
 DynamicSparseNumberVector<DynamicSparseNumberVector<T, I>, I2>
-transpose(const DynamicSparseNumberVector<DynamicSparseNumberVector<T, I2>, I>& a)
+transpose(const DynamicSparseNumberVector<DynamicSparseNumberVector<T, I2>, I>& /*a*/)
 {
   DynamicSparseNumberVector<DynamicSparseNumberVector<T, I>, I2> returnval;
 
