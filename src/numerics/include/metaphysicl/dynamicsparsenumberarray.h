@@ -721,6 +721,171 @@ private:
 // Non-member functions
 //
 
+template <typename B, typename IB, typename T, typename I, typename T2, typename I2>
+inline
+DynamicSparseNumberArray<typename CompareTypes<T,T2>::supertype,
+                         typename CompareTypes<IB,I2>::supertype>
+if_else (const DynamicSparseNumberArray<B,IB>  & condition,
+         const DynamicSparseNumberArray<T,I>   & if_true,
+         const DynamicSparseNumberArray<T2,I2> & if_false)
+{
+    metaphysicl_assert
+      (std::adjacent_find(condition.nude_indices().begin(), condition.nude_indices().end()) ==
+       condition.nude_indices().end());
+    metaphysicl_assert
+      (std::adjacent_find(if_true.nude_indices().begin(), if_true.nude_indices().end()) ==
+       if_true.nude_indices().end());
+    metaphysicl_assert
+      (std::adjacent_find(if_false.nude_indices().begin(), if_false.nude_indices().end()) ==
+       if_false.nude_indices().end());
+#ifdef METAPHYSICL_HAVE_CXX11
+    metaphysicl_assert(std::is_sorted(condition.nude_indices().begin(), condition.nude_indices().end()));
+    metaphysicl_assert(std::is_sorted(if_true.nude_indices().begin(), if_true.nude_indices().end()));
+    metaphysicl_assert(std::is_sorted(if_false.nude_indices().begin(), if_false.nude_indices().end()));
+#endif
+
+  // <I,I2>::supertype would have worked too; every index from the
+  // truth case will be in both I and IB.
+  typedef typename CompareTypes<IB,I2>::supertype IS;
+  typedef typename CompareTypes<T,T2>::supertype TS;
+
+  DynamicSparseNumberArray<TS, IS> returnval;
+
+  // First count returnval size
+  IS required_size = 0;
+  {
+    typename std::vector<IB>::const_iterator indexcond_it      = condition.nude_indices().begin();
+    typename std::vector<B>::const_iterator datacond_it        = condition.nude_data().begin();
+    typename std::vector<I>::const_iterator indextrue_it       = if_true.nude_indices().begin();
+    const typename std::vector<I>::const_iterator endtrue_it   = if_true.nude_indices().end();
+    typename std::vector<T>::const_iterator datatrue_it        = if_true.nude_data().begin();
+    typename std::vector<I2>::const_iterator indexfalse_it     = if_false.nude_indices().begin();
+    const typename std::vector<I2>::const_iterator endfalse_it = if_false.nude_indices().end();
+    typename std::vector<T2>::const_iterator datafalse_it      = if_false.nude_data().begin();
+
+    for (; indexcond_it != condition.nude_indices().end(); ++indexcond_it, ++datacond_it)
+     {
+       while (indexfalse_it != endfalse_it &&
+              *indexfalse_it < *indexcond_it)
+         {
+           if (*datafalse_it)
+             ++required_size;
+
+           ++indexfalse_it;
+           ++datafalse_it;
+         }
+
+       if (*datacond_it)
+         {
+           while (indextrue_it != endtrue_it &&
+                  *indextrue_it < *indexcond_it)
+             {
+               ++indextrue_it;
+               ++datatrue_it;
+             }
+           if (indextrue_it != endtrue_it &&
+               *indextrue_it == *indexcond_it &&
+               *datatrue_it)
+             {
+               ++required_size;
+               ++indextrue_it;
+               ++datatrue_it;
+             }
+         }
+       else
+         {
+           if (indexfalse_it != endfalse_it &&
+               *indexfalse_it == *indexcond_it &&
+               *datafalse_it)
+             {
+               ++required_size;
+               ++indexfalse_it;
+               ++datafalse_it;
+             }
+         }
+     }
+  }
+
+  // Then fill returnval
+  returnval.resize(required_size);
+  {
+    typename std::vector<IB>::const_iterator indexcond_it      = condition.nude_indices().begin();
+    typename std::vector<B>::const_iterator datacond_it        = condition.nude_data().begin();
+    typename std::vector<I>::const_iterator indextrue_it       = if_true.nude_indices().begin();
+    const typename std::vector<I>::const_iterator endtrue_it   = if_true.nude_indices().end();
+    typename std::vector<T>::const_iterator datatrue_it        = if_true.nude_data().begin();
+    typename std::vector<I2>::const_iterator indexfalse_it     = if_false.nude_indices().begin();
+    const typename std::vector<I2>::const_iterator endfalse_it = if_false.nude_indices().end();
+    typename std::vector<T2>::const_iterator datafalse_it      = if_false.nude_data().begin();
+
+    typename std::vector<IS>::iterator indexreturn_it          = returnval.nude_indices().begin();
+    typename std::vector<TS>::iterator datareturn_it           = returnval.nude_data().begin();
+
+    for (; indexcond_it != condition.nude_indices().end(); ++indexcond_it, ++datacond_it)
+     {
+       while (indexfalse_it != endfalse_it &&
+              *indexfalse_it < *indexcond_it)
+         {
+           if (*datafalse_it)
+             {
+               *indexreturn_it = *indexfalse_it;
+               *datareturn_it  = *datafalse_it;
+               ++indexreturn_it;
+               ++datareturn_it;
+             }
+
+           ++indexfalse_it;
+           ++datafalse_it;
+         }
+
+       if (*datacond_it)
+         {
+           while (indextrue_it != endtrue_it &&
+                  *indextrue_it < *indexcond_it)
+             {
+               ++indextrue_it;
+               ++datatrue_it;
+             }
+           if (indextrue_it != endtrue_it &&
+               *indextrue_it == *indexcond_it &&
+               *datatrue_it)
+             {
+               *indexreturn_it = *indextrue_it;
+               *datareturn_it  = *datatrue_it;
+               ++indexreturn_it;
+               ++datareturn_it;
+               ++indextrue_it;
+               ++datatrue_it;
+             }
+         }
+       else
+         {
+           if (indexfalse_it != endfalse_it &&
+               *indexfalse_it == *indexcond_it &&
+               *datafalse_it)
+             {
+               *indexreturn_it = *indexfalse_it;
+               *datareturn_it  = *datafalse_it;
+               ++indexreturn_it;
+               ++datareturn_it;
+               ++indexfalse_it;
+               ++datafalse_it;
+             }
+         }
+     }
+  }
+
+  metaphysicl_assert
+    (std::adjacent_find(returnval.nude_indices().begin(), returnval.nude_indices().end()) ==
+     returnval.nude_indices().end());
+#ifdef METAPHYSICL_HAVE_CXX11
+  metaphysicl_assert(std::is_sorted(returnval.nude_indices().begin(), returnval.nude_indices().end()));
+#endif
+
+  return returnval;
+}
+
+
 template <unsigned int N,
           unsigned int index1=0, typename Data1=void,
           unsigned int index2=0, typename Data2=void,
