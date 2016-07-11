@@ -622,6 +622,15 @@ using MetaPhysicL::DualExpression;
 using MetaPhysicL::CompareTypes;
 using MetaPhysicL::enable_if_c;
 using MetaPhysicL::DefinesSupertype;
+using std::isnan;
+
+template <typename T, typename D>
+inline
+auto isnan (const DualExpression<T,D> & a)
+-> decltype(isnan(a.value()))
+{
+  return isnan(a.value());
+}
 
 // Some forward declarations necessary for recursive DualExpressions
 

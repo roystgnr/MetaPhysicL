@@ -582,6 +582,13 @@ namespace std {
 using MetaPhysicL::DualNumber;
 using MetaPhysicL::CompareTypes;
 
+template <typename T, typename D>
+inline bool isnan (const DualNumber<T,D> & a)
+{
+  using std::isnan;
+  return isnan(a.value());
+}
+
 // Some forward declarations necessary for recursive DualNumbers
 
 #if __cplusplus >= 201103L
