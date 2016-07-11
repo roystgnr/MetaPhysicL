@@ -623,8 +623,6 @@ using MetaPhysicL::CompareTypes;
 using MetaPhysicL::enable_if_c;
 using MetaPhysicL::DefinesSupertype;
 
-DualExpression<double, double> testexpr;
-
 // Some forward declarations necessary for recursive DualExpressions
 
 template <typename T, typename D>
