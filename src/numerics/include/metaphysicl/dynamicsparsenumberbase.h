@@ -1035,13 +1035,11 @@ DynamicSparseNumberBase_operator_binary(&&, logical_and)
 DynamicSparseNumberBase_operator_binary(||, logical_or)
 
 
-} // namespace MetaPhysicL
-#if 0
-
-template <typename T, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename I>
 inline
 std::ostream&
-operator<< (std::ostream& output, const DynamicSparseNumberArray<T, I>& a)
+operator<< (std::ostream& output, const DynamicSparseNumberBase<T,I,SubType>& a)
 {
   // Enclose the entire output in braces
   output << '{';
@@ -1067,60 +1065,27 @@ operator<< (std::ostream& output, const DynamicSparseNumberArray<T, I>& a)
 
 // CompareTypes, RawType, ValueType specializations
 
-#define DynamicSparseNumberArray_comparisons(templatename, settype) \
+#define DynamicSparseNumberBase_comparisons(subtypename, templatename) \
 template<typename T, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberArray<T,I>, DynamicSparseNumberArray<T,I>, reverseorder> { \
-  typedef DynamicSparseNumberArray<T,I> supertype; \
+struct templatename<subtypename<T,I>, subtypename<T,I>, reverseorder> { \
+  typedef subtypename<T,I> supertype; \
 }; \
  \
 template<typename T, typename T2, typename I, typename I2, bool reverseorder> \
-struct templatename<DynamicSparseNumberArray<T,I>, DynamicSparseNumberArray<T2,I2>, reverseorder> { \
-  typedef DynamicSparseNumberArray<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
-                            typename CompareTypes<I,I2>::supertype> supertype; \
+struct templatename<subtypename<T,I>, subtypename<T2,I2>, reverseorder> { \
+  typedef subtypename<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
+                      typename CompareTypes<I,I2>::supertype> supertype; \
 }; \
  \
 template<typename T, typename T2, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberArray<T, I>, T2, reverseorder, \
+struct templatename<subtypename<T, I>, T2, reverseorder, \
                     typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
-  typedef DynamicSparseNumberArray<typename Symmetric##templatename<T, T2, reverseorder>::supertype, I> supertype; \
+  typedef subtypename<typename Symmetric##templatename<T, T2, reverseorder>::supertype, I> supertype; \
 }
-
-DynamicSparseNumberArray_comparisons(CompareTypes, Union);
-DynamicSparseNumberArray_comparisons(PlusType, Union);
-DynamicSparseNumberArray_comparisons(MinusType, Union);
-DynamicSparseNumberArray_comparisons(MultipliesType, Intersection);
-DynamicSparseNumberArray_comparisons(DividesType, First);
-DynamicSparseNumberArray_comparisons(AndType, Intersection);
-DynamicSparseNumberArray_comparisons(OrType, Union);
-
-
-template <typename T, typename I>
-struct RawType<DynamicSparseNumberArray<T, I> >
-{
-  typedef DynamicSparseNumberArray<typename RawType<T>::value_type, I> value_type;
-
-  static value_type value(const DynamicSparseNumberArray<T, I>& a)
-    {
-      value_type returnval;
-      returnval.nude_indices() = a.nude_indices();
-
-      std::size_t index_size = a.size();
-      returnval.nude_data().resize(index_size);
-
-      for (unsigned int i=0; i != index_size; ++i)
-        returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
-      return returnval;
-    }
-};
-
-template <typename T, typename I>
-struct ValueType<DynamicSparseNumberArray<T, I> >
-{
-  typedef typename ValueType<T>::type type;
-};
 
 } // namespace MetaPhysicL
 
+#if 0
 
 namespace std {
 

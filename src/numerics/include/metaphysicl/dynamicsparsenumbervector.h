@@ -285,60 +285,15 @@ DynamicSparseNumberBase_op(DynamicSparseNumberVector, *, Multiplies) // Intersec
 DynamicSparseNumberBase_op(DynamicSparseNumberVector, /, Divides)    // First)
 
 
-template <typename T, typename I>
-inline
-std::ostream&
-operator<< (std::ostream& output, const DynamicSparseNumberVector<T, I>& a)
-{
-  // Enclose the entire output in braces
-  output << '{';
-
-  std::size_t index_size = a.size();
-
-  // Output the first value from a non-empty set
-  // All values are given as ordered (index, value) pairs
-  if (index_size)
-    output << '(' << a.raw_index(0) << ',' <<
-              a.raw_at(0) << ')';
-
-  // Output the comma-separated subsequent values from a non-singleton
-  // set
-  for (unsigned int i = 1; i < index_size; ++i)
-    {
-      output << ", (" << a.raw_index(i) << ',' << a.raw_data()[i] << ')';
-    }
-  output << '}';
-  return output;
-}
-
-
 // CompareTypes, RawType, ValueType specializations
 
-#define DynamicSparseNumberVector_comparisons(templatename, settype) \
-template<typename T, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberVector<T,I>, DynamicSparseNumberVector<T,I>, reverseorder> { \
-  typedef DynamicSparseNumberVector<T,I> supertype; \
-}; \
- \
-template<typename T, typename T2, typename I, typename I2, bool reverseorder> \
-struct templatename<DynamicSparseNumberVector<T,I>, DynamicSparseNumberVector<T2,I2>, reverseorder> { \
-  typedef DynamicSparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
-                            typename CompareTypes<I,I2>::supertype> supertype; \
-}; \
- \
-template<typename T, typename T2, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberVector<T, I>, T2, reverseorder, \
-                    typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
-  typedef DynamicSparseNumberVector<typename Symmetric##templatename<T, T2, reverseorder>::supertype, I> supertype; \
-}
-
-DynamicSparseNumberVector_comparisons(CompareTypes, Union);
-DynamicSparseNumberVector_comparisons(PlusType, Union);
-DynamicSparseNumberVector_comparisons(MinusType, Union);
-DynamicSparseNumberVector_comparisons(MultipliesType, Intersection);
-DynamicSparseNumberVector_comparisons(DividesType, First);
-DynamicSparseNumberVector_comparisons(AndType, Intersection);
-DynamicSparseNumberVector_comparisons(OrType, Union);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, CompareTypes);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, PlusType);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, MinusType);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, MultipliesType);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, DividesType);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, AndType);
+DynamicSparseNumberBase_comparisons(DynamicSparseNumberVector, OrType);
 
 
 template <typename T, typename I>
