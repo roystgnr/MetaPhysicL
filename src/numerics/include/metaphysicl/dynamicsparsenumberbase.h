@@ -839,20 +839,18 @@ DynamicSparseNumberBase_op_ab(opname, subtypename<T MacroComma I>, subtypename<T
 
 #endif
 
-} // namespace MetaPhysicL
-#if 0
-
 // Let's also allow scalar times vector.
 // Scalar plus vector, etc. remain undefined in the sparse context.
 
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename T2, typename I>
 inline
-typename MultipliesType<DynamicSparseNumberArray<T2,I>,T,true>::supertype
-operator * (const T& a, const DynamicSparseNumberArray<T2,I>& b)
+typename MultipliesType<SubType<T2,I>,T,true>::supertype
+operator * (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b)
 {
   const unsigned int index_size = b.size();
 
-  typename MultipliesType<DynamicSparseNumberArray<T2,I>,T,true>::supertype
+  typename MultipliesType<SubType<T2,I>,T,true>::supertype
     returnval;
   returnval.resize(index_size);
 
@@ -864,14 +862,15 @@ operator * (const T& a, const DynamicSparseNumberArray<T2,I>& b)
   return returnval;
 }
 
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename T2, typename I>
 inline
-typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
-operator * (const DynamicSparseNumberArray<T,I>& a, const T2& b)
+typename MultipliesType<SubType<T,I>,T2>::supertype
+operator * (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b)
 {
   const unsigned int index_size = a.size();
 
-  typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
+  typename MultipliesType<SubType<T,I>,T2>::supertype
     returnval;
   returnval.resize(index_size);
 
@@ -882,14 +881,15 @@ operator * (const DynamicSparseNumberArray<T,I>& a, const T2& b)
   return returnval;
 }
 
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename T2, typename I>
 inline
-typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype
-operator / (const DynamicSparseNumberArray<T,I>& a, const T2& b)
+typename DividesType<SubType<T,I>,T2>::supertype
+operator / (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b)
 {
   const unsigned int index_size = a.size();
 
-  typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype returnval;
+  typename DividesType<SubType<T,I>,T2>::supertype returnval;
   returnval.resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i) {
@@ -901,28 +901,28 @@ operator / (const DynamicSparseNumberArray<T,I>& a, const T2& b)
 }
 
 #if __cplusplus >= 201103L
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename T2, typename I>
 inline
-typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
-operator * (DynamicSparseNumberArray<T,I>&& a, const T2& b)
+typename MultipliesType<SubType<T,I>,T2>::supertype
+operator * (DynamicSparseNumberBase<T,I,SubType>&& a, const T2& b)
 {
-  const unsigned int index_size = a.size();
-
-  typename MultipliesType<DynamicSparseNumberArray<T,I>,T2>::supertype
-    returnval = std::move(a);
+  typename MultipliesType<SubType<T,I>,T2>::supertype
+    returnval = std::move(static_cast<SubType<T,I>&&>(a));
 
   returnval *= b;
 
   return returnval;
 }
 
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType,
+          typename T, typename T2, typename I>
 inline
-typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype
-operator / (DynamicSparseNumberArray<T,I>&& a, const T2& b)
+typename DividesType<SubType<T,I>,T2>::supertype
+operator / (DynamicSparseNumberBase<T,I,SubType>&& a, const T2& b)
 {
-  typename DividesType<DynamicSparseNumberArray<T,I>,T2>::supertype returnval;
-  returnval = std::move(a);
+  typename DividesType<SubType<T,I>,T2>::supertype
+    returnval = std::move(static_cast<SubType<T,I>&&>(a));
 
   returnval /= b;
 
@@ -931,16 +931,17 @@ operator / (DynamicSparseNumberArray<T,I>&& a, const T2& b)
 #endif
 
 
-#define DynamicSparseNumberArray_operator_binary(opname, functorname) \
-template <typename T, typename T2, typename I, typename I2> \
+#define DynamicSparseNumberBase_operator_binary(opname, functorname) \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I, typename I2> \
 inline \
-DynamicSparseNumberArray<bool, typename CompareTypes<I,I2>::supertype> \
-operator opname (const DynamicSparseNumberArray<T,I>& a, \
-                 const DynamicSparseNumberArray<T2,I2>& b) \
+SubType<bool, typename CompareTypes<I,I2>::supertype> \
+operator opname (const DynamicSparseNumberBase<T,I,SubType>& a, \
+                 const DynamicSparseNumberBase<T2,I2,SubType>& b) \
 { \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   typedef typename CompareTypes<I,I2>::supertype IS; \
-  DynamicSparseNumberArray<bool, IS> returnval; \
+  SubType<bool, IS> returnval; \
   returnval.nude_indices() = a.nude_indices(); \
   returnval.nude_data().resize(a.nude_indices().size()); \
   returnval.sparsity_union(b.nude_indices()); \
@@ -983,12 +984,13 @@ operator opname (const DynamicSparseNumberArray<T,I>& a, \
  \
   return returnval; \
 } \
-template <typename T, typename T2, typename I> \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I> \
 inline \
-DynamicSparseNumberArray<bool, I> \
-operator opname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
+SubType<bool, I> \
+operator opname (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b) \
 { \
-  DynamicSparseNumberArray<bool, I> returnval; \
+  SubType<bool, I> returnval; \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
@@ -999,12 +1001,13 @@ operator opname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
  \
   return returnval; \
 } \
-template <typename T, typename T2, typename I> \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I> \
 inline \
-DynamicSparseNumberArray<bool, I> \
-operator opname (const T& a, const DynamicSparseNumberArray<T2,I>& b) \
+SubType<bool, I> \
+operator opname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b) \
 { \
-  DynamicSparseNumberArray<bool, I> returnval; \
+  SubType<bool, I> returnval; \
  \
   std::size_t index_size = a.size(); \
   returnval.nude_indices() = a.nude_indices(); \
@@ -1020,16 +1023,20 @@ operator opname (const T& a, const DynamicSparseNumberArray<T2,I>& b) \
 // errors, because there's no efficient way to have them make sense in
 // the sparse context.
 
-DynamicSparseNumberArray_operator_binary(<, less)
-// DynamicSparseNumberArray_operator_binary(<=)
-DynamicSparseNumberArray_operator_binary(>, greater)
-// DynamicSparseNumberArray_operator_binary(>=)
-// DynamicSparseNumberArray_operator_binary(==)
-DynamicSparseNumberArray_operator_binary(!=, not_equal_to)
+DynamicSparseNumberBase_operator_binary(<, less)
+// DynamicSparseNumberBase_operator_binary(<=)
+DynamicSparseNumberBase_operator_binary(>, greater)
+// DynamicSparseNumberBase_operator_binary(>=)
+// DynamicSparseNumberBase_operator_binary(==)
+DynamicSparseNumberBase_operator_binary(!=, not_equal_to)
 
 // FIXME - make && an intersection rather than a union for efficiency
-DynamicSparseNumberArray_operator_binary(&&, logical_and)
-DynamicSparseNumberArray_operator_binary(||, logical_or)
+DynamicSparseNumberBase_operator_binary(&&, logical_and)
+DynamicSparseNumberBase_operator_binary(||, logical_or)
+
+
+} // namespace MetaPhysicL
+#if 0
 
 template <typename T, typename I>
 inline
