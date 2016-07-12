@@ -62,6 +62,7 @@ include_HEADERS += numerics/include/metaphysicl/sparsenumbervector.h
 
 # utilities
 include_HEADERS += utilities/include/metaphysicl/metaphysicl_asserts.h
+include_HEADERS += utilities/include/metaphysicl/metaphysicl_cast.h
 include_HEADERS += utilities/include/metaphysicl/metaphysicl_exceptions.h
 include_HEADERS += utilities/include/metaphysicl/metaprogramming.h
 include_HEADERS += utilities/include/metaphysicl/testable.h
