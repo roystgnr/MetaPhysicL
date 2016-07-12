@@ -1085,39 +1085,42 @@ struct templatename<subtypename<T, I>, T2, reverseorder, \
 
 } // namespace MetaPhysicL
 
-#if 0
-
 namespace std {
 
 using MetaPhysicL::CompareTypes;
-using MetaPhysicL::DynamicSparseNumberArray;
+using MetaPhysicL::DynamicSparseNumberBase;
 using MetaPhysicL::SymmetricCompareTypes;
 
-#define DynamicSparseNumberArray_std_unary(funcname) \
-template <typename T, typename I> \
+#define DynamicSparseNumberBase_std_unary(funcname) \
+template <template <typename, typename> class SubType, \
+          typename T, typename I> \
 inline \
-DynamicSparseNumberArray<T, I> \
-funcname (DynamicSparseNumberArray<T, I> a) \
+SubType<T, I> \
+funcname (const DynamicSparseNumberBase<T,I,SubType> & a) \
 { \
   std::size_t index_size = a.size(); \
+  SubType<T,I> returnval; \
+  returnval.nude_indices() = a.nude_indices(); \
+  returnval.nude_data().resize(index_size); \
   for (unsigned int i=0; i != index_size; ++i) \
-    a.raw_at(i) = std::funcname(a.raw_at(i)); \
+    returnval.raw_at(i) = std::funcname(a.raw_at(i)); \
  \
-  return a; \
+  return returnval; \
 }
 
 
-#define DynamicSparseNumberArray_std_binary_union(funcname) \
-template <typename T, typename T2, typename I, typename I2> \
+#define DynamicSparseNumberBase_std_binary_union(funcname) \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I, typename I2> \
 inline \
-DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, \
-                         typename CompareTypes<I,I2>::supertype> \
-funcname (const DynamicSparseNumberArray<T, I>& a, \
-          const DynamicSparseNumberArray<T2, I2>& b) \
+SubType<typename SymmetricCompareTypes<T,T2>::supertype, \
+        typename CompareTypes<I,I2>::supertype> \
+funcname (const DynamicSparseNumberBase<T,I,SubType>& a, \
+          const DynamicSparseNumberBase<T2,I2,SubType>& b) \
 { \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
   typedef typename CompareTypes<I,I2>::supertype IS; \
-  DynamicSparseNumberArray<TS, IS> returnval; \
+  SubType<TS, IS> returnval; \
  \
   std::size_t index_size = a.nude_indices.size(); \
   returnval.nude_indices = a.nude_indices; \
@@ -1163,13 +1166,14 @@ funcname (const DynamicSparseNumberArray<T, I>& a, \
   return returnval; \
 } \
  \
-template <typename T, typename T2, typename I> \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I> \
 inline \
-DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
+SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
+funcname (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b) \
 { \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
-  DynamicSparseNumberArray<TS, I> returnval; \
+  SubType<TS, I> returnval; \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
@@ -1181,13 +1185,14 @@ funcname (const DynamicSparseNumberArray<T, I>& a, const T2& b) \
   return returnval; \
 } \
  \
-template <typename T, typename T2, typename I> \
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I> \
 inline \
-DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const T& a, const DynamicSparseNumberArray<T2, I>& b) \
+SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
+funcname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b) \
 { \
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS; \
-  DynamicSparseNumberArray<TS, I> returnval; \
+  SubType<TS, I> returnval; \
  \
   std::size_t index_size = a.size(); \
   returnval.resize(index_size); \
@@ -1202,13 +1207,14 @@ funcname (const T& a, const DynamicSparseNumberArray<T2, I>& b) \
 
 // Pow needs its own specialization, both to avoid being confused by
 // pow<T1,T2> and because pow(x,0) isn't 0.
-template <typename T, typename T2, typename I>
+template <template <typename, typename> class SubType, \
+          typename T, typename T2, typename I>
 inline
-DynamicSparseNumberArray<typename SymmetricCompareTypes<T,T2>::supertype, I>
-pow (const DynamicSparseNumberArray<T, I>& a, const T2& b)
+SubType<typename SymmetricCompareTypes<T,T2>::supertype, I>
+pow (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b)
 {
   typedef typename SymmetricCompareTypes<T,T2>::supertype TS;
-  DynamicSparseNumberArray<TS, I> returnval;
+  SubType<TS, I> returnval;
 
   std::size_t index_size = a.size();
   returnval.nude_indices() = a.nude_indices();
@@ -1225,37 +1231,30 @@ pow (const DynamicSparseNumberArray<T, I>& a, const T2& b)
 // errors, because there's no efficient way to have them make sense in
 // the sparse context.
 
-// DynamicSparseNumberArray_std_binary(pow) // separate definition
-// DynamicSparseNumberArray_std_unary(exp)
-// DynamicSparseNumberArray_std_unary(log)
-// DynamicSparseNumberArray_std_unary(log10)
-DynamicSparseNumberArray_std_unary(sin)
-// DynamicSparseNumberArray_std_unary(cos)
-DynamicSparseNumberArray_std_unary(tan)
-DynamicSparseNumberArray_std_unary(asin)
-// DynamicSparseNumberArray_std_unary(acos)
-DynamicSparseNumberArray_std_unary(atan)
-DynamicSparseNumberArray_std_binary_union(atan2)
-DynamicSparseNumberArray_std_unary(sinh)
-// DynamicSparseNumberArray_std_unary(cosh)
-DynamicSparseNumberArray_std_unary(tanh)
-DynamicSparseNumberArray_std_unary(sqrt)
-DynamicSparseNumberArray_std_unary(abs)
-DynamicSparseNumberArray_std_unary(fabs)
-DynamicSparseNumberArray_std_binary_union(max)
-DynamicSparseNumberArray_std_binary_union(min)
-DynamicSparseNumberArray_std_unary(ceil)
-DynamicSparseNumberArray_std_unary(floor)
-DynamicSparseNumberArray_std_binary_union(fmod) // TODO: optimize this
-
-
-template <typename T, typename I>
-class numeric_limits<DynamicSparseNumberArray<T, I> > :
-  public MetaPhysicL::raw_numeric_limits<DynamicSparseNumberArray<T, I>, T> {};
+// DynamicSparseNumberBase_std_binary(pow) // separate definition
+// DynamicSparseNumberBase_std_unary(exp)
+// DynamicSparseNumberBase_std_unary(log)
+// DynamicSparseNumberBase_std_unary(log10)
+DynamicSparseNumberBase_std_unary(sin)
+// DynamicSparseNumberBase_std_unary(cos)
+DynamicSparseNumberBase_std_unary(tan)
+DynamicSparseNumberBase_std_unary(asin)
+// DynamicSparseNumberBase_std_unary(acos)
+DynamicSparseNumberBase_std_unary(atan)
+DynamicSparseNumberBase_std_binary_union(atan2)
+DynamicSparseNumberBase_std_unary(sinh)
+// DynamicSparseNumberBase_std_unary(cosh)
+DynamicSparseNumberBase_std_unary(tanh)
+DynamicSparseNumberBase_std_unary(sqrt)
+DynamicSparseNumberBase_std_unary(abs)
+DynamicSparseNumberBase_std_unary(fabs)
+DynamicSparseNumberBase_std_binary_union(max)
+DynamicSparseNumberBase_std_binary_union(min)
+DynamicSparseNumberBase_std_unary(ceil)
+DynamicSparseNumberBase_std_unary(floor)
+DynamicSparseNumberBase_std_binary_union(fmod) // TODO: optimize this
 
 } // namespace std
-
-#endif // 0
 
 
 #endif // METAPHYSICL_DYNAMICSPARSENUMBERARRAY_H
