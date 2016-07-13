@@ -33,7 +33,9 @@ include_HEADERS += graphs/include/metaphysicl/physics.h
 # numerics
 include_HEADERS += numerics/include/metaphysicl/dualderivatives.h
 include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumberarray.h
+include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumberarray_decl.h
 include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumbervector.h
+include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumbervector_decl.h
 include_HEADERS += numerics/include/metaphysicl/dualexpression.h
 include_HEADERS += numerics/include/metaphysicl/dualnamedarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h

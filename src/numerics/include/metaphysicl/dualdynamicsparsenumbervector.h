@@ -29,25 +29,13 @@
 #define METAPHYSICL_DUALDYNAMICSPARSENUMBERVECTOR_H
 
 
+#include "metaphysicl/dualdynamicsparsenumbervector_decl.h"
+
 #include "metaphysicl/dualnumber.h"
 #include "metaphysicl/dynamicsparsenumbervector.h"
 
 
 namespace MetaPhysicL {
-
-template <typename T, typename I>
-struct DerivativeType<DynamicSparseNumberVector<T, I> >
-{
-  typedef DynamicSparseNumberVector<typename DerivativeType<T>::type, I> type;
-};
-
-
-template <typename T, typename I>
-struct DerivativesType<DynamicSparseNumberVector<T, I> >
-{
-  typedef DynamicSparseNumberVector<typename DerivativesType<T>::type, I> type;
-};
-
 
 template <typename T, typename I>
 inline
@@ -86,24 +74,21 @@ derivatives (const DynamicSparseNumberVector<T, I>& a)
 
 
 template <typename T, typename I, unsigned int derivativeindex>
-struct DerivativeOf<DynamicSparseNumberVector<T, I>, derivativeindex>
+typename DerivativeType<DynamicSparseNumberVector<T, I> >::type
+DerivativeOf<DynamicSparseNumberVector<T, I>, derivativeindex>::derivative
+  (const DynamicSparseNumberVector<T, I>& a)
 {
-  static
-  typename DerivativeType<DynamicSparseNumberVector<T, I> >::type
-  derivative (const DynamicSparseNumberVector<T, I>& a)
-  {
-    std::size_t index_size = a.size();
+  std::size_t index_size = a.size();
 
-    typename DerivativeType<DynamicSparseNumberVector<T, I> >::type returnval;
+  typename DerivativeType<DynamicSparseNumberVector<T, I> >::type returnval;
 
-    returnval.nude_indices() = a.nude_indices();
-    returnval.resize(index_size);
+  returnval.nude_indices() = a.nude_indices();
+  returnval.resize(index_size);
 
-    for (unsigned int i=0; i != index_size; ++i)
-      returnval.raw_at(i) = DerivativeOf<T,derivativeindex>::derivative(a.raw_at(i));
-    return returnval;
-  }
-};
+  for (unsigned int i=0; i != index_size; ++i)
+    returnval.raw_at(i) = DerivativeOf<T,derivativeindex>::derivative(a.raw_at(i));
+  return returnval;
+}
 
 
 
@@ -145,22 +130,6 @@ gradient(const DynamicSparseNumberVector<T, I>& a)
 
   return returnval;
 }
-
-// DualNumber is subordinate to DynamicSparseNumberVector
-
-#define DualDynamicSparseNumberVector_comparisons(templatename) \
-template<typename T, typename T2, typename D, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberVector<T2, I>, DualNumber<T, D>, reverseorder> { \
-  typedef DynamicSparseNumberVector<typename Symmetric##templatename<T2,DualNumber<T, D>,reverseorder>::supertype, I> supertype; \
-}
-
-DualDynamicSparseNumberVector_comparisons(CompareTypes);
-DualDynamicSparseNumberVector_comparisons(PlusType);
-DualDynamicSparseNumberVector_comparisons(MinusType);
-DualDynamicSparseNumberVector_comparisons(MultipliesType);
-DualDynamicSparseNumberVector_comparisons(DividesType);
-DualDynamicSparseNumberVector_comparisons(AndType);
-DualDynamicSparseNumberVector_comparisons(OrType);
 
 } // namespace MetaPhysicL
 
