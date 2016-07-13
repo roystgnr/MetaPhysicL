@@ -53,6 +53,7 @@ include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberarray_decl.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberbase.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberbase_decl.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumbervector.h
+include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumbervector_decl.h
 include_HEADERS += numerics/include/metaphysicl/namedindexarray.h
 include_HEADERS += numerics/include/metaphysicl/numberarray.h
 include_HEADERS += numerics/include/metaphysicl/numbervector.h
