@@ -49,6 +49,7 @@ include_HEADERS += numerics/include/metaphysicl/dualsparsenumberarray.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumberstruct.h
 include_HEADERS += numerics/include/metaphysicl/dualsparsenumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberarray.h
+include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberarray_decl.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberbase.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumberbase_decl.h
 include_HEADERS += numerics/include/metaphysicl/dynamicsparsenumbervector.h

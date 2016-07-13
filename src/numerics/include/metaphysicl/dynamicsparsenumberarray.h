@@ -29,196 +29,84 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERARRAY_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERARRAY_H
 
+#include "metaphysicl/dynamicsparsenumberarray_decl.h"
 #include "metaphysicl/dynamicsparsenumberbase.h"
 
 namespace MetaPhysicL {
 
-// Forward declarations
-
-// Data type T, index type I
 template <typename T, typename I>
-class DynamicSparseNumberArray;
+inline
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray() {}
 
-// Helper structs
+template <typename T, typename I>
+inline
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(const T& val) {
+  // This makes no sense unless val is 0!
+#ifndef NDEBUG
+  if (val)
+    throw std::domain_error("Cannot initialize DynamicSparseNumberArray with non-zero scalar");
+#endif
+}
 
-template<typename I1, typename I2, typename S, typename T, bool reverseorder>
-struct DotType<DynamicSparseNumberArray<S,I1>,
-               DynamicSparseNumberArray<T,I2>, reverseorder> {
-  typedef
-    DynamicSparseNumberArray
-      <typename DotType<S,T,reverseorder>::supertype,
-       typename CompareTypes<I1, I2>::supertype>
-      supertype;
-};
+template <typename T, typename I>
+template <typename T2>
+inline
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(const T2& val) {
+  // This makes no sense unless val is 0!
+#ifndef NDEBUG
+  if (val)
+    throw std::domain_error("Cannot initialize DynamicSparseNumberArray with non-zero scalar");
+#endif
+}
 
-template<typename I1, typename I2, typename S, typename T, bool reverseorder>
-struct OuterProductType<DynamicSparseNumberArray<S, I1>,
-                        DynamicSparseNumberArray<T, I2>, reverseorder> {
-  typedef
-    DynamicSparseNumberArray
-      <typename OuterProductType<S,T,reverseorder>::supertype,
-       typename CompareTypes<I1, I2>::supertype>
-      supertype;
-};
-
-template<typename S, typename I>
-struct SumType<DynamicSparseNumberArray<S, I> > {
-  typedef DynamicSparseNumberArray<typename SumType<S>::supertype, I> supertype;
-};
+template <typename T, typename I>
+template <typename T2, typename I2>
+inline
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src) :
+  DynamicSparseNumberBase<T,I,MetaPhysicL::DynamicSparseNumberArray>(src) {}
 
 
 template <typename T, typename I>
-class DynamicSparseNumberArray :
-  public DynamicSparseNumberBase<T,I,DynamicSparseNumberArray>,
-  public safe_bool<DynamicSparseNumberArray<T,I> >
+template <typename T2, typename I2>
+inline
+DynamicSparseNumberArray
+  <typename DotType<T,T2>::supertype,
+   typename CompareTypes<I, I2>::supertype>
+DynamicSparseNumberArray<T,I>::dot (const DynamicSparseNumberArray<T2,I2>& a) const
 {
-public:
-  template <typename T2>
-  struct rebind {
-    typedef DynamicSparseNumberArray<T2, I> other;
-  };
+  typedef typename DotType<T,T2>::supertype TS;
+  typedef typename CompareTypes<I, I2>::supertype IS;
 
-  DynamicSparseNumberArray() {}
+  DynamicSparseNumberArray<TS, IS> returnval;
 
-  DynamicSparseNumberArray(const T& val) {
-    // This makes no sense unless val is 0!
-#ifndef NDEBUG
-    if (val)
-      throw std::domain_error("Cannot initialize DynamicSparseNumberArray with non-zero scalar");
-#endif
-  }
+  // FIXME
+  metaphysicl_not_implemented();
 
-  template <typename T2>
-  DynamicSparseNumberArray(const T2& val) {
-    // This makes no sense unless val is 0!
-#ifndef NDEBUG
-    if (val)
-      throw std::domain_error("Cannot initialize DynamicSparseNumberArray with non-zero scalar");
-#endif
-  }
+  return returnval;
+}
 
-#if __cplusplus >= 201103L
-  // Move constructors are useful when all your data is on the heap
-  DynamicSparseNumberArray(DynamicSparseNumberArray<T, I> && src) = default;
+template <typename T, typename I>
+template <typename T2, typename I2>
+inline
+DynamicSparseNumberArray<
+  typename OuterProductType<T,T2>::supertype,
+  typename CompareTypes<I, I2>::supertype>
+DynamicSparseNumberArray<T,I>::outerproduct (const DynamicSparseNumberArray<T2, I2>& a) const
+{
+  typedef typename OuterProductType<T,T2>::supertype TS;
+  typedef typename CompareTypes<I, I2>::supertype IS;
+  DynamicSparseNumberArray<TS, IS> returnval;
 
-  // Move assignment avoids heap operations too
-  DynamicSparseNumberArray& operator= (DynamicSparseNumberArray<T, I> && src) = default;
+  // FIXME
+  metaphysicl_not_implemented();
 
-  // Standard copy operations get implicitly deleted upon move
-  // constructor definition, so we manually enable them.
-  DynamicSparseNumberArray(const DynamicSparseNumberArray<T, I> & src) = default;
-
-  DynamicSparseNumberArray& operator= (const DynamicSparseNumberArray<T, I> & src) = default;
-#endif
-
-  template <typename T2, typename I2>
-  DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src) :
-    DynamicSparseNumberBase<T,I,MetaPhysicL::DynamicSparseNumberArray>(src) {}
-
-
-  template <typename T2, typename I2>
-  DynamicSparseNumberArray
-    <typename DotType<T,T2>::supertype,
-     typename CompareTypes<I, I2>::supertype>
-  dot (const DynamicSparseNumberArray<T2,I2>& a) const
-  {
-    typedef typename DotType<T,T2>::supertype TS;
-    typedef typename CompareTypes<I, I2>::supertype IS;
-
-    DynamicSparseNumberArray<TS, IS> returnval;
-
-    // FIXME
-    metaphysicl_not_implemented();
-
-    return returnval;
-  }
-
-  template <typename T2, typename I2>
-  DynamicSparseNumberArray<
-    typename OuterProductType<T,T2>::supertype,
-    typename CompareTypes<I, I2>::supertype>
-  outerproduct (const DynamicSparseNumberArray<T2, I2>& a) const
-  {
-    typedef typename OuterProductType<T,T2>::supertype TS;
-    typedef typename CompareTypes<I, I2>::supertype IS;
-    DynamicSparseNumberArray<TS, IS> returnval;
-
-    // FIXME
-    metaphysicl_not_implemented();
-
-    return returnval;
-  }
-};
+  return returnval;
+}
 
 
 //
 // Non-member functions
 //
-
-template <unsigned int N,
-          unsigned int index1=0, typename Data1=void,
-          unsigned int index2=0, typename Data2=void,
-          unsigned int index3=0, typename Data3=void,
-          unsigned int index4=0, typename Data4=void,
-          unsigned int index5=0, typename Data5=void,
-          unsigned int index6=0, typename Data6=void,
-          unsigned int index7=0, typename Data7=void,
-          unsigned int index8=0, typename Data8=void>
-struct DynamicSparseNumberArrayOf
-{
-  typedef
-  typename SymmetricCompareTypes<Data1,
-    typename SymmetricCompareTypes<Data2,
-      typename SymmetricCompareTypes<Data3,
-        typename SymmetricCompareTypes<Data4,
-          typename SymmetricCompareTypes<Data5,
-            typename SymmetricCompareTypes<Data6,
-              typename SymmetricCompareTypes<Data7,Data8>::supertype
-            >::supertype
-          >::supertype
-        >::supertype
-      >::supertype
-    >::supertype
-  >::supertype supertype;
-
-  typedef DynamicSparseNumberArray<supertype, unsigned int> type;
-};
-
-
-
-template <std::size_t N, unsigned int index, typename T>
-struct DynamicSparseNumberArrayUnitVector
-{
-  typedef DynamicSparseNumberArray<T, unsigned int> type;
-
-  static type value() {
-    type returnval;
-    returnval.resize(1);
-    returnval.raw_at(0) = 1;
-    returnval.raw_index(0) = index;
-    return returnval;
-  }
-};
-
-
-template <std::size_t N, typename T>
-struct DynamicSparseNumberArrayFullVector
-{
-  typedef DynamicSparseNumberArray<T,unsigned int> type;
-
-  static type value() {
-    type returnval;
-    returnval.resize(N);
-    for (unsigned int i=0; i != N; ++i)
-      {
-        returnval.raw_at(i) = 1;
-        returnval.raw_index(i) = i;
-      }
-    return returnval;
-  }
-};
-
-
 
 template <typename T, typename I, typename I2>
 inline
@@ -234,6 +122,7 @@ transpose(const DynamicSparseNumberArray<DynamicSparseNumberArray<T, I2>, I>& /*
 
 
 template <typename T, typename I>
+inline
 DynamicSparseNumberArray<typename SumType<T>::supertype, I>
 sum (const DynamicSparseNumberArray<T, I> &a)
 {
@@ -259,54 +148,22 @@ DynamicSparseNumberBase_op(DynamicSparseNumberArray, *, Multiplies) // Intersect
 DynamicSparseNumberBase_op(DynamicSparseNumberArray, /, Divides)    // First)
 
 
-// CompareTypes, RawType, ValueType specializations
-
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, CompareTypes);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, PlusType);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, MinusType);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, MultipliesType);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, DividesType);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, AndType);
-DynamicSparseNumberBase_comparisons(DynamicSparseNumberArray, OrType);
-
-
 template <typename T, typename I>
-struct RawType<DynamicSparseNumberArray<T, I> >
+inline
+typename RawType<DynamicSparseNumberArray<T, I> >::value_type
+RawType<DynamicSparseNumberArray<T, I> >::value(const DynamicSparseNumberArray<T, I>& a)
 {
-  typedef DynamicSparseNumberArray<typename RawType<T>::value_type, I> value_type;
+  value_type returnval;
+  returnval.nude_indices() = a.nude_indices();
 
-  static value_type value(const DynamicSparseNumberArray<T, I>& a)
-    {
-      value_type returnval;
-      returnval.nude_indices() = a.nude_indices();
+  std::size_t index_size = a.size();
+  returnval.nude_data().resize(index_size);
 
-      std::size_t index_size = a.size();
-      returnval.nude_data().resize(index_size);
-
-      for (unsigned int i=0; i != index_size; ++i)
-        returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
-      return returnval;
-    }
-};
-
-template <typename T, typename I>
-struct ValueType<DynamicSparseNumberArray<T, I> >
-{
-  typedef typename ValueType<T>::type type;
-};
+  for (unsigned int i=0; i != index_size; ++i)
+    returnval.raw_at(i) = RawType<T>::value(a.raw_at(i));
+  return returnval;
+}
 
 } // namespace MetaPhysicL
-
-
-namespace std {
-
-using MetaPhysicL::DynamicSparseNumberArray;
-
-template <typename T, typename I>
-class numeric_limits<DynamicSparseNumberArray<T, I> > :
-  public MetaPhysicL::raw_numeric_limits<DynamicSparseNumberArray<T, I>, T> {};
-
-} // namespace std
-
 
 #endif // METAPHYSICL_DYNAMICSPARSENUMBERARRAY_H
