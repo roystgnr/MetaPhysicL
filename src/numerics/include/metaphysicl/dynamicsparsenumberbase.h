@@ -127,7 +127,7 @@ DynamicSparseNumberBase<T,I,SubType>::runtime_index_query(index_value_type i) co
 {
   typename std::vector<I>::const_iterator it =
     std::lower_bound(_indices.begin(), _indices.end(), i);
-  if (it == _indices.end())
+  if (it == _indices.end() || *it != i)
     return std::numeric_limits<std::size_t>::max();
   std::size_t offset = it - _indices.begin();
   metaphysicl_assert_equal_to(_indices[offset], i);
