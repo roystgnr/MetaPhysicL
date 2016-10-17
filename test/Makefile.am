@@ -3,13 +3,11 @@ BUILT_SOURCES   = .license.stamp
 check_PROGRAMS  =
 check_PROGRAMS += compare_types_unit
 check_PROGRAMS += derivs_unit
-check_PROGRAMS += dualnamedarray_unit
 check_PROGRAMS += dynamic_sparse_vector_navier_unit
 check_PROGRAMS += dynamic_sparse_vector_pde_unit
 check_PROGRAMS += identities_unit
 check_PROGRAMS += instantiations_unit
 check_PROGRAMS += main_unit
-check_PROGRAMS += namedindexarray_unit
 check_PROGRAMS += shadow_dynamic_sparse_vector_navier_unit
 check_PROGRAMS += shadow_dynamic_sparse_vector_pde_unit
 check_PROGRAMS += shadow_sparse_struct_navier_unit
@@ -30,6 +28,8 @@ check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
 
 if CXX11_ENABLED
+  check_PROGRAMS += dualnamedarray_unit
+  check_PROGRAMS += namedindexarray_unit
   check_PROGRAMS += physics_unit
 endif
 
@@ -108,13 +108,11 @@ vector_pde_unit_SOURCES += testing.h
 TESTS  =
 TESTS += compare_types_unit
 TESTS += derivs_unit
-TESTS += dualnamedarray_unit
 #TESTS += dynamic_sparse_vector_navier_unit
 TESTS += dynamic_sparse_vector_pde_unit
 TESTS += identities_unit
 TESTS += instantiations_unit
 TESTS += main_unit
-TESTS += namedindexarray_unit
 #TESTS += shadow_dynamic_sparse_vector_navier_unit
 TESTS += shadow_dynamic_sparse_vector_pde_unit
 TESTS += shadow_sparse_struct_navier_unit
@@ -135,6 +133,8 @@ TESTS += vector_navier_unit
 TESTS += vector_pde_unit
 
 if CXX11_ENABLED
+  TESTS += dualnamedarray_unit
+  TESTS += namedindexarray_unit
   TESTS += physics_unit
 endif
 
