@@ -524,7 +524,7 @@ DualNumber<T,D> funcname (DualNumber<T,D> && in);
 
 #else
 
-#define DualNumber_std_unary(funcname) \
+#define DualNumber_decl_std_unary(funcname) \
 template <typename T, typename D> \
 inline \
 DualNumber<T,D> funcname (DualNumber<T,D> in);
