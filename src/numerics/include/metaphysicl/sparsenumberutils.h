@@ -88,12 +88,12 @@ public:
 template <typename BinaryFunctor, typename Arg1>
 bound_first<BinaryFunctor>
 binary_bind1st (BinaryFunctor f, const Arg1 &a)
-{ return bound_first<BinaryFunctor>{f, a}; }
+{ return bound_first<BinaryFunctor>(f, a); }
 
 template <typename BinaryFunctor, typename Arg2>
 bound_second<BinaryFunctor>
 binary_bind2nd (BinaryFunctor f, const Arg2 &b)
-{ return bound_second<BinaryFunctor>{f, b}; }
+{ return bound_second<BinaryFunctor>(f, b); }
 
   template <typename SubFunctor, typename IndexSet,
             typename IndexSetOut, typename T, typename Tout>
