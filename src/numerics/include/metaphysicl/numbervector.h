@@ -495,6 +495,10 @@ NumberVector_std_binary_abab(funcname, NumberVector<N MacroComma T>,            
                             NumberVector<N MacroComma T> MacroComma T2,                              a[i],    b) \
 NumberVector_std_binary_aa(funcname, NumberVector<N MacroComma T>)
 
+// These functions are hard to consistently define on vectors, as
+// opposed to arrays, so let's not define them for now.
+
+/*
 NumberVector_std_binary(pow)
 NumberVector_std_unary(exp)
 NumberVector_std_unary(log)
@@ -517,6 +521,7 @@ NumberVector_std_binary(min)
 NumberVector_std_unary(ceil)
 NumberVector_std_unary(floor)
 NumberVector_std_binary(fmod)
+*/
 
 
 template <std::size_t N, typename T>
