@@ -209,12 +209,12 @@ inline
 typename CompareTypes<T,T2>::supertype
 if_else (const NumberVector<N,B> & condition, const T & if_true, const T2 & if_false)
 {
-  typename CompareTypes<T,T2>::supertype returnval(if_true);
+  typedef typename CompareTypes<T,T2>::supertype returntype;
   for (std::size_t i = 0; i != N; ++i)
-    if (!condition[i])
-      returnval[i] = if_false[i];
+    if (condition[i])
+      return returntype(if_true);
 
-  return returnval;
+  return returntype(if_false);
 }
 
 
