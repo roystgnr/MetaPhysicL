@@ -29,8 +29,9 @@
 #define METAPHYSICL_DUALNUMBERVECTOR_H
 
 
-#include "metaphysicl/dualnumber.h"
+#include "metaphysicl/dualnumber_decl.h"
 #include "metaphysicl/numbervector.h"
+#include "metaphysicl/dualnumber.h"
 
 
 namespace MetaPhysicL {
