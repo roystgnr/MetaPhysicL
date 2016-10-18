@@ -170,9 +170,13 @@ int main(void)
   returnval = returnval || vectester<NumberArray<N, DualNumber<double> > >();
   returnval = returnval || vectester<NumberArray<N, DualNumber<long double> > >();
 
+  // We no longer treat vectors like arrays for built-in functions, so
+  // most of the identities above make no sense.
+  /*
   returnval = returnval || vectester<NumberVector<N, DualNumber<float> > >();
   returnval = returnval || vectester<NumberVector<N, DualNumber<double> > >();
   returnval = returnval || vectester<NumberVector<N, DualNumber<long double> > >();
+  */
 
   return returnval;
 }

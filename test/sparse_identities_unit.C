@@ -137,9 +137,13 @@ int main(void)
   returnval = returnval || vectester(NumberArray<N, double>());
   returnval = returnval || vectester(NumberArray<N, long double>());
 
+  // We no longer treat vectors like arrays for built-in functions, so
+  // most of the identities above make no sense.
+  /*
   returnval = returnval || vectester(NumberVector<N, float>());
   returnval = returnval || vectester(NumberVector<N, double>());
   returnval = returnval || vectester(NumberVector<N, long double>());
+  */
 
   returnval = returnval ||
               vectester(SparseNumberArrayOf

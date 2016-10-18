@@ -31,7 +31,7 @@ int main(void)
   std::cos(NA);
 
   NumberVector<3, float> NV = 0;
-  std::cos(NV);
+  // std::cos(NV);
 
   SparseNumberVectorUnitVector<3, 2, float>::type SNV;
   SparseNumberVectorUnitVector<3, 1, float>::type SNV2;
