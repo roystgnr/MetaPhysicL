@@ -92,20 +92,37 @@ struct DerivativeOf<NumberVector<size, T>, derivativeindex>
 };
 
 
-// For a vector of values a[i] each of which has a defined gradient,
-// the divergence is the sum of derivative_wrt_xi(a[i])
-
-// For a tensor of values, we take the divergence with respect to the
-// first index.
+// For a vector of values a[i] each of which is a scalar with a
+// defined derivative, the divergence is the sum of
+// derivative_wrt_xi(a[i])
 template <std::size_t size, typename T>
 inline
-typename DerivativeType<T>::type
+typename boostcopy::enable_if_c<
+  ScalarTraits<T>::value,
+  typename DerivativeType<T>::type>::type
 divergence(const NumberVector<size, T>& a)
 {
   typename DerivativeType<T>::type returnval = 0;
 
   for (unsigned int i=0; i != size; ++i)
     returnval += derivative(a[i], i);
+
+  return returnval;
+}
+
+// For a tensor of values, we take the divergence with respect to the
+// last index.
+template <std::size_t size, typename T>
+inline
+typename boostcopy::enable_if_c<
+  !ScalarTraits<T>::value,
+  typename DerivativeType<T>::type>::type
+divergence(const NumberVector<size, T>& a)
+{
+  typename DerivativeType<T>::type returnval = 0;
+
+  for (unsigned int i=0; i != size; ++i)
+    returnval[i] = divergence(a[i]);
 
   return returnval;
 }
