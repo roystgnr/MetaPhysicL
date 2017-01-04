@@ -50,6 +50,25 @@ struct DerivativesType<NumberVector<size, T> >
 };
 
 
+// DivergenceType of vectors is a scalar
+template <std::size_t size, typename T>
+struct DivergenceType<NumberVector<size, T> >
+{
+  typedef typename DerivativeType<T>::type type;
+};
+
+
+// DivergenceType of tensors sums over the last rank
+template <std::size_t size1, std::size_t size2, typename T>
+struct DivergenceType<NumberVector<size1, NumberVector<size2, T> > >
+{
+  typedef NumberVector
+    <size1, typename DivergenceType<NumberVector<size2, T> >::type>
+    type;
+};
+
+
+
 template <std::size_t size, typename T>
 inline
 typename DerivativeType<NumberVector<size, T> >::type
@@ -99,10 +118,10 @@ template <std::size_t size, typename T>
 inline
 typename boostcopy::enable_if_c<
   ScalarTraits<T>::value,
-  typename DerivativeType<T>::type>::type
+  typename DivergenceType<NumberVector<size, T> >::type>::type
 divergence(const NumberVector<size, T>& a)
 {
-  typename DerivativeType<T>::type returnval = 0;
+  typename DivergenceType<NumberVector<size, T> >::type returnval = 0;
 
   for (unsigned int i=0; i != size; ++i)
     returnval += derivative(a[i], i);
@@ -116,10 +135,10 @@ template <std::size_t size, typename T>
 inline
 typename boostcopy::enable_if_c<
   !ScalarTraits<T>::value,
-  typename DerivativeType<T>::type>::type
+  typename DivergenceType<NumberVector<size, T> >::type>::type
 divergence(const NumberVector<size, T>& a)
 {
-  typename DerivativeType<T>::type returnval = 0;
+  typename DivergenceType<NumberVector<size, T> >::type returnval = 0;
 
   for (unsigned int i=0; i != size; ++i)
     returnval[i] = divergence(a[i]);
