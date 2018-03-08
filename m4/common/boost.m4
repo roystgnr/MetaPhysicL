@@ -329,14 +329,14 @@ CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
                [_BOOST_FIND_LIBS($@)])
 case $Boost_lib in #(
-  (no) _AC_MSG_LOG_CONFTEST
-    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
+  (yes) _AC_MSG_LOG_CONFTEST
+    AC_DEFINE(AS_TR_CPP([HAVE_BOOST_$1]), [1], [Defined if the Boost $1 library is available])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+    AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
     ;;
 esac
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
 CPPFLAGS=$boost_save_CPPFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
@@ -570,9 +570,11 @@ BOOST_DEFUN([Chrono],
 [# Do we have to check for Boost.System?  This link-time dependency was
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
+if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 135; then
   BOOST_SYSTEM([$1])
 fi # end of the Boost.System check.
+fi
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
@@ -755,9 +757,11 @@ BOOST_DEFUN([Filesystem],
 [# Do we have to check for Boost.System?  This link-time dependency was
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
+if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 135; then
   BOOST_SYSTEM([$1])
 fi # end of the Boost.System check.
+fi
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
@@ -1169,9 +1173,11 @@ boost_thread_save_LIBS=$LIBS
 boost_thread_save_LDFLAGS=$LDFLAGS
 boost_thread_save_CPPFLAGS=$CPPFLAGS
 # Link-time dependency from thread to system was added as of 1.49.0.
+if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 149; then
 BOOST_SYSTEM([$1])
 fi # end of the Boost.System check.
+fi
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
@@ -1182,10 +1188,12 @@ CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 # possibly new versions of GCC on mingw I am assuming it's Boost's change for
 # now and I am setting version to 1.48, for lack of knowledge as to when this
 # change occurred.
+if test "x$boost_major_version" != x; then
 if test $boost_major_version -lt 148; then
   case $host_os in
     (*mingw*) boost_thread_lib_ext=_win32;;
   esac
+fi
 fi
 BOOST_FIND_LIBS([thread], [thread$boost_thread_lib_ext],
                 [$1],
