@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
-// 
+//
 // MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
@@ -49,7 +49,7 @@ struct DotType<NumberArray<N,S>, NumberArray<N,T>, reverseorder> {
 
 template<std::size_t N, typename S, typename T, bool reverseorder>
 struct OuterProductType<NumberArray<N,S>, NumberArray<N,T>, reverseorder> {
-  typedef 
+  typedef
   NumberArray<N, typename OuterProductType<S,T,reverseorder>::supertype> supertype;
 };
 
@@ -74,7 +74,7 @@ public:
     typedef NumberArray<N, T2> other;
   };
 
-  NumberArray() {}
+  NumberArray() : _data() {}
 
   NumberArray(const T& val)
     { std::fill(_data, _data+N, val); }
@@ -184,6 +184,11 @@ public:
     return returnval;
   }
 
+  void zero()
+  {
+    std::fill(_data, _data+N, T());
+  }
+
 private:
   T _data[N];
 };
@@ -286,39 +291,50 @@ sum (const NumberArray<N, T>& a)
 {
   NumberArray<N, typename SumType<T>::supertype>
     returnval = 0;
-  
+
   for (std::size_t i=0; i != N; ++i)
     returnval[i] = a[i].sum();
 
   return returnval;
 }
 
+#define NumberArray_op(opname, functorname)                                                        \
+  template <std::size_t N, typename T, typename T2>                                                \
+  inline auto operator opname(const NumberArray<N, T> & a, const NumberArray<N, T2> & b)           \
+      ->NumberArray<N, decltype(a[0] opname b[0])>                                                 \
+  {                                                                                                \
+    NumberArray<N, decltype(a[0] opname b[0])> returnval;                                          \
+    for (std::size_t i = 0; i != N; ++i)                                                           \
+      returnval[i] = a[i] opname b[i];                                                             \
+                                                                                                   \
+    return returnval;                                                                              \
+  }                                                                                                \
+  template <std::size_t N, typename T, typename T2>                                                \
+  inline auto operator opname(const T & a, const NumberArray<N, T2> & b)                           \
+      ->NumberArray<N, decltype(a opname b[0])>                                                    \
+  {                                                                                                \
+    NumberArray<N, decltype(a opname b[0])> returnval;                                             \
+    for (std::size_t i = 0; i != N; ++i)                                                           \
+      returnval[i] = a opname b[i];                                                                \
+                                                                                                   \
+    return returnval;                                                                              \
+  }                                                                                                \
+  template <std::size_t N, typename T, typename T2>                                                \
+  inline auto operator opname(const NumberArray<N, T> & a, const T2 & b)                           \
+      ->NumberArray<N, decltype(a[0] opname b)>                                                    \
+  {                                                                                                \
+    NumberArray<N, decltype(a[0] * b)> returnval;                                                  \
+    for (std::size_t i = 0; i != N; ++i)                                                           \
+      returnval[i] = a[i] opname b;                                                                \
+                                                                                                   \
+    return returnval;                                                                              \
+  }                                                                                                \
+  void macro_syntax_function()
 
-
-#define NumberArray_op_ab(opname, atype, btype, newtype) \
-template <std::size_t N, typename T, typename T2> \
-inline \
-typename newtype::supertype \
-operator opname (const atype& a, const btype& b) \
-{ \
-  typedef typename newtype::supertype TS; \
-  TS returnval(a); \
-  returnval opname##= b; \
-  return returnval; \
-}
-
-#define NumberArray_op(opname, typecomparison) \
-NumberArray_op_ab(opname, NumberArray<N MacroComma T>, NumberArray<N MacroComma T2>, \
-                  typecomparison##Type<NumberArray<N MacroComma T> MacroComma NumberArray<N MacroComma T2> >) \
-NumberArray_op_ab(opname,                             T , NumberArray<N MacroComma T2>, \
-                  typecomparison##Type<NumberArray<N MacroComma T2> MacroComma T MacroComma true>) \
-NumberArray_op_ab(opname, NumberArray<N MacroComma T>,                             T2 , \
-                  typecomparison##Type<NumberArray<N MacroComma T> MacroComma T2>)
-
-NumberArray_op(+,Plus)
-NumberArray_op(-,Minus)
-NumberArray_op(*,Multiplies)
-NumberArray_op(/,Divides)
+NumberArray_op(+, Plus);
+NumberArray_op(-, Minus);
+NumberArray_op(*, Multiplies);
+NumberArray_op(/, Divides);
 
 
 #define NumberArray_operator_binary_abab(opname, atype, btype, aarg, barg) \
@@ -351,7 +367,7 @@ NumberArray_operator_binary(||)
 
 template <std::size_t N, typename T>
 inline
-std::ostream&      
+std::ostream&
 operator<< (std::ostream& output, const NumberArray<N,T>& a)
 {
   output << '{';
@@ -511,7 +527,7 @@ NumberArray_std_binary(fmod)
 
 
 template <std::size_t N, typename T>
-class numeric_limits<NumberArray<N, T> > : 
+class numeric_limits<NumberArray<N, T> > :
   public MetaPhysicL::raw_numeric_limits<NumberArray<N, T>, T> {};
 
 } // namespace std

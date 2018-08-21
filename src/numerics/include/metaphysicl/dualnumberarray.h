@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
-// 
+//
 // MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
@@ -30,6 +30,7 @@
 
 
 #include "metaphysicl/dualnumber.h"
+#include "metaphysicl/dualnumber_surrogate.h"
 #include "metaphysicl/numberarray.h"
 
 
@@ -91,7 +92,7 @@ struct DerivativeOf<NumberArray<size, T>, derivativeindex>
     typename DerivativeType<NumberArray<size, T> >::type returnval;
     for (unsigned int i=0; i != size; ++i)
       returnval[i] = DerivativeOf<T,derivativeindex>::derivative(a[i]);
-  
+
     return returnval;
   }
 };
