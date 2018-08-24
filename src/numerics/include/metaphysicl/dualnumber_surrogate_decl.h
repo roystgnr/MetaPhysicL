@@ -4,22 +4,25 @@
 namespace MetaPhysicL
 {
 
-template <typename T, typename D, typename Enable>
+template <typename T, typename D>
 class NotADuckDualNumber;
-template <typename T, typename D = T, typename Enable = void>
-using NDDualNumber = NotADuckDualNumber<T, D, Enable>;
+template <typename T, typename D = T>
+using NDDualNumber = NotADuckDualNumber<T, D>;
 
 // Surrogate structure that refers/points to a component of a DualNumber, e.g. it might correspond
 // to the ij'th component of a DualNumber<TypeTensor<T>, N>
 
 template <typename T, typename D>
-struct DualNumberSurrogate
+class DualNumberSurrogate
 {
-  DualNumberSurrogate(DualNumber<T, D> & dn);
+public:
+  DualNumberSurrogate(DualNumber<T, typename D::template rebind<T>::other> & dn);
 
-  DualNumberSurrogate(DualNumber<T, D> && dn);
+  DualNumberSurrogate(DualNumber<T, typename D::template rebind<T>::other> && dn);
 
-  DualNumberSurrogate(const T & n);
+  DualNumberSurrogate(T & n);
+
+  DualNumberSurrogate(T && n);
 
   template <typename T2, typename D2, class... Args>
   DualNumberSurrogate(DualNumber<T2, D2> & dn, Args &&... args);
@@ -27,9 +30,8 @@ struct DualNumberSurrogate
   template <typename T2, typename D2, class... Args>
   DualNumberSurrogate(DualNumber<T2, D2> && dn, Args &&... args);
 
+  DualNumberSurrogate(const DualNumberSurrogate<T, D> & dns) = delete;
   DualNumberSurrogate(DualNumberSurrogate<T, D> & dns);
-
-  DualNumberSurrogate(const DualNumberSurrogate<T, D> & dns);
 
   DualNumberSurrogate(DualNumberSurrogate<T, D> && dns);
 
@@ -84,8 +86,14 @@ struct DualNumberSurrogate
   template <typename T2, typename D2>
   DualNumberSurrogate<T, D> & operator/=(const DualNumber<T2, D2> & in_dn);
 
-  T & value;
-  D derivatives;
+  const T & value() const;
+  T & value();
+  const D & derivatives() const;
+  D & derivatives();
+
+private:
+  T & _value;
+  D _derivatives;
 };
 
 #define metaphysicl_DNS_compares_decl(comparator)                                                  \

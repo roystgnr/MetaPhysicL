@@ -39,7 +39,7 @@
 
 namespace MetaPhysicL {
 
-template <typename T, typename D=T, typename Enable=void>
+template <typename T, typename D=T>
 class NotADuckDualNumber;
 
 template <typename T, typename D=T>

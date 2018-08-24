@@ -5,7 +5,7 @@
 
 namespace MetaPhysicL {
 
-template <typename T, typename D, typename Enable>
+template <typename T, typename D>
 class NotADuckDualNumber : public DualNumber<T, D>
 {
 public:
@@ -15,8 +15,8 @@ public:
   NotADuckDualNumber<T, D> operator!() const { return NotADuckDualNumber<T, D>(!this->value(), !this->derivatives()); }
 };
 
-template <typename T, typename D, typename Enable>
-using NDDualNumber = NotADuckDualNumber<T,D,Enable>;
+template <typename T, typename D>
+using NDDualNumber = NotADuckDualNumber<T,D>;
 
 }
 

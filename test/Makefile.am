@@ -1,6 +1,7 @@
 check_PROGRAMS  =
 check_PROGRAMS += compare_types_unit
 check_PROGRAMS += derivs_unit
+check_PROGRAMS += nd_derivs_unit
 check_PROGRAMS += divgrad_unit
 check_PROGRAMS += dynamic_sparse_vector_navier_unit
 check_PROGRAMS += dynamic_sparse_vector_pde_unit
@@ -32,7 +33,7 @@ if CXX11_ENABLED
   check_PROGRAMS += physics_unit
 endif
 
-AM_CPPFLAGS  = 
+AM_CPPFLAGS  =
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
@@ -44,6 +45,9 @@ AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 # Sources for these tests
 compare_types_unit_SOURCES = compare_types_unit.C
 derivs_unit_SOURCES = derivs_unit.C
+nd_derivs_unit_SOURCES = nd_derivs_unit.C
+nd_derivs_unit_SOURCES += math_structs.C
+nd_derivs_unit_SOURCES += math_structs.h
 divgrad_unit_SOURCES = divgrad_unit.C
 dualnamedarray_unit_SOURCES = dualnamedarray_unit.C
 dynamic_sparse_vector_navier_unit_SOURCES =  dynamic_sparse_vector_navier_unit.C
@@ -108,6 +112,7 @@ vector_pde_unit_SOURCES += testing.h
 TESTS  =
 TESTS += compare_types_unit
 TESTS += derivs_unit
+TESTS += nd_derivs_unit
 TESTS += divgrad_unit
 #TESTS += dynamic_sparse_vector_navier_unit
 TESTS += dynamic_sparse_vector_pde_unit
