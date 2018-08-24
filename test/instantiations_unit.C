@@ -1,5 +1,5 @@
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201402L
 //#  include "metaphysicl/dualnamedarray.h"
 #  include "metaphysicl/namedindexarray.h"
 #endif
@@ -35,6 +35,14 @@ struct Instantiator {
           test_snv;
   typename SparseNumberStructOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
           test_sns;
+
+#if __cplusplus >= 201402L
+  NamedIndexArray
+    <double,
+     SparseNumberVector
+       <long unsigned int,
+        ULongSetConstructor<2>::type> > indexed_by_two;
+#endif
 };
 
 int main (void)

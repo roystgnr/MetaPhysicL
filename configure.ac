@@ -54,12 +54,14 @@ AC_PROG_CXX
 dnl Added for AX_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
 
-dnl We're going to need C++1y for one of our test cases
-AX_CXX_COMPILE_STDCXX_1Y(noext,optional)
-AM_CONDITIONAL(CXX1Y_ENABLED,test x$HAVE_CXX1Y = x1)
+dnl We're going to need at least C++14 for two of our test cases
+AX_CXX_COMPILE_STDCXX(14,noext,optional)
+AM_CONDITIONAL(CXX14_ENABLED,test x$HAVE_CXX14 = x1)
 
 dnl We're going to need at least C++11 for another of our test cases
-AX_CXX_COMPILE_STDCXX_11(noext,optional)
+AS_IF([test x$HAVE_CXX14 = x1],
+      [HAVE_CXX11 = 1],
+      [AX_CXX_COMPILE_STDCXX(11,noext,optional)])
 AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 
 dnl -Wall warnings, -Wall the time.

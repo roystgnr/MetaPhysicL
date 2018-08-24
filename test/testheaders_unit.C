@@ -3,7 +3,7 @@
 #include "metaphysicl/dualshadowsparsevector.h"
 #include "metaphysicl/dualshadowvector.h"
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201402L
 #  include "metaphysicl/dualexpression.h"
 #  include "metaphysicl/namedindexarray.h"
 #endif

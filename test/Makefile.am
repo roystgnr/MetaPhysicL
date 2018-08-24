@@ -26,9 +26,12 @@ check_PROGRAMS += testopt_unit
 check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
 
-if CXX11_ENABLED
+if CXX14_ENABLED
   check_PROGRAMS += dualnamedarray_unit
   check_PROGRAMS += namedindexarray_unit
+endif
+
+if CXX11_ENABLED
   check_PROGRAMS += physics_unit
 endif
 
@@ -133,9 +136,11 @@ TESTS += testopt_unit
 TESTS += vector_navier_unit
 TESTS += vector_pde_unit
 
-if CXX11_ENABLED
+if CXX14_ENABLED
   TESTS += dualnamedarray_unit
   TESTS += namedindexarray_unit
+endif
+if CXX11_ENABLED
   TESTS += physics_unit
 endif
 
