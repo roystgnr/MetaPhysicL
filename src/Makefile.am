@@ -2,7 +2,7 @@
 # Programs and libraries we want to build
 #----------------------------------------
 
-bin_PROGRAMS    = metaphysicl_version 
+bin_PROGRAMS    = metaphysicl_version
 
 lib_LTLIBRARIES = libmetaphysicl.la
 
@@ -38,6 +38,9 @@ include_HEADERS += numerics/include/metaphysicl/dualexpression.h
 include_HEADERS += numerics/include/metaphysicl/dualnamedarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber_decl.h
+include_HEADERS += numerics/include/metaphysicl/nddualnumber.h
+include_HEADERS += numerics/include/metaphysicl/dualnumber_surrogate.h
+include_HEADERS += numerics/include/metaphysicl/dualnumber_surrogate_decl.h
 include_HEADERS += numerics/include/metaphysicl/dualnumberarray.h
 include_HEADERS += numerics/include/metaphysicl/dualnumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dualshadow.h
@@ -82,7 +85,7 @@ metaphysicl_version_LDADD = libmetaphysicl.la
 #--------------------------------------
 #Local Directories to include for build
 #--------------------------------------
-AM_CPPFLAGS  = 
+AM_CPPFLAGS  =
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include

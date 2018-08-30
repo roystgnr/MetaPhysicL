@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
-// 
+//
 // MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
@@ -40,6 +40,9 @@
 namespace MetaPhysicL {
 
 template <typename T, typename D=T>
+class NotADuckDualNumber;
+
+template <typename T, typename D=T>
 class DualNumber : public safe_bool<DualNumber<T,D> >
 {
 public:
@@ -69,6 +72,8 @@ public:
   DualNumber& operator= (const DualNumber<T, D> & src) = default;
 #endif
 
+  template <typename T2, typename D2>
+  DualNumber & operator=(const NotADuckDualNumber<T2,D2> & nd_dn);
 
   T& value();
 
@@ -85,35 +90,46 @@ public:
   DualNumber<T,D> operator! () const;
 
   template <typename T2, typename D2>
-  DualNumber<T,D>& operator+= (const DualNumber<T2,D2>& a);
-
-  template <typename T2>
-  DualNumber<T,D>& operator+= (const T2& a);
+  DualNumber<T, D> & operator+= (const DualNumber<T2,D2>& a);
 
   template <typename T2, typename D2>
-  DualNumber<T,D>& operator-= (const DualNumber<T2,D2>& a);
+  DualNumber<T, D> & operator+= (const NotADuckDualNumber<T2,D2>& a);
 
   template <typename T2>
-  DualNumber<T,D>& operator-= (const T2& a);
+  DualNumber<T, D> & operator+= (const T2& a);
 
   template <typename T2, typename D2>
-  DualNumber<T,D>& operator*= (const DualNumber<T2,D2>& a);
-
-  template <typename T2>
-  DualNumber<T,D>& operator*= (const T2& a);
+  DualNumber<T, D> & operator-= (const DualNumber<T2,D2>& a);
 
   template <typename T2, typename D2>
-  DualNumber<T,D>& operator/= (const DualNumber<T2,D2>& a);
+  DualNumber<T, D> & operator-= (const NotADuckDualNumber<T2,D2>& a);
 
   template <typename T2>
-  DualNumber<T,D>& operator/= (const T2& a);
+  DualNumber<T, D> & operator-= (const T2& a);
+
+  template <typename T2, typename D2>
+  DualNumber<T, D> & operator*= (const DualNumber<T2,D2>& a);
+
+  template <typename T2, typename D2>
+  DualNumber<T, D> & operator*= (const NotADuckDualNumber<T2,D2>& a);
+
+  template <typename T2>
+  DualNumber<T, D> & operator*= (const T2& a);
+
+  template <typename T2, typename D2>
+  DualNumber<T, D> & operator/= (const DualNumber<T2,D2>& a);
+
+  template <typename T2, typename D2>
+  DualNumber<T, D> & operator/= (const NotADuckDualNumber<T2,D2>& a);
+
+  template <typename T2>
+  DualNumber<T, D> & operator/= (const T2& a);
+
 
 private:
   T _val;
   D _deriv;
 };
-
-
 
 // Helper class to handle partial specialization for DualNumber
 // constructors
@@ -169,7 +185,6 @@ struct DualNumberConstructor<DualNumber<T,D>, DD>
   static DD deriv(const T2&, const D2& d) { return d; }
 };
 
-
 // FIXME: these operators currently do automatic type promotion when
 // encountering DualNumbers of differing levels of recursion and
 // differentiability.  But what we really want is automatic type
@@ -222,14 +237,12 @@ operator opname (DualNumber<T,D>&& a, const T2& b); \
         DualNumber_decl_preop(opname, functorname)
 #endif
 
-
 DualNumber_decl_op(+, Plus)
 DualNumber_decl_op(-, Minus)
 DualNumber_decl_op(*, Multiplies)
 DualNumber_decl_op(/, Divides)
 
-
-#define DualNumber_decl_compare(opname) \
+#define DualNumber_decl_compare(opname)                     \
 template <typename T, typename D, typename T2, typename D2> \
 inline \
 bool \
@@ -264,7 +277,7 @@ DualNumber_decl_compare(||)
 
 template <typename T, typename D>
 inline
-std::ostream&      
+std::ostream&
 operator<< (std::ostream& output, const DualNumber<T,D>& a);
 
 
@@ -470,7 +483,6 @@ template <typename T, typename D>
 inline
 D gradient(const DualNumber<T, D>& a);
 
-
 } // namespace MetaPhysicL
 
 
@@ -582,7 +594,7 @@ DualNumber_decl_std_binary(min)
 DualNumber_decl_std_binary(fmod)
 
 template <typename T, typename D>
-class numeric_limits<DualNumber<T, D> > : 
+class numeric_limits<DualNumber<T, D> > :
   public MetaPhysicL::raw_numeric_limits<DualNumber<T, D>, T> {};
 
 } // namespace std

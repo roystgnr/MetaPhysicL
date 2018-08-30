@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
-// 
+//
 // MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
@@ -34,6 +34,9 @@
 namespace MetaPhysicL {
 
 template <typename T, typename D>
+class NotADuckDualNumber;
+
+template <typename T, typename D>
 inline
 T&
 DualNumber<T,D>::value() { return _val; }
@@ -60,14 +63,24 @@ DualNumber<T,D>::boolean_test() const { return _val; }
 
 template <typename T, typename D>
 inline
-DualNumber<T,D> 
+DualNumber<T,D>
 DualNumber<T,D>::operator- () const { return DualNumber<T,D>(-_val, -_deriv); }
 
 template <typename T, typename D>
 inline
-DualNumber<T,D> 
+DualNumber<T,D>
 DualNumber<T,D>::operator! () const { return DualNumber<T,D>(!_val, !_deriv); }
 
+template <typename T, typename D>
+template <typename T2, typename D2>
+inline
+DualNumber<T,D> &
+DualNumber<T,D>::operator=(const NotADuckDualNumber<T2,D2> & nd_dn)
+{
+  _val = nd_dn.value();
+  _deriv = nd_dn.derivatives();
+  return *this;
+}
 
 //
 // Member function definitions
@@ -92,7 +105,6 @@ DualNumber<T,D>::DualNumber(const T2& val,
                             const D2& deriv) :
   _val  (DualNumberConstructor<T,D>::value(val,deriv)),
   _deriv(DualNumberConstructor<T,D>::deriv(val,deriv)) {}
-
 
 // FIXME: these operators currently do automatic type promotion when
 // encountering DualNumbers of differing levels of recursion and
@@ -119,6 +131,17 @@ template <typename T2, typename D2> \
 inline \
 DualNumber<T,D>& \
 DualNumber<T,D>::operator opname##= (const DualNumber<T2,D2>& in) \
+{ \
+  dualcalc; \
+  this->value() opname##= in.value(); \
+  return *this; \
+} \
+ \
+template <typename T, typename D> \
+template <typename T2, typename D2> \
+inline \
+DualNumber<T,D> & \
+DualNumber<T,D>::operator opname##= (const NotADuckDualNumber<T2,D2>& in) \
 { \
   dualcalc; \
   this->value() opname##= in.value(); \
@@ -202,23 +225,25 @@ operator opname (DualNumber<T,D>&& a, const T2& b) \
         DualNumber_preop(opname, functorname, simplecalc, dualcalc)
 #endif
 
-
 DualNumber_op(+, Plus, , this->derivatives() += in.derivatives())
 
 DualNumber_op(-, Minus, , this->derivatives() -= in.derivatives())
 
-DualNumber_op(*, Multiplies, this->derivatives() *= in,
-  this->derivatives() *= in.value();
-  this->derivatives() += this->value() * in.derivatives();)
+DualNumber_op(*,
+              Multiplies,
+              this->derivatives() *= in,
+              this->derivatives() = this->derivatives() * in.value() +
+                                    this->value() * in.derivatives())
 
-DualNumber_op(/, Divides, this->derivatives() /= in,
-  this->derivatives() /= in.value();
-  this->derivatives() -= this->value()/(in.value()*in.value()) * in.derivatives();
-)
+DualNumber_op(/,
+              Divides,
+              this->derivatives() /= in,
+              this->derivatives() = this->derivatives() / in.value() -
+                                    in.derivatives() * this->value() /
+                                        (in.value() * in.value()))
 
 
-
-#define DualNumber_compare(opname) \
+#define DualNumber_compare(opname)                          \
 template <typename T, typename D, typename T2, typename D2> \
 inline \
 bool \
@@ -249,19 +274,12 @@ operator opname  (const DualNumber<T,D>& a, const T2& b) \
   return (a.value() opname b); \
 }
 
-DualNumber_compare(>)
-DualNumber_compare(>=)
-DualNumber_compare(<)
-DualNumber_compare(<=)
-DualNumber_compare(==)
-DualNumber_compare(!=)
-DualNumber_compare(&&)
-DualNumber_compare(||)
+    DualNumber_compare(>) DualNumber_compare(>=) DualNumber_compare(<) DualNumber_compare(<=)
+        DualNumber_compare(==) DualNumber_compare(!=) DualNumber_compare(&&) DualNumber_compare(||)
 
-template <typename T, typename D>
-inline
-std::ostream&      
-operator<< (std::ostream& output, const DualNumber<T,D>& a)
+            template <typename T, typename D>
+            inline std::ostream &
+            operator<<(std::ostream & output, const DualNumber<T, D> & a)
 {
   return output << '(' << a.value() << ',' << a.derivatives() << ')';
 }
@@ -273,8 +291,6 @@ D gradient(const DualNumber<T, D>& a)
 {
   return a.derivatives();
 }
-
-
 } // namespace MetaPhysicL
 
 
