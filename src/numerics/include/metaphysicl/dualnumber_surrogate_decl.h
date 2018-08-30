@@ -5,9 +5,7 @@ namespace MetaPhysicL
 {
 
 template <typename T, typename D>
-class NotADuckDualNumber;
-template <typename T, typename D = T>
-using NDDualNumber = NotADuckDualNumber<T, D>;
+class DualNumber;
 
 // Surrogate structure that refers/points to a component of a DualNumber, e.g. it might correspond
 // to the ij'th component of a DualNumber<TypeTensor<T>, N>

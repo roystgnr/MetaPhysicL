@@ -2,7 +2,6 @@
 #define METAPHYSICL_DUALNUMBER_SURROGATE_H
 
 #include "metaphysicl/dualnumber_surrogate_decl.h"
-#include "metaphysicl/dualnumber_decl.h"
 
 namespace MetaPhysicL
 {

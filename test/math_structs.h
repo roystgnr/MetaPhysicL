@@ -4,7 +4,7 @@
 #include <tuple>
 #include <map>
 #include "metaphysicl/compare_types.h"
-#include "metaphysicl/dualnumber.h"
+#include "metaphysicl/nddualnumber.h"
 
 namespace MetaPhysicL
 {
