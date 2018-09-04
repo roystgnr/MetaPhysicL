@@ -76,7 +76,7 @@ derivatives(const NamedIndexArray<DataVector, SparseSizeVector>& a)
 }
 
 
-template <typename DataVector, typename SparseSizeVector, int derivativeindex>
+template <typename DataVector, typename SparseSizeVector, unsigned int derivativeindex>
 struct DerivativeOf<NamedIndexArray<DataVector, SparseSizeVector>, derivativeindex>
 {
   static
