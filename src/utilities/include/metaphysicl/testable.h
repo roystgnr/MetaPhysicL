@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------bl-
 //--------------------------------------------------------------------------
-// 
+//
 // MetaPhysicL - A metaprogramming library for physics calculations
 //
 // Copyright (C) 2013 The PECOS Development Team
