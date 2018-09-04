@@ -1,7 +1,6 @@
 
 #if __cplusplus >= 201402L
-//#  include "metaphysicl/dualnamedarray.h"
-#  include "metaphysicl/namedindexarray.h"
+#  include "metaphysicl/dualnamedarray.h"
 #endif
 
 #include "metaphysicl/dualnumberarray.h"
@@ -17,8 +16,8 @@ using namespace MetaPhysicL;
 template <typename T1, typename T2>
 struct Instantiator {
 
-#if __cplusplus >= 201103L
-  //DualExpression<T1, T2> test_de;
+#if __cplusplus >= 201402L
+  DualExpression<T1, T2> test_de;
 #endif
 
   DualNumber<T1, T2> test_dn;
