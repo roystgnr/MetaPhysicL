@@ -60,7 +60,7 @@ AM_CONDITIONAL(CXX14_ENABLED,test x$HAVE_CXX14 = x1)
 
 dnl We're going to need at least C++11 for another of our test cases
 AS_IF([test x$HAVE_CXX14 = x1],
-      [HAVE_CXX11 = 1],
+      [HAVE_CXX11=1],
       [AX_CXX_COMPILE_STDCXX(11,noext,optional)])
 AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 
