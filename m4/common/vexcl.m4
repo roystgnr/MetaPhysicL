@@ -19,7 +19,7 @@
 #
 # COPYLEFT
 #
-#   Copyright (c) 2013 Roy H. Stogner <roystgnr@ices.utexas.edu>
+#   Copyright (c) 2013-2018 Roy H. Stogner <roystgnr@ices.utexas.edu>
 #   Copyright (c) 2012 Paul T. Bauman <pbauman@ices.utexas.edu>
 #   Copyright (c) 2010 Karl W. Schulz <karl@ices.utexas.edu>
 #   Copyright (c) 2009 Rhys Ulerich <rhys.ulerich@gmail.com>
@@ -69,11 +69,13 @@ if test "${with_vexcl}" != no ; then
     # and we'll need C++11 to compile them
     if test -e "${VEXCL_PREFIX}/vexcl/vexcl.hpp" ; then
        VEXCL_CPPFLAGS="-I${VEXCL_PREFIX}"
-       AX_CXX_COMPILE_STDCXX_11(noext)
+       AS_IF([test x$HAVE_CXX11 = x1], [],
+             [AX_CXX_COMPILE_STDCXX_11(noext)])
     elif test -e "${VEXCL_PREFIX}/include/vexcl/vexcl.hpp" ; then
        VEXCL_INCLUDE="${VEXCL_PREFIX}/include"
        VEXCL_CPPFLAGS="-I${VEXCL_PREFIX}/include"
-       AX_CXX_COMPILE_STDCXX_11(noext)
+       AS_IF([test x$HAVE_CXX11 = x1], [],
+             [AX_CXX_COMPILE_STDCXX_11(noext)])
     else
        AC_MSG_NOTICE([${VEXCL_PREFIX}/vexcl/vexcl.hpp not found])
        AC_MSG_NOTICE([${VEXCL_PREFIX}/include/vexcl/vexcl.hpp not found])
