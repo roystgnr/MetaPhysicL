@@ -1,3 +1,10 @@
+Version 0.3.0
+  * Fixed dualnamedarray.h for newer compilers
+  * DualNumber now requires C++11
+  * DualNumberSurrogate for wrapping container classes in DualNumber
+  * Fix testing for C++11, C++14
+  * Starting automatic Travis CI testing of new PRs
+  * Fixes for VexCL, Boost configuration
 Version 0.2.0
   * Fixed divergence of tensors
   * Refactoring common code from Array-vs-Vector class pairs
