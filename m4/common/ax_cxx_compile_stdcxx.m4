@@ -459,6 +459,9 @@ m4_define([_AX_CXX_COMPILE_STDCXX_testbody_new_in_14], [[
 
 #else
 
+// C++14 clang with C++11 libstdc++ dies on this header
+#include <iostream>
+
 namespace cxx14
 {
 
