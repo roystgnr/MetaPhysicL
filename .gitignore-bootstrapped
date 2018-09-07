@@ -1,0 +1,6 @@
+autom4te.cache
+*~
+build
+installed
+.clang-format
+TAGS
