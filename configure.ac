@@ -14,6 +14,10 @@ AC_CANONICAL_TARGET()
 AM_INIT_AUTOMAKE([dist-bzip2 tar-ustar 1.11 no-define color-tests parallel-tests subdir-objects])
 AM_SILENT_RULES(yes)  # use silent rules where available - automake 1.11
 
+dnl Turn off AM_MAINTAINER_MODE for bootstrapped release by
+dnl uncommenting this:
+dnl AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
+
 LT_INIT
 
 dnl Release versioning
