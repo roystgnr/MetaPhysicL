@@ -17,6 +17,10 @@ perl -pi -e 's/dnl AM_MAINTAINER_MODE/AM_MAINTAINER_MODE/' configure.ac
 
 cp .gitignore-bootstrapped .gitignore
 
+git add .gitignore
+
+git commit -m "Don't ignore bootstrap output"
+
 git add Makefile.in aclocal.m4 metaphysicl_config.h.tmp.in build-aux \
         configure doxygen/Makefile.in m4/libtool.m4 m4/ltoptions.m4 \
         m4/ltsugar.m4 m4/ltversion.m4 m4/lt~obsolete.m4 \
