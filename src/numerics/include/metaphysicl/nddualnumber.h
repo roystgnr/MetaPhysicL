@@ -4,6 +4,8 @@
 #include "metaphysicl/dualnumber.h"
 #include "metaphysicl/dualnumber_surrogate.h"
 
+#include <memory>
+
 namespace MetaPhysicL
 {
 
@@ -418,8 +420,9 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
 
 #define metaphysicl_map_decl(SpecialType)                                                          \
   Map<typename SpecialType::index_type,                                                            \
-      DualNumberSurrogate<typename SpecialType::value_type,                                        \
-                          typename D::template rebind<typename SpecialType::value_type *>::other>> \
+      std::shared_ptr<DualNumberSurrogate<                                                         \
+          typename SpecialType::value_type,                                                        \
+          typename D::template rebind<typename SpecialType::value_type *>::other>>>                \
       _dual_number_surrogates
 
 #define metaphysicl_map_api_decl(SpecialType)                                                      \
@@ -480,16 +483,16 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
   inline void NDDualNumber<SpecialType, D>::dns_try_emplace(typename SpecialType::index_type key,  \
                                                             ConstructionArgs &&... args)           \
   {                                                                                                \
-    typename Map<typename SpecialType::index_type,                                                 \
-                 DualNumberSurrogate<typename SpecialType::value_type,                             \
-                                     typename D::template rebind<                                  \
-                                         typename SpecialType::value_type *>::other>>::iterator    \
-        it = _dual_number_surrogates.find(key);                                                    \
+    typedef DualNumberSurrogate<                                                                   \
+        typename SpecialType::value_type,                                                          \
+        typename D::template rebind<typename SpecialType::value_type *>::other>                    \
+        dns_type;                                                                                  \
+    typename Map<typename SpecialType::index_type, std::shared_ptr<dns_type>>::iterator it =       \
+        _dual_number_surrogates.find(key);                                                         \
     if (it == _dual_number_surrogates.end())                                                       \
     {                                                                                              \
-      DualNumberSurrogate<typename SpecialType::value_type,                                        \
-                          typename D::template rebind<typename SpecialType::value_type *>::other>  \
-          dns{*this, std::forward<ConstructionArgs>(args)...};                                     \
+      std::shared_ptr<dns_type> dns =                                                              \
+          std::make_shared<dns_type>(*this, std::forward<ConstructionArgs>(args)...);              \
       _dual_number_surrogates.emplace(key, std::move(dns));                                        \
     }                                                                                              \
   }                                                                                                \
@@ -502,7 +505,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
       typename D::template rebind<typename SpecialType::value_type *>::other> &                    \
   NDDualNumber<SpecialType, D>::dns_at(typename SpecialType::index_type key)                       \
   {                                                                                                \
-    return _dual_number_surrogates.at(key);                                                        \
+    return *_dual_number_surrogates.at(key);                                                       \
   }                                                                                                \
   void metaphysicl_syntax_function()
 
