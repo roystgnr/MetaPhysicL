@@ -33,8 +33,7 @@ public:
 
   DualNumberSurrogate(DualNumberSurrogate<T, D> && dns);
 
-  template <typename T2, typename D2>
-  DualNumberSurrogate<T, D> & operator=(DualNumberSurrogate<T2, D2> & dns);
+  DualNumberSurrogate& operator=(const DualNumberSurrogate<T, D> & dns);
 
   template <typename T2, typename D2>
   DualNumberSurrogate<T, D> & operator=(const DualNumberSurrogate<T2, D2> & dns);

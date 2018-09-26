@@ -69,9 +69,8 @@ inline DualNumberSurrogate<T, D>::DualNumberSurrogate(DualNumberSurrogate<T, D> 
 }
 
 template <typename T, typename D>
-template <typename T2, typename D2>
 inline DualNumberSurrogate<T, D> &
-DualNumberSurrogate<T, D>::operator=(DualNumberSurrogate<T2, D2> & dns)
+DualNumberSurrogate<T, D>::operator=(const DualNumberSurrogate<T, D> & dns)
 {
   _value = dns.value();
   auto size = _derivatives.size();
