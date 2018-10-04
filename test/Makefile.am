@@ -49,7 +49,6 @@ AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 compare_types_unit_SOURCES = compare_types_unit.C
 derivs_unit_SOURCES = derivs_unit.C
 nd_derivs_unit_SOURCES = nd_derivs_unit.C
-nd_derivs_unit_SOURCES += math_structs.C
 nd_derivs_unit_SOURCES += math_structs.h
 divgrad_unit_SOURCES = divgrad_unit.C
 dualnamedarray_unit_SOURCES = dualnamedarray_unit.C

@@ -50,7 +50,7 @@ struct DotType<NumberVector<N,S>, NumberVector<N,T>, reverseorder> {
 
 template<std::size_t size1, std::size_t size2, typename S, typename T, bool reverseorder>
 struct OuterProductType<NumberVector<size1,S>, NumberVector<size2,T>, reverseorder> {
-  typedef 
+  typedef
   NumberVector<size1, NumberVector<size2,
     typename MultipliesType<S,T,reverseorder>::supertype> > supertype;
 };
@@ -74,6 +74,11 @@ public:
   template <typename T2>
   struct rebind {
     typedef NumberVector<N, T2> other;
+  };
+
+  template <size_t N2>
+  struct resize {
+    typedef NumberVector<N2, T> other;
   };
 
   NumberVector() {}
@@ -192,7 +197,7 @@ public:
     metaphysicl_assert_equal_to(n, N);
 
     NumberVector<N, NumberVector<N, T> > returnval(0);
-  
+
     for (std::size_t i=0; i != N; ++i)
       returnval[i][i] = 1;
 
@@ -301,7 +306,7 @@ template<std::size_t N, typename T>
 T sum (const NumberVector<N, T> &a)
 {
   T returnval = 0;
-  
+
   for (std::size_t i=0; i != N; ++i)
     returnval += a[i];
 
@@ -366,7 +371,7 @@ NumberVector_operator_binary(||)
 
 template <std::size_t N, typename T>
 inline
-std::ostream&      
+std::ostream&
 operator<< (std::ostream& output, const NumberVector<N,T>& a)
 {
   output << '{';
@@ -531,7 +536,7 @@ NumberVector_std_binary(fmod)
 
 
 template <std::size_t N, typename T>
-class numeric_limits<NumberVector<N, T> > : 
+class numeric_limits<NumberVector<N, T> > :
   public MetaPhysicL::raw_numeric_limits<NumberVector<N, T>, T> {};
 
 } // namespace std

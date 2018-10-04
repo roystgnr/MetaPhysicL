@@ -19,12 +19,12 @@ int
 main()
 {
   NDDualNumber<double, NumberArray<2, double>> scalar_ad_prop;
-  NDDualNumber<RealVector, NumberArray<2, RealVector>> vector_ad_prop;
-  NDDualNumber<RealTensor, NumberArray<2, RealTensor>> tensor_ad_prop;
+  NDDualNumber<VectorValue<double>, NumberArray<2, VectorValue<double>>> vector_ad_prop;
+  NDDualNumber<TensorValue<double>, NumberArray<2, TensorValue<double>>> tensor_ad_prop;
 
   double scalar_reg_prop;
-  RealVector vector_reg_prop;
-  RealTensor tensor_reg_prop;
+  VectorValue<double> vector_reg_prop;
+  TensorValue<double> tensor_reg_prop;
 
   int returnval = 0;
   double tol = 1e-8;
@@ -42,7 +42,7 @@ main()
   nd_derivs_expect_near(scalar_ad_prop.derivatives()[0], 32., tol);
   nd_derivs_expect_near(scalar_ad_prop.derivatives()[1], 64., tol);
 
-  vector_ad_prop = scalar_ad_prop * RealVector(1., 1., 1.);
+  vector_ad_prop = scalar_ad_prop * VectorValue<double>(1., 1., 1.);
   for (decltype(3) i = 0; i != 3; ++i)
   {
     nd_derivs_expect_near(vector_ad_prop.value()(i), 16., tol);
@@ -50,6 +50,7 @@ main()
     nd_derivs_expect_near(vector_ad_prop.derivatives()[1](i), 64., tol);
   }
   scalar_ad_prop = vector_ad_prop * vector_ad_prop;
+
   nd_derivs_expect_near(scalar_ad_prop.value(), 768., tol);
   nd_derivs_expect_near(scalar_ad_prop.derivatives()[0], 3072., tol);
   nd_derivs_expect_near(scalar_ad_prop.derivatives()[1], 6144., tol);
@@ -69,7 +70,7 @@ main()
     nd_derivs_expect_near(vector_ad_prop.derivatives()[1](i), 1728., tol);
   }
 
-  tensor_ad_prop = scalar_ad_prop * RealTensor(1., 1., 1., 1., 1., 1., 1., 1., 1.);
+  tensor_ad_prop = scalar_ad_prop * TensorValue<double>(1., 1., 1., 1., 1., 1., 1., 1., 1.);
   for (decltype(3) i = 0; i != 3; ++i)
   {
     for (decltype(3) j = 0; j != 3; ++j)
@@ -192,9 +193,24 @@ main()
   nd_derivs_expect_near(tensor_reg_prop(2, 1), -14220, tol);
   nd_derivs_expect_near(tensor_reg_prop(2, 2), -20430, tol);
 
+
+  TensorValue<DualNumber<double, NumberArray<2, double>>> inner_template;
+  for (unsigned i = 0; i < 3; ++i)
+    for (unsigned j = 0; j < 3; ++j)
+    {
+      inner_template(i, j).value() = tensor_ad_prop.value()(i, j);
+      for (unsigned di = 0; di < 2; ++di)
+        inner_template(i, j).derivatives()[di] = tensor_ad_prop.derivatives()[di](i, j);
+    }
+
   tensor_ad_prop = (tensor_ad_prop + tensor_ad_prop.transpose()) / 2.;
   auto strain = tensor_ad_prop.tr();
   tensor_ad_prop(0, 0) += (strain - tensor_ad_prop.tr() + tensor_ad_prop(2, 2)) / 3.;
+
+  inner_template = (inner_template + inner_template.transpose()) / 2.;
+  auto strain_inner = inner_template.tr();
+  inner_template(0, 0) += (strain_inner - inner_template.tr() + inner_template(2, 2)) / 3.;
+
   nd_derivs_expect_near(tensor_ad_prop.value()(0, 0), -9960, tol);
   nd_derivs_expect_near(tensor_ad_prop.value()(0, 1), -5580, tol);
   nd_derivs_expect_near(tensor_ad_prop.value()(0, 2), -8010, tol);
@@ -222,6 +238,34 @@ main()
   nd_derivs_expect_near(tensor_ad_prop.derivatives()[1](2, 0), -128160, tol);
   nd_derivs_expect_near(tensor_ad_prop.derivatives()[1](2, 1), -227520, tol);
   nd_derivs_expect_near(tensor_ad_prop.derivatives()[1](2, 2), -326880, tol);
+
+  nd_derivs_expect_near(inner_template(0, 0).value(), -9960, tol);
+  nd_derivs_expect_near(inner_template(0, 1).value(), -5580, tol);
+  nd_derivs_expect_near(inner_template(0, 2).value(), -8010, tol);
+  nd_derivs_expect_near(inner_template(1, 0).value(), -5580, tol);
+  nd_derivs_expect_near(inner_template(1, 1).value(), -9900, tol);
+  nd_derivs_expect_near(inner_template(1, 2).value(), -14220, tol);
+  nd_derivs_expect_near(inner_template(2, 0).value(), -8010, tol);
+  nd_derivs_expect_near(inner_template(2, 1).value(), -14220, tol);
+  nd_derivs_expect_near(inner_template(2, 2).value(), -20430, tol);
+  nd_derivs_expect_near(inner_template(0, 0).derivatives()[0], -119520, tol);
+  nd_derivs_expect_near(inner_template(0, 1).derivatives()[0], -66960, tol);
+  nd_derivs_expect_near(inner_template(0, 2).derivatives()[0], -96120, tol);
+  nd_derivs_expect_near(inner_template(1, 0).derivatives()[0], -66960, tol);
+  nd_derivs_expect_near(inner_template(1, 1).derivatives()[0], -118800, tol);
+  nd_derivs_expect_near(inner_template(1, 2).derivatives()[0], -170640, tol);
+  nd_derivs_expect_near(inner_template(2, 0).derivatives()[0], -96120, tol);
+  nd_derivs_expect_near(inner_template(2, 1).derivatives()[0], -170640, tol);
+  nd_derivs_expect_near(inner_template(2, 2).derivatives()[0], -245160, tol);
+  nd_derivs_expect_near(inner_template(0, 0).derivatives()[1], -159360, tol);
+  nd_derivs_expect_near(inner_template(0, 1).derivatives()[1], -89280, tol);
+  nd_derivs_expect_near(inner_template(0, 2).derivatives()[1], -128160, tol);
+  nd_derivs_expect_near(inner_template(1, 0).derivatives()[1], -89280, tol);
+  nd_derivs_expect_near(inner_template(1, 1).derivatives()[1], -158400, tol);
+  nd_derivs_expect_near(inner_template(1, 2).derivatives()[1], -227520, tol);
+  nd_derivs_expect_near(inner_template(2, 0).derivatives()[1], -128160, tol);
+  nd_derivs_expect_near(inner_template(2, 1).derivatives()[1], -227520, tol);
+  nd_derivs_expect_near(inner_template(2, 2).derivatives()[1], -326880, tol);
 
   DualNumberSurrogate<double, NumberArray<2, double*>> dns(0);
   double zero(0);
