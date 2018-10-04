@@ -30,6 +30,7 @@
 #define METAPHYSICL_DUALNUMBER_H
 
 #include "metaphysicl/dualnumber_decl.h"
+#include "metaphysicl/dualnumber_surrogate.h"
 
 namespace MetaPhysicL {
 
@@ -79,6 +80,29 @@ DualNumber<T,D>::operator=(const NotADuckDualNumber<T2,D2> & nd_dn)
 {
   _val = nd_dn.value();
   _deriv = nd_dn.derivatives();
+  return *this;
+}
+
+template <typename T, typename D>
+template <typename T2, typename D2>
+inline
+DualNumber<T,D>::DualNumber(const DualNumberSurrogate<T2,D2> & dns) : _val(dns.value())
+{
+  auto size = dns.derivatives().size();
+  for (decltype(size) i = 0; i < size; ++i)
+    _deriv[i] = *dns.derivatives()[i];
+}
+
+template <typename T, typename D>
+template <typename T2, typename D2>
+inline
+DualNumber<T,D> &
+DualNumber<T,D>::operator=(const DualNumberSurrogate<T2,D2> & dns)
+{
+  _val = dns.value();
+  auto size = dns.derivatives().size();
+  for (decltype(size) i = 0; i < size; ++i)
+    _deriv[i] = *dns.derivatives()[i];
   return *this;
 }
 
