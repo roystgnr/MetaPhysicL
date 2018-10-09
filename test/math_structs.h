@@ -4,6 +4,7 @@
 #include <tuple>
 #include <map>
 #include <utility>
+#include <cmath>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/nddualnumber.h"
@@ -72,6 +73,11 @@ public:
 
   const T & operator()(unsigned i) const { return _coords[i]; }
   T & operator()(unsigned i) { return _coords[i]; }
+
+  T norm() const
+    {
+      return std::sqrt(_coords[0] * _coords[0] + _coords[1] * _coords[1] + _coords[2] * _coords[2]);
+    }
 };
 
 template <typename T, typename T2, typename std::enable_if<ScalarTraits<T>::value, int>::type = 0>
@@ -348,6 +354,82 @@ struct DividesType<TensorValue<double>, double>
 {
   typedef TensorValue<double> supertype;
 };
+
+template <typename D>
+class NotADuckDualNumber<VectorValue<double>, D> : public DualNumber<VectorValue<double>, D>
+{
+public:
+  NotADuckDualNumber() : DualNumber<VectorValue<double>, D>() {}
+
+  using DualNumber<VectorValue<double>, D>::DualNumber;
+
+  typedef typename D::template resize<3>::other ResizedDerivatives;
+  typedef typename D::template rebind<double>::other::template resize<3>::other DuckNumberDerivatives;
+
+  template <typename KeyType, typename ValueType>
+  using Map = std::map<KeyType, ValueType>;
+
+  NotADuckDualNumber<VectorValue<double>, D> operator-() const
+  {
+    return NotADuckDualNumber<VectorValue<double>, D>(-this->_val, -this->_deriv);
+  }
+  NotADuckDualNumber<VectorValue<double>, D> operator!() const
+  {
+    return NotADuckDualNumber<VectorValue<double>, D>(!this->_val, !this->_deriv);
+  }
+
+  VectorValue<DualNumber<double, DuckNumberDerivatives>> inner_template() const
+  {
+    DualNumber<double, DuckNumberDerivatives> x{this->value()(0), _e0};
+    DualNumber<double, DuckNumberDerivatives> y{this->value()(1), _e1};
+    DualNumber<double, DuckNumberDerivatives> z{this->value()(2), _e2};
+    return {x, y, z};
+  }
+
+  NotADuckDualNumber<VectorValue<double>, ResizedDerivatives>
+  convert_to_outer(const VectorValue<DualNumber<double, DuckNumberDerivatives>> & inner) const
+  {
+    NotADuckDualNumber<VectorValue<double>, ResizedDerivatives> nd = VectorValue<double>(inner(0).value(), inner(1).value(), inner(2).value());
+
+    for (unsigned di = 0; di < 3; ++di)
+      for (unsigned i = 0; i < 3; ++i)
+        nd.derivatives()[di](i) = inner(i).derivatives()[di];
+    return nd;
+  }
+
+  const DualNumber<double, DuckNumberDerivatives> &
+  convert_to_outer(const DualNumber<double, DuckNumberDerivatives> & inner) const
+    {
+      return inner;
+    }
+
+  static constexpr double _e0[3] = {1, 0, 0};
+  static constexpr double _e1[3] = {0, 1, 0};
+  static constexpr double _e2[3] = {0, 0, 1};
+
+  metaphysicl_const_return_decl(operator());
+  metaphysicl_nonconst_return_decl(operator());
+  metaphysicl_const_return_decl(norm);
+
+  metaphysicl_map_api_decl(VectorValue<double>);
+
+private:
+  metaphysicl_map_decl(VectorValue<double>);
+};
+
+metaphysicl_const_return_def(operator(), VectorValue<double>);
+metaphysicl_nonconst_return_def(operator(), VectorValue<double>);
+metaphysicl_const_return_def(norm, VectorValue<double>);
+
+metaphysicl_map_api_def(VectorValue<double>);
+
+template <typename D>
+constexpr double NotADuckDualNumber<VectorValue<double>, D>::_e0[3];
+template <typename D>
+constexpr double NotADuckDualNumber<VectorValue<double>, D>::_e1[3];
+template <typename D>
+constexpr double NotADuckDualNumber<VectorValue<double>, D>::_e2[3];
+
 
 template <typename D>
 class NotADuckDualNumber<TensorValue<double>, D> : public DualNumber<TensorValue<double>, D>

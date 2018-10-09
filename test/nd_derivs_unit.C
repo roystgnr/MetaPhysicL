@@ -193,7 +193,6 @@ main()
   nd_derivs_expect_near(tensor_reg_prop(2, 1), -14220, tol);
   nd_derivs_expect_near(tensor_reg_prop(2, 2), -20430, tol);
 
-
   TensorValue<DualNumber<double, NumberArray<2, double>>> inner_template;
   for (unsigned i = 0; i < 3; ++i)
     for (unsigned j = 0; j < 3; ++j)
@@ -266,6 +265,35 @@ main()
   nd_derivs_expect_near(inner_template(2, 0).derivatives()[1], -128160, tol);
   nd_derivs_expect_near(inner_template(2, 1).derivatives()[1], -227520, tol);
   nd_derivs_expect_near(inner_template(2, 2).derivatives()[1], -326880, tol);
+
+  VectorValue<DualNumber<double, NumberArray<2, double>>> vector_inner_template;
+  for (unsigned i = 0; i < 3; ++i)
+  {
+    vector_inner_template(i).value() = vector_ad_prop.value()(i);
+    for (unsigned di = 0; di < 2; ++di)
+      vector_inner_template(i).derivatives()[di] = vector_ad_prop.derivatives()[di](i);
+  }
+
+  auto outer_norm = vector_ad_prop.norm();
+  auto inner_norm = vector_inner_template.norm();
+  nd_derivs_expect_near(outer_norm.value(), inner_norm.value(), tol);
+  nd_derivs_expect_near(outer_norm.derivatives()[0], inner_norm.derivatives()[0], tol);
+  nd_derivs_expect_near(outer_norm.derivatives()[1], inner_norm.derivatives()[1], tol);
+
+  vector_ad_prop.value() = VectorValue<double>(.05, 0, 0);
+  vector_ad_prop.derivatives()[0] = VectorValue<double>(-0.5, 0, 0);
+  vector_ad_prop.derivatives()[1] = VectorValue<double>(0.5, 0, 0);
+  double dx[2] = {-0.5, 0.5};
+  double dy[2] = {0, 0};
+  double dz[2] = {0, 0};
+  vector_inner_template(0) = DualNumber<double, NumberArray<2, double>>(.05, dx);
+  vector_inner_template(1) = DualNumber<double, NumberArray<2, double>>(0, dy);
+  vector_inner_template(2) = DualNumber<double, NumberArray<2, double>>(0, dz);
+  outer_norm = vector_ad_prop.norm();
+  inner_norm = vector_inner_template.norm();
+  nd_derivs_expect_near(outer_norm.value(), inner_norm.value(), tol);
+  nd_derivs_expect_near(outer_norm.derivatives()[0], inner_norm.derivatives()[0], tol);
+  nd_derivs_expect_near(outer_norm.derivatives()[1], inner_norm.derivatives()[1], tol);
 
   DualNumberSurrogate<double, NumberArray<2, double*>> dns(0);
   double zero(0);
