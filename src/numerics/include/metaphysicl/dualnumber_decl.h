@@ -60,16 +60,16 @@ public:
 
 #if __cplusplus >= 201103L
   // Move constructors are useful when all your data is on the heap
-  DualNumber(DualNumber<T, D> && src) = default;
+  DualNumber(DualNumber<T, D> && /*src*/) = default;
 
   // Move assignment avoids heap operations too
-  DualNumber& operator= (DualNumber<T, D> && src) = default;
+  DualNumber& operator= (DualNumber<T, D> && /*src*/) = default;
 
   // Standard copy operations get implicitly deleted upon move
   // constructor definition, so we redefine them.
-  DualNumber(const DualNumber<T, D> & src) = default;
+  DualNumber(const DualNumber<T, D> & /*src*/) = default;
 
-  DualNumber& operator= (const DualNumber<T, D> & src) = default;
+  DualNumber& operator= (const DualNumber<T, D> & /*src*/) = default;
 #endif
 
   template <typename T2, typename D2>
