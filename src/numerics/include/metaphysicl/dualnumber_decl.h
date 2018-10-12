@@ -41,6 +41,8 @@ namespace MetaPhysicL {
 
 template <typename T, typename D=T>
 class NotADuckDualNumber;
+template <typename T, typename D>
+class DualNumberSurrogate;
 
 template <typename T, typename D=T>
 class DualNumber : public safe_bool<DualNumber<T,D> >
@@ -74,6 +76,12 @@ public:
 
   template <typename T2, typename D2>
   DualNumber & operator=(const NotADuckDualNumber<T2,D2> & nd_dn);
+
+  template <typename T2, typename D2>
+  explicit DualNumber(const DualNumberSurrogate<T2, D2> & dns);
+
+  template <typename T2, typename D2>
+  DualNumber & operator= (const DualNumberSurrogate<T2, D2> & dns);
 
   T& value();
 

@@ -224,8 +224,21 @@ main()
   nd_derivs_expect_near(tensor_ad_prop.derivatives()[1](2, 2), -326880, tol);
 
   DualNumberSurrogate<double, NumberArray<2, double*>> dns(0);
+  double zero(0);
+  dns.derivatives()[0] = &zero;
+  dns.derivatives()[1] = &zero;
   DualNumberSurrogate<double, NumberArray<2, double*>> dns2(dns);
   DualNumberSurrogate<double, NumberArray<2, double*>> dns3(scalar_ad_prop);
+
+  DualNumber<double, NumberArray<2, double>> new_scalar_ad_prop(dns);
+  nd_derivs_expect_near(new_scalar_ad_prop.value(), 0, tol);
+  nd_derivs_expect_near(new_scalar_ad_prop.derivatives()[0], 0, tol);
+  nd_derivs_expect_near(new_scalar_ad_prop.derivatives()[1], 0, tol);
+
+  new_scalar_ad_prop = dns3;
+  nd_derivs_expect_near(new_scalar_ad_prop.value(), scalar_ad_prop.value(), tol);
+  nd_derivs_expect_near(new_scalar_ad_prop.derivatives()[0], scalar_ad_prop.derivatives()[0], tol);
+  nd_derivs_expect_near(new_scalar_ad_prop.derivatives()[1], scalar_ad_prop.derivatives()[1], tol);
 
   return returnval;
 }
