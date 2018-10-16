@@ -74,6 +74,11 @@ public:
     typedef NumberArray<N, T2> other;
   };
 
+  template <size_t N2>
+  struct resize {
+    typedef NumberArray<N2, T> other;
+  };
+
   NumberArray() : _data() {}
 
   NumberArray(const T& val)

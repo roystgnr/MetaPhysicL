@@ -56,8 +56,8 @@ using NDDualNumber = NotADuckDualNumber<T, D>;
     return {value, derivatives};                                                                   \
   }                                                                                                \
                                                                                                    \
-  template <typename T, typename D, typename T2>                                                   \
-  inline auto operator opname(const T2 & a, const NDDualNumber<T, D> & b)                          \
+  template <typename T, typename T2, typename D>                                                   \
+  inline auto operator opname(const T & a, const NDDualNumber<T2, D> & b)                          \
       ->NDDualNumber<decltype(a opname b.value()), decltype(dn_second_calc)>                       \
   {                                                                                                \
     auto value = a opname b.value();                                                               \
@@ -336,32 +336,6 @@ ND_DNS_op(/, divide);
 // NotADuck helper functions, method declarations, and method definitions
 //
 
-template <typename T, typename TBase, typename D, typename R, class... PtrArgs, class... ParamArgs>
-NDDualNumber<R, typename D::template rebind<R>::other>
-return_dn(const R & (TBase::*fn)(PtrArgs...) const,
-          const NDDualNumber<T, D> & calling_dn,
-          ParamArgs &&... args)
-{
-  typename D::template rebind<R>::other deriv;
-  auto size = calling_dn.derivatives().size();
-  for (decltype(size) di = 0; di < size; ++di)
-    deriv[di] = (calling_dn.derivatives()[di].*fn)(std::forward<ParamArgs>(args)...);
-  return {(calling_dn.value().*fn)(std::forward<ParamArgs>(args)...), deriv};
-}
-
-template <typename T, typename TBase, typename D, typename R, class... PtrArgs, class... ParamArgs>
-NDDualNumber<R, typename D::template rebind<R>::other>
-return_dn(R (TBase::*fn)(PtrArgs...) const,
-          const NDDualNumber<T, D> & calling_dn,
-          ParamArgs &&... args)
-{
-  typename D::template rebind<R>::other deriv;
-  auto size = calling_dn.derivatives().size();
-  for (decltype(size) di = 0; di < size; ++di)
-    deriv[di] = (calling_dn.derivatives()[di].*fn)(std::forward<ParamArgs>(args)...);
-  return {(calling_dn.value().*fn)(std::forward<ParamArgs>(args)...), deriv};
-}
-
 template <typename T, typename TBase, typename D, class... PtrArgs, class... ParamArgs>
 void
 const_void_helper(void (TBase::*fn)(PtrArgs...) const,
@@ -438,7 +412,24 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
       typename D::template rebind<typename std::remove_const<typename std::remove_reference<       \
           decltype(this->value().method_name(std::forward<Args>(args)...))>::type>::type>::other>  \
   {                                                                                                \
-    return return_dn(&SpecialType::method_name, *this, std::forward<Args>(args)...);               \
+    typedef typename D::template rebind<typename std::remove_const<typename std::remove_reference< \
+        decltype(this->value().method_name(std::forward<Args>(args)...))>::type>::type>::other     \
+        DerivativeType;                                                                            \
+    DerivativeType deriv;                                                                          \
+    auto outer_size = this->derivatives().size();                                                  \
+    auto inner_template_dn =                                                                       \
+        this->convert_to_outer(this->inner_template().method_name(std::forward<Args>(args)...));   \
+    auto & inner_template_value = inner_template_dn.value();                                       \
+    auto & inner_template_derivatives = inner_template_dn.derivatives();                           \
+    auto inner_size = inner_template_derivatives.size();                                           \
+    for (decltype(outer_size) outer_di = 0; outer_di < outer_size; ++outer_di)                     \
+    {                                                                                              \
+      deriv[outer_di] = 0;                                                                         \
+      for (decltype(inner_size) inner_di = 0; inner_di < inner_size; ++inner_di)                   \
+        deriv[outer_di] +=                                                                         \
+            inner_template_derivatives[inner_di] * this->derivatives()[outer_di](inner_di);        \
+    }                                                                                              \
+    return {inner_template_value, deriv};                                                          \
   }                                                                                                \
   void macro_syntax_function()
 
