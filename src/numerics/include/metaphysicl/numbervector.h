@@ -97,6 +97,15 @@ public:
   NumberVector(const T2& val)
     { std::fill(_data, _data+N, T(val)); }
 
+  template <typename T2,
+            typename std::enable_if<ScalarTraits<T2>::value,
+                                    int>::type = 0>
+  NumberVector & operator=(const T2 & val)
+    {
+      std::fill(_data, _data+N, T(val));
+      return *this;
+    }
+
   T& operator[](std::size_t i)
     { return _data[i]; }
 
