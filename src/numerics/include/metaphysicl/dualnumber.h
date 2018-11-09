@@ -411,7 +411,8 @@ template <typename T, typename D> \
 inline DualNumber<std::complex<T>, D> \
 funcname(const DualNumber<std::complex<T>, D> & in) \
 { \
-  return {std::funcname(in.value()), std::numeric_limits<double>::quiet_NaN()}; \
+  return {std::funcname(in.value()), std::complex<T>{std::numeric_limits<double>::quiet_NaN(), \
+                                                     std::numeric_limits<double>::quiet_NaN()}}; \
 }
 
 #if __cplusplus >= 201103L
