@@ -389,8 +389,50 @@ DualNumber_std_unary(cosh, std::sinh(in.value()),)
 DualNumber_std_unary(tanh, sech_in * sech_in, T sech_in = 1 / std::cosh(in.value()))
 DualNumber_std_unary(abs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
 DualNumber_std_unary(fabs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
+DualNumber_std_unary(norm, (in.value() > 0) - (in.value() < 0),)
 DualNumber_std_unary(ceil, 0,)
 DualNumber_std_unary(floor, 0,)
+
+#define DualNumber_complex_std_unary_real(funcname) \
+template <typename T, typename D> \
+inline DualNumber<T, typename D::template rebind<T>::other> \
+funcname(const DualNumber<std::complex<T>, D> & in) \
+{ \
+  return {std::funcname(in.value()), std::numeric_limits<double>::quiet_NaN()}; \
+}
+
+DualNumber_complex_std_unary_real(real)
+DualNumber_complex_std_unary_real(imag)
+DualNumber_complex_std_unary_real(norm)
+DualNumber_complex_std_unary_real(abs)
+
+#define DualNumber_complex_std_unary_complex_pre(funcname) \
+template <typename T, typename D> \
+inline DualNumber<std::complex<T>, D> \
+funcname(const DualNumber<std::complex<T>, D> & in) \
+{ \
+  return {std::funcname(in.value()), std::complex<T>{std::numeric_limits<double>::quiet_NaN(), \
+                                                     std::numeric_limits<double>::quiet_NaN()}}; \
+}
+
+#if __cplusplus >= 201103L
+#define DualNumber_complex_std_unary_complex(funcname) \
+DualNumber_complex_std_unary_complex_pre(funcname) \
+template <typename T, typename D> \
+inline DualNumber<std::complex<T>, D> \
+funcname(DualNumber<std::complex<T>, D> && in) \
+{ \
+  in.value() = std::funcname(in.value()); \
+  in.derivatives() = std::complex<T>(std::numeric_limits<double>::quiet_NaN(), \
+                                     std::numeric_limits<double>::quiet_NaN()); \
+  return in; \
+}
+#else
+#define DualNumber_complex_std_unary_complex(funcname) \
+DualNumber_complex_std_unary_complex_pre(funcname)
+#endif
+
+DualNumber_complex_std_unary_complex(conj)
 
 #define DualNumber_std_binary(funcname, derivative) \
 template <typename T, typename D, typename T2, typename D2> \
