@@ -156,7 +156,7 @@ DynamicSparseNumberBase<T,I,SubType>::operator[](index_value_type i)
 
   // Bad user code could make this fail.  We'd prefer to catch OOB
   // writes at *write* time but at least we can catch at read time.
-  metaphysicl_assert(zero == 0);
+  metaphysicl_assert(zero == T(0));
 
   std::size_t rq = runtime_index_query(i);
   if (rq == std::numeric_limits<std::size_t>::max())
