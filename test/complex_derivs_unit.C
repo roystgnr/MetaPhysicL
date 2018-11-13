@@ -3,6 +3,7 @@
 
 #include "metaphysicl/dualnumber.h"
 #include "metaphysicl/numberarray.h"
+#include "metaphysicl/dynamicsparsenumberarray.h"
 
 using namespace MetaPhysicL;
 
@@ -86,6 +87,29 @@ main()
   expect_near(dn_conj2.value().imag(), -1, tol);
   expect_nan(dn_conj2.derivatives().real());
   expect_nan(dn_conj2.derivatives().imag());
+
+  DynamicSparseNumberArray<double, unsigned int> double_dsna;
+  double_dsna.resize(1);
+  double_dsna[0] = -1;
+
+  DynamicSparseNumberArray<double, unsigned int> double_dsna_real = std::real(double_dsna);
+  expect_near(double_dsna_real[0], -1, tol);
+  DynamicSparseNumberArray<double, unsigned int> double_dsna_imag = std::imag(double_dsna);
+  expect_near(double_dsna_imag[0], 0, tol);
+  DynamicSparseNumberArray<double, unsigned int> double_dsna_norm = std::norm(double_dsna);
+  expect_near(double_dsna_norm[0], 1, tol);
+
+  DynamicSparseNumberArray<std::complex<double>, unsigned int> complex_dsna;
+  complex_dsna.resize(1);
+  complex_dsna[0].real(-1);
+  complex_dsna[0].imag(-1);
+
+  DynamicSparseNumberArray<double, unsigned int> complex_dsna_real = std::real(complex_dsna);
+  expect_near(complex_dsna_real[0], -1, tol);
+  DynamicSparseNumberArray<double, unsigned int> complex_dsna_imag = std::imag(complex_dsna);
+  expect_near(complex_dsna_imag[0], -1, tol);
+  DynamicSparseNumberArray<double, unsigned int> complex_dsna_norm = std::norm(complex_dsna);
+  expect_near(complex_dsna_norm[0], 2, tol);
 
   return returnval;
 }
