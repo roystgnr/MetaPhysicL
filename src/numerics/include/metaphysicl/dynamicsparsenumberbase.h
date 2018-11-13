@@ -151,22 +151,28 @@ template <typename T, typename I, template <typename, typename> class SubType>
 inline
 T&
 DynamicSparseNumberBase<T,I,SubType>::operator[](index_value_type i)
-{ return this->query(i); }
+{
+  static T zero = 0;
+
+  // Bad user code could make this fail.  We'd prefer to catch OOB
+  // writes at *write* time but at least we can catch at read time.
+  metaphysicl_assert(zero == T(0));
+
+  std::size_t rq = runtime_index_query(i);
+  if (rq == std::numeric_limits<std::size_t>::max())
+    return zero;
+  return _data[rq];
+}
 
 template <typename T, typename I, template <typename, typename> class SubType>
 inline
 const T&
 DynamicSparseNumberBase<T,I,SubType>::operator[](index_value_type i) const
-{ return _data[runtime_index_of(i)]; }
-
-template <typename T, typename I, template <typename, typename> class SubType>
-inline
-T
-DynamicSparseNumberBase<T,I,SubType>::query(index_value_type i) const
 {
+  static const T zero = 0;
   std::size_t rq = runtime_index_query(i);
   if (rq == std::numeric_limits<std::size_t>::max())
-    return 0;
+    return zero;
   return _data[rq];
 }
 

@@ -111,8 +111,6 @@ public:
 
   const T& operator[](index_value_type i) const;
 
-  T query(index_value_type i) const;
-
   template <unsigned int i>
   typename entry_type<i>::type& get();
 
