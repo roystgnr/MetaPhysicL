@@ -399,6 +399,12 @@ inline DualNumber<T, typename D::template rebind<T>::other> \
 funcname(const DualNumber<std::complex<T>, D> & in) \
 { \
   return {std::funcname(in.value()), std::numeric_limits<double>::quiet_NaN()}; \
+} \
+template <typename T> \
+inline DualNumber<T> \
+funcname(const DualNumber<std::complex<T>> & in)    \
+{ \
+  return {std::funcname(in.value()), std::numeric_limits<double>::quiet_NaN()}; \
 }
 
 DualNumber_complex_std_unary_real(real)
@@ -413,6 +419,13 @@ funcname(const DualNumber<std::complex<T>, D> & in) \
 { \
   return {std::funcname(in.value()), std::complex<T>{std::numeric_limits<double>::quiet_NaN(), \
                                                      std::numeric_limits<double>::quiet_NaN()}}; \
+} \
+template <typename T> \
+inline DualNumber<std::complex<T>> \
+funcname(const DualNumber<std::complex<T>> & in) \
+{ \
+  return {std::funcname(in.value()), std::complex<T>{std::numeric_limits<double>::quiet_NaN(), \
+                                                     std::numeric_limits<double>::quiet_NaN()}}; \
 }
 
 #if __cplusplus >= 201103L
@@ -421,6 +434,15 @@ DualNumber_complex_std_unary_complex_pre(funcname) \
 template <typename T, typename D> \
 inline DualNumber<std::complex<T>, D> \
 funcname(DualNumber<std::complex<T>, D> && in) \
+{ \
+  in.value() = std::funcname(in.value()); \
+  in.derivatives() = std::complex<T>(std::numeric_limits<double>::quiet_NaN(), \
+                                     std::numeric_limits<double>::quiet_NaN()); \
+  return in; \
+} \
+template <typename T> \
+inline DualNumber<std::complex<T>> \
+funcname(DualNumber<std::complex<T>> && in) \
 { \
   in.value() = std::funcname(in.value()); \
   in.derivatives() = std::complex<T>(std::numeric_limits<double>::quiet_NaN(), \
