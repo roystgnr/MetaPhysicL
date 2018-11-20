@@ -392,6 +392,15 @@ DynamicSparseNumberBase_decl_std_unary(ceil)
 DynamicSparseNumberBase_decl_std_unary(floor)
 DynamicSparseNumberBase_decl_std_binary_union(fmod) // TODO: optimize this
 
+#define DynamicSparseNumberBase_decl_std_unary_complex(funcname) \
+template <template <typename, typename> class SubType, \
+          typename T, typename I> \
+inline auto \
+funcname (const DynamicSparseNumberBase<T,I,SubType> & in) -> SubType<decltype(std::funcname(T())), I>
+
+DynamicSparseNumberBase_decl_std_unary_complex(real);
+DynamicSparseNumberBase_decl_std_unary_complex(imag);
+DynamicSparseNumberBase_decl_std_unary_complex(norm);
 } // namespace std
 
 
