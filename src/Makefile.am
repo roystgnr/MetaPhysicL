@@ -6,6 +6,8 @@ bin_PROGRAMS    = metaphysicl_version
 
 lib_LTLIBRARIES = libmetaphysicl.la
 
+libmetaphysicl_la_LDFLAGS = -version-info 1:0:0
+
 #----------------------------------------------
 # List of source files to build dynamic library
 #----------------------------------------------
