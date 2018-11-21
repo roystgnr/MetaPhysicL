@@ -1,3 +1,8 @@
+0.3.2 -> 0.3.3
+  * Begin incrementing library versioning properly
+  * More declarations properly added to _decl headers
+  * Fixes for numerous compiler warnings
+
 0.3.1 -> 0.3.2
   * Support for std::complex functions for some classes
   * Bugfix in DynamicSparseNumber*::operator[]
