@@ -99,7 +99,7 @@ DerivativeOf<DynamicSparseNumberArray<T, I>, derivativeindex>::derivative (const
 template <typename T, typename I>
 inline
 typename DerivativeType<T>::type
-divergence(const DynamicSparseNumberArray<T, I>& a)
+divergence(const DynamicSparseNumberArray<T, I>& /*a*/)
 {
   typename DerivativeType<T>::type returnval = 0;
 

@@ -375,7 +375,7 @@ public:
   SparseNumberArray<typename DotType<T,T2>::supertype,
                     typename IndexSet::template
                       Intersection<IndexSet2>::type>
-  dot (const SparseNumberArray<T2,IndexSet2>& a) const
+  dot (const SparseNumberArray<T2,IndexSet2>& /*a*/) const
   {
     typedef typename DotType<T,T2>::supertype TS;
     typedef typename IndexSet::template Intersection<IndexSet2>::type IndexSetS;
@@ -396,7 +396,7 @@ public:
   SparseNumberArray<
     typename OuterProductType<T,T2>::supertype,
     typename IndexSet::template Intersection<IndexSet2>::type>
-  outerproduct (const SparseNumberArray<T2, IndexSet2>& a) const
+  outerproduct (const SparseNumberArray<T2, IndexSet2>& /*a*/) const
   {
     typedef typename OuterProductType<T,T2>::supertype TS;
     typedef typename IndexSet::template Intersection<IndexSet2>::type IndexSetS;
