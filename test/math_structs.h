@@ -417,11 +417,11 @@ private:
   metaphysicl_map_decl(VectorValue<double>);
 };
 
-metaphysicl_const_return_def(operator(), VectorValue<double>);
-metaphysicl_nonconst_return_def(operator(), VectorValue<double>);
-metaphysicl_const_return_def(norm, VectorValue<double>);
+metaphysicl_const_return_def(operator(), VectorValue<double>)
+metaphysicl_nonconst_return_def(operator(), VectorValue<double>)
+metaphysicl_const_return_def(norm, VectorValue<double>)
 
-metaphysicl_map_api_def(VectorValue<double>);
+metaphysicl_map_api_def(VectorValue<double>)
 
 template <typename D>
 constexpr double NotADuckDualNumber<VectorValue<double>, D>::_e0[3];
@@ -527,12 +527,12 @@ private:
   metaphysicl_map_decl(TensorValue<double>);
 };
 
-metaphysicl_const_return_def(operator(), TensorValue<double>);
-metaphysicl_nonconst_return_def(operator(), TensorValue<double>);
-metaphysicl_const_return_def(tr, TensorValue<double>);
-metaphysicl_const_return_def(transpose, TensorValue<double>);
+metaphysicl_const_return_def(operator(), TensorValue<double>)
+metaphysicl_nonconst_return_def(operator(), TensorValue<double>)
+metaphysicl_const_return_def(tr, TensorValue<double>)
+metaphysicl_const_return_def(transpose, TensorValue<double>)
 
-metaphysicl_map_api_def(TensorValue<double>);
+metaphysicl_map_api_def(TensorValue<double>)
 
 template <typename D>
 constexpr double NotADuckDualNumber<TensorValue<double>, D>::_e0[9];
