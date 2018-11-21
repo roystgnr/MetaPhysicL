@@ -72,25 +72,24 @@ using NDDualNumber = NotADuckDualNumber<T, D>;
     auto value = a.value() opname b;                                                               \
     auto derivatives = dn_first_calc;                                                              \
     return {value, derivatives};                                                                   \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
-NDDualNumber_op(+, Plus, a.derivatives(), b.derivatives(), a.derivatives() + b.derivatives());
+NDDualNumber_op(+, Plus, a.derivatives(), b.derivatives(), a.derivatives() + b.derivatives())
 
-NDDualNumber_op(-, Minus, a.derivatives(), -b.derivatives(), a.derivatives() - b.derivatives());
+NDDualNumber_op(-, Minus, a.derivatives(), -b.derivatives(), a.derivatives() - b.derivatives())
 
 NDDualNumber_op(*,
                 Multiplies,
                 a.derivatives() * b,
                 a * b.derivatives(),
-                a.value() * b.derivatives() + a.derivatives() * b.value());
+                a.value() * b.derivatives() + a.derivatives() * b.value())
 
 NDDualNumber_op(/,
                 Divides,
                 a.derivatives() / b,
                 -a * b.derivatives() / (b.value() * b.value()),
                 (b.value() * a.derivatives() - b.derivatives() * a.value()) /
-                    (b.value() * b.value()));
+                    (b.value() * b.value()))
 
 template <typename T, typename D, typename T2, typename DPtrs>
 auto
@@ -324,13 +323,12 @@ dns_t_divide(const DualNumberSurrogate<T, D> & dns, const T2 & t) ->
     auto value = a.value() opname b;                                                               \
     auto derivatives = std::move(dns_t_##optype(a, b));                                            \
     return {value, derivatives};                                                                   \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
-ND_DNS_op(+, plus);
-ND_DNS_op(-, minus);
-ND_DNS_op(*, multiply);
-ND_DNS_op(/, divide);
+ND_DNS_op(+, plus)
+ND_DNS_op(-, minus)
+ND_DNS_op(*, multiply)
+ND_DNS_op(/, divide)
 
 //
 // NotADuck helper functions, method declarations, and method definitions
@@ -430,8 +428,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
             inner_template_derivatives[inner_di] * this->derivatives()[outer_di](inner_di);        \
     }                                                                                              \
     return {inner_template_value, deriv};                                                          \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
 #define metaphysicl_nonconst_return_def(method_name, SpecialType)                                  \
   template <typename D>                                                                            \
@@ -446,8 +443,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
     typename SpecialType::index_type key(std::forward<Args>(args)...);                             \
     dns_try_emplace(key, std::forward<Args>(args)...);                                             \
     return dns_at(key);                                                                            \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
 #define metaphysicl_const_void_def(method_name, SpecialType)                                       \
   template <typename D>                                                                            \
@@ -455,8 +451,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
   void NDDualNumber<SpecialType, D>::method_name(Args &&... args) const                            \
   {                                                                                                \
     const_void_helper(&SpecialType::method_name, *this, std::forward<Args>(args)...);              \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
 #define metaphysicl_nonconst_void_def(method_name, SpecialType)                                    \
   template <typename D>                                                                            \
@@ -465,8 +460,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
                                                                                                    \
   {                                                                                                \
     void_helper(&SpecialType::method_name, *this, std::forward<Args>(args)...);                    \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
 #define metaphysicl_try_emplace_def(SpecialType)                                                   \
   template <typename D>                                                                            \
@@ -486,8 +480,7 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
           std::make_shared<dns_type>(*this, std::forward<ConstructionArgs>(args)...);              \
       _dual_number_surrogates.emplace(key, std::move(dns));                                        \
     }                                                                                              \
-  }                                                                                                \
-  void metaphysicl_syntax_function()
+  }
 
 #define metaphysicl_at_def(SpecialType)                                                            \
   template <typename D>                                                                            \
@@ -497,11 +490,11 @@ void_helper(void (TBase::*fn)(PtrArgs...), NDDualNumber<T, D> & calling_dn, Para
   NDDualNumber<SpecialType, D>::dns_at(typename SpecialType::index_type key)                       \
   {                                                                                                \
     return *_dual_number_surrogates.at(key);                                                       \
-  }                                                                                                \
-  void metaphysicl_syntax_function()
+  }
+
 
 #define metaphysicl_map_api_def(SpecialType)                                                       \
-  metaphysicl_try_emplace_def(SpecialType);                                                        \
+  metaphysicl_try_emplace_def(SpecialType)                                                         \
   metaphysicl_at_def(SpecialType)
 }
 

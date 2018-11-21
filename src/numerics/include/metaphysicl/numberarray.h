@@ -342,13 +342,12 @@ sum (const NumberArray<N, T>& a)
       returnval[i] = a[i] opname b;                                                                \
                                                                                                    \
     return returnval;                                                                              \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
-NumberArray_op(+, Plus);
-NumberArray_op(-, Minus);
-NumberArray_op(*, Multiplies);
-NumberArray_op(/, Divides);
+NumberArray_op(+, Plus)
+NumberArray_op(-, Minus)
+NumberArray_op(*, Multiplies)
+NumberArray_op(/, Divides)
 
 
 #define NumberArray_operator_binary_abab(opname, atype, btype, aarg, barg) \

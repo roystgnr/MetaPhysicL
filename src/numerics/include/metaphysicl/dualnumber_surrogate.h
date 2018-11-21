@@ -338,14 +338,13 @@ DualNumberSurrogate<T, D>::derivatives()
                            const DualNumberSurrogate<T2, D2> & dns2)                               \
   {                                                                                                \
     return dns1.value() comparator dns2.value();                                                   \
-  }                                                                                                \
-  void macro_syntax_function()
+  }
 
-metaphysicl_DNS_compares(>);
-metaphysicl_DNS_compares(<);
-metaphysicl_DNS_compares(==);
-metaphysicl_DNS_compares(!=);
-metaphysicl_DNS_compares(>=);
-metaphysicl_DNS_compares(<=);
+metaphysicl_DNS_compares(>)
+metaphysicl_DNS_compares(<)
+metaphysicl_DNS_compares(==)
+metaphysicl_DNS_compares(!=)
+metaphysicl_DNS_compares(>=)
+metaphysicl_DNS_compares(<=)
 }
 #endif

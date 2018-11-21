@@ -565,11 +565,51 @@ DualNumber_decl_std_unary(sinh)
 DualNumber_decl_std_unary(cosh)
 DualNumber_decl_std_unary(tanh)
 DualNumber_decl_std_unary(abs)
+DualNumber_decl_std_unary(norm)
 DualNumber_decl_std_unary(fabs)
 DualNumber_decl_std_unary(ceil)
 DualNumber_decl_std_unary(floor)
 
-#define DualNumber_decl_std_binary(funcname) \
+#define DualNumber_decl_complex_std_unary_real(funcname) \
+template <typename T, typename D> \
+inline DualNumber<T, typename D::template rebind<T>::other> \
+funcname(const DualNumber<std::complex<T>, D> & in); \
+template <typename T> \
+inline DualNumber<T> \
+funcname(const DualNumber<std::complex<T>> & in)
+
+DualNumber_decl_complex_std_unary_real(real);
+DualNumber_decl_complex_std_unary_real(imag);
+DualNumber_decl_complex_std_unary_real(norm);
+DualNumber_decl_complex_std_unary_real(abs);
+
+#define DualNumber_decl_complex_std_unary_complex_pre(funcname) \
+template <typename T, typename D> \
+inline DualNumber<std::complex<T>, D> \
+funcname(const DualNumber<std::complex<T>, D> & in); \
+template <typename T> \
+inline DualNumber<std::complex<T>> \
+funcname(const DualNumber<std::complex<T>> & in)
+
+#if __cplusplus >= 201103L
+#define DualNumber_decl_complex_std_unary_complex(funcname) \
+DualNumber_decl_complex_std_unary_complex_pre(funcname);  \
+template <typename T, typename D> \
+inline DualNumber<std::complex<T>, D> \
+funcname(DualNumber<std::complex<T>, D> && in); \
+ \
+template <typename T> \
+inline DualNumber<std::complex<T>> \
+funcname(DualNumber<std::complex<T>> && in)
+
+#else
+#define DualNumber_decl_complex_std_unary_complex(funcname) \
+DualNumber_complex_std_unary_complex_pre(funcname);
+#endif
+
+DualNumber_decl_complex_std_unary_complex(conj);
+
+#define DualNumber_decl_std_binary(funcname)                \
 template <typename T, typename D, typename T2, typename D2> \
 inline \
 typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
