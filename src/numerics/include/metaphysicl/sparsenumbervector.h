@@ -398,7 +398,7 @@ public:
   }
 
   static SparseNumberVector<SparseNumberVector<T, IndexSet>, IndexSet>
-  identity(std::size_t n=0)
+  identity(std::size_t /*n*/=0)
   {
     SparseNumberVector<SparseNumberVector<T, IndexSet>, IndexSet > returnval(0);
   

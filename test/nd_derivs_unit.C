@@ -9,7 +9,7 @@ using namespace MetaPhysicL;
 
 #define nd_derivs_expect_near(double1, double2, tolerance)                                         \
   {                                                                                                \
-    int new_returnval = fabs(double1 - double2) > tolerance;                                       \
+    int new_returnval = std::abs(double1 - double2) > tolerance;                                   \
     if (new_returnval)                                                                             \
       std::cerr << "Failed test at line " << __LINE__ << std::endl;                                \
     returnval = returnval || new_returnval;                                                        \

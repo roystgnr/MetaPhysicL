@@ -38,7 +38,7 @@ bool test_error (Scalar computed,
 }
 
 template <typename Vector, typename VectorX, typename VectorY, typename VectorZ>
-bool vectester (const Vector & zero_vec,
+bool vectester (const Vector &,
                 const VectorX & unit_x,
                 const VectorY & unit_y,
                 const VectorZ & unit_z)
