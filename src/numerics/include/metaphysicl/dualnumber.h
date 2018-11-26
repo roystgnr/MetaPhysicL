@@ -389,7 +389,7 @@ DualNumber_std_unary(cosh, std::sinh(in.value()),)
 DualNumber_std_unary(tanh, sech_in * sech_in, T sech_in = 1 / std::cosh(in.value()))
 DualNumber_std_unary(abs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
 DualNumber_std_unary(fabs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
-DualNumber_std_unary(norm, (in.value() > 0) - (in.value() < 0),)
+DualNumber_std_unary(norm, 2. * in.value(),)
 DualNumber_std_unary(ceil, 0,)
 DualNumber_std_unary(floor, 0,)
 
