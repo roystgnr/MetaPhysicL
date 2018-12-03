@@ -76,6 +76,17 @@ template <typename T, typename D>
 template <typename T2, typename D2>
 inline
 DualNumber<T,D> &
+DualNumber<T,D>::operator=(const DualNumber<T2,D2> & dn)
+{
+  _val = dn.value();
+  _deriv = dn.derivatives();
+  return *this;
+}
+
+template <typename T, typename D>
+template <typename T2, typename D2>
+inline
+DualNumber<T,D> &
 DualNumber<T,D>::operator=(const NotADuckDualNumber<T2,D2> & nd_dn)
 {
   _val = nd_dn.value();
@@ -103,6 +114,17 @@ DualNumber<T,D>::operator=(const DualNumberSurrogate<T2,D2> & dns)
   auto size = dns.derivatives().size();
   for (decltype(size) i = 0; i < size; ++i)
     _deriv[i] = *dns.derivatives()[i];
+  return *this;
+}
+
+template <typename T, typename D>
+template <typename T2>
+inline
+DualNumber<T,D> &
+DualNumber<T,D>::operator=(const T2 & scalar)
+{
+  _val = scalar;
+  _deriv = 0;
   return *this;
 }
 
