@@ -75,6 +75,9 @@ public:
 #endif
 
   template <typename T2, typename D2>
+  DualNumber & operator=(const DualNumber<T2,D2> & dn);
+
+  template <typename T2, typename D2>
   DualNumber & operator=(const NotADuckDualNumber<T2,D2> & nd_dn);
 
   template <typename T2, typename D2>
@@ -82,6 +85,9 @@ public:
 
   template <typename T2, typename D2>
   DualNumber & operator= (const DualNumberSurrogate<T2, D2> & dns);
+
+  template <typename T2>
+  DualNumber & operator= (const T2 & scalar);
 
   T& value();
 
