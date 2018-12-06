@@ -524,7 +524,7 @@ funcname (const DualNumber<T,D>& a, const T2& b) \
 // is 0; we should have a contribution of 0 from those, not NaN.
 DualNumber_std_binary(pow,
   funcval * (b.value() * a.derivatives() / a.value() +
-  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()), b.derivatives())))
+  b.derivatives() * std::log(a.value())))
 DualNumber_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
   (b.value() * b.value() + a.value() * a.value()))
