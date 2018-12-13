@@ -79,7 +79,7 @@ public:
     typedef NumberArray<N2, T> other;
   };
 
-  NumberArray() : _data() {}
+  NumberArray() = default;
 
   NumberArray(const T& val)
     { std::fill(_data, _data+N, val); }

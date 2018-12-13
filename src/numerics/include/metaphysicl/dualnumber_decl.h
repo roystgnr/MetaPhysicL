@@ -52,7 +52,7 @@ public:
 
   typedef D derivatives_type;
 
-  DualNumber();
+  DualNumber() = default;
 
   template <typename T2>
   DualNumber(const T2& val);

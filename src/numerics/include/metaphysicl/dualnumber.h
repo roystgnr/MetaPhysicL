@@ -131,12 +131,6 @@ DualNumber<T,D>::operator=(const T2 & scalar)
 //
 // Member function definitions
 //
-
-template <typename T, typename D>
-inline
-DualNumber<T,D>::DualNumber() :
-  _val(), _deriv() {}
-
 template <typename T, typename D>
 template <typename T2>
 inline
