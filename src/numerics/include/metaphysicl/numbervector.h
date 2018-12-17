@@ -81,7 +81,7 @@ public:
     typedef NumberVector<N2, T> other;
   };
 
-  NumberVector() {}
+  NumberVector() = default;
 
   NumberVector(const T& val)
     { std::fill(_data, _data+N, val); }
