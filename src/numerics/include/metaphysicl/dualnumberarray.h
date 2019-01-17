@@ -29,9 +29,10 @@
 #define METAPHYSICL_DUALNUMBERARRAY_H
 
 
-#include "metaphysicl/dualnumber.h"
+#include "metaphysicl/dualnumber_decl.h"
 #include "metaphysicl/dualnumber_surrogate.h"
 #include "metaphysicl/numberarray.h"
+#include "metaphysicl/dualnumber.h"
 
 
 namespace MetaPhysicL {
