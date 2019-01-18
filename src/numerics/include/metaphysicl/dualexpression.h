@@ -682,13 +682,13 @@ DualExpression_std_unary(cosh, std::sinh(in.value()))
 DualExpression_std_unary(tanh, 1 / std::cosh(in.value()) / std::cosh(in.value()))
 DualExpression_std_unary(abs, (in.value() > 0) - (in.value() < 0)) // std < and > return 0 or 1
 DualExpression_equivfl_unary(abs)
+DualExpression_equiv_unary(fabs, abs)
 DualExpression_std_unary(ceil, 0)
 DualExpression_std_unary(floor, 0)
 
 #if __cplusplus >= 201103L
 DualExpression_equiv_unary(llabs, abs)
 DualExpression_equiv_unary(imaxabs, abs)
-DualExpression_equiv_unary(fabs, abs)
 DualExpression_equivfl_unary(fabs)
 DualExpression_equivfl_unary(exp)
 DualExpression_std_unary(exp2, std::log(T(2))*std::exp(in.value()))
