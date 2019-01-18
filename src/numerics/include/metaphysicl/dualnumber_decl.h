@@ -703,7 +703,7 @@ DualNumber_decl_stdfl_binary(remainder)
 DualNumber_decl_stdfl_binary(fmax)
 DualNumber_decl_stdfl_binary(fmin)
 DualNumber_decl_stdfl_binary(fdim)
-DualNumber_decl_std_binary(hypot)
+DualNumber_decl_stdfl_binary(hypot)
 DualNumber_decl_fl_binary(atan2)
 #endif // __cplusplus >= 201103L
 

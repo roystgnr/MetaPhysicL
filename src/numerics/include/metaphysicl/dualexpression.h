@@ -884,6 +884,7 @@ DualExpression_std_binary(hypot, (a.value()*a.derivatives() +
                                   hypot(a.value(), b),
                                  (b.value()*b.derivatives()) /
                                   hypot(a, b.value()))
+DualExpression_equivfl_binary(hypot)
 DualExpression_equivfl_binary(atan2)
 #endif // __cplusplus >= 201103L
 

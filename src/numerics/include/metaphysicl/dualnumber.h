@@ -658,6 +658,7 @@ DualNumber_equivfl_binary(fdim)
 DualNumber_std_binary(hypot, (a.value()*a.derivatives() +
                               b.value()*b.derivatives()) /
                               hypot(a.value(), b.value()))
+DualNumber_equivfl_binary(hypot)
 DualNumber_equivfl_binary(atan2)
 #endif // __cplusplus >= 201103L
 
