@@ -133,6 +133,21 @@ int test_func_values(const T & random_quant, T2 & error_quant)
   using std::tan;
   using std::tanh;
 
+#if __cplusplus >= 201103L
+  using std::exp2;
+  using std::log2;
+  using std::expm1;
+  using std::log1p;
+  using std::cbrt;
+  using std::asinh;
+  using std::acosh;
+  using std::atanh;
+  using std::erf;
+  using std::erfc;
+  using std::trunc;
+  using std::round;
+#endif // __cplusplus >= 201103L
+
   int returnval = 0;
 
   typedef typename ValueType<T2>::type Scalar;
@@ -169,6 +184,20 @@ int test_func_values(const T & random_quant, T2 & error_quant)
 
   one_test(abs(random_quant) - random_quant, error_quant);
   one_test(fabs(random_quant-.75) - abs(random_quant-.75), error_quant);
+
+#if __cplusplus >= 201103L
+  one_test(log2(exp2(random_quant)) - random_quant, error_quant);
+  one_test(exp2(log2(random_quant)) - random_quant, error_quant);
+  one_test(expm1(random_quant) - exp(random_quant) + 1, error_quant);
+  one_test(log1p(random_quant) - log(random_quant + 1), error_quant);
+  one_test(cbrt(random_quant) - pow(random_quant, Scalar(1)/3), error_quant);
+  one_test(asinh(sinh(random_quant)) - random_quant, error_quant);
+  one_test(acosh(cosh(random_quant)) - random_quant, error_quant);
+  one_test(atanh(tanh(random_quant)) - random_quant, error_quant);
+  one_test(1 - erf(random_quant) - erfc(random_quant), error_quant);
+  one_test(trunc(3 * random_quant - 1.5), error_quant);
+  one_test(round(2 * random_quant - 1), error_quant);
+#endif // __cplusplus >= 201103L
 
   return returnval;
 }
