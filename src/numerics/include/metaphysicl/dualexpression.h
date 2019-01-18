@@ -701,7 +701,6 @@ DualExpression_std_unary(log2, 1 / in.value() * (1/std::log(T(2))))
 DualExpression_equivfl_unary(log2)
 DualExpression_std_unary(log1p, 1 / (in.value() + 1))
 DualExpression_equivfl_unary(log1p)
-DualExpression_equivfl_unary(pow)
 DualExpression_equivfl_unary(sqrt)
 DualExpression_std_unary(cbrt, 1 / (3 * std::cbrt(in.value()) * std::cbrt(in.value())))
 DualExpression_equivfl_unary(cbrt)
@@ -864,6 +863,7 @@ DualExpression_std_binary(min,
 DualExpression_std_binary(fmod, a.derivatives(), 0, a.derivatives())
 
 #if __cplusplus >= 201103L
+DualExpression_equivfl_binary(pow)
 DualExpression_equivfl_binary(fmod)
 DualExpression_std_binary(remainder, a.derivatives(), 0, a.derivatives())
 DualExpression_equivfl_binary(remainder)

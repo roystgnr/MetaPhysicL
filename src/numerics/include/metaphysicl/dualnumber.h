@@ -450,7 +450,6 @@ DualNumber_std_unary(log2, 1 / in.value() * (1/std::log(T(2))),)
 DualNumber_equivfl_unary(log2)
 DualNumber_std_unary(log1p, 1 / (in.value() + 1),)
 DualNumber_equivfl_unary(log1p)
-DualNumber_equivfl_unary(pow)
 DualNumber_equivfl_unary(sqrt)
 DualNumber_std_unary(cbrt, 1 / (3 * cbrt_in * cbrt_in), T cbrt_in = std::cbrt(in.value()))
 DualNumber_equivfl_unary(cbrt)
@@ -645,6 +644,7 @@ DualNumber_std_binary(min,
 DualNumber_std_binary(fmod, a.derivatives())
 
 #if __cplusplus >= 201103L
+DualNumber_equivfl_binary(pow)
 DualNumber_equivfl_binary(fmod)
 DualNumber_std_binary(remainder, a.derivatives())
 DualNumber_equivfl_binary(remainder)
