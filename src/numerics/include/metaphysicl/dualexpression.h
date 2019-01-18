@@ -657,7 +657,7 @@ auto funcname (DualExpression<T,D> in) \
 #define DualExpression_equiv_unary(funcname, equivalent) \
 template <typename T, typename D> \
 inline \
-auto funcname (DualExpression<T,D> in) \
+auto funcname (const DualExpression<T,D> & in) \
 -> decltype(std::equivalent(in)) \
 { \
   return std::equivalent(in); \
