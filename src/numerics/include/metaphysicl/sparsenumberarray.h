@@ -830,6 +830,16 @@ funcname (SparseNumberArray<T, IndexSet> a) \
 }
 
 
+#define SparseNumberArray_fl_unary(funcname) \
+SparseNumberArray_std_unary(funcname##f) \
+SparseNumberArray_std_unary(funcname##l)
+
+
+#define SparseNumberArray_stdfl_unary(funcname) \
+SparseNumberArray_std_unary(funcname) \
+SparseNumberArray_fl_unary(funcname)
+
+
 #define SparseNumberArray_std_binary(funcname) \
 template <typename T, typename T2, typename IndexSet, typename IndexSet2> \
 inline \
@@ -879,6 +889,10 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
  \
   return returnval; \
 }
+
+#define SparseNumberArray_fl_binary(funcname) \
+SparseNumberArray_std_binary(funcname##f) \
+SparseNumberArray_std_binary(funcname##l)
 
 
 #define SparseNumberArray_std_binary_union(funcname) \
@@ -965,6 +979,16 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
 }
 
 
+#define SparseNumberArray_fl_binary_union(funcname) \
+SparseNumberArray_std_binary_union(funcname##f) \
+SparseNumberArray_std_binary_union(funcname##l)
+
+
+#define SparseNumberArray_stdfl_binary_union(funcname) \
+SparseNumberArray_std_binary_union(funcname) \
+SparseNumberArray_fl_binary_union(funcname)
+
+
 // We can't use decltype without requiring C++11, we can't infer
 // function types without decltype, and we can't declare a
 // pointer_to_binary_function without a function type.  So let's make
@@ -1029,6 +1053,36 @@ SparseNumberArray_std_binary_union(min)
 SparseNumberArray_std_unary(ceil)
 SparseNumberArray_std_unary(floor)
 SparseNumberArray_std_binary(fmod) // dangerous unless y is dense
+
+#if __cplusplus >= 201103L
+SparseNumberArray_std_unary(llabs)
+SparseNumberArray_std_unary(imaxabs)
+SparseNumberArray_fl_unary(fabs)
+SparseNumberArray_stdfl_unary(expm1)
+SparseNumberArray_fl_unary(sqrt)
+SparseNumberArray_stdfl_unary(cbrt)
+SparseNumberArray_fl_unary(sin)
+SparseNumberArray_fl_unary(tan)
+SparseNumberArray_fl_unary(asin)
+SparseNumberArray_fl_unary(atan)
+SparseNumberArray_stdfl_unary(asinh)
+SparseNumberArray_stdfl_unary(atanh)
+SparseNumberArray_stdfl_unary(erf)
+SparseNumberArray_fl_unary(ceil)
+SparseNumberArray_fl_unary(floor)
+SparseNumberArray_stdfl_unary(trunc)
+SparseNumberArray_stdfl_unary(round)
+SparseNumberArray_stdfl_unary(nearbyint)
+SparseNumberArray_stdfl_unary(rint)
+
+SparseNumberArray_fl_binary(fmod)
+SparseNumberArray_stdfl_binary_union(fmax)
+SparseNumberArray_stdfl_binary_union(fmin)
+SparseNumberArray_stdfl_binary_union(fdim)
+SparseNumberArray_stdfl_binary_union(hypot)
+SparseNumberArray_fl_binary_union(atan2)
+#endif // __cplusplus >= 201103L
+
 
 
 template <typename T, typename IndexSet>
