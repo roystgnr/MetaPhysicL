@@ -890,9 +890,15 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
   return returnval; \
 }
 
+
 #define SparseNumberArray_fl_binary(funcname) \
 SparseNumberArray_std_binary(funcname##f) \
 SparseNumberArray_std_binary(funcname##l)
+
+
+#define SparseNumberArray_stdfl_binary(funcname) \
+SparseNumberArray_std_binary(funcname) \
+SparseNumberArray_fl_binary(funcname)
 
 
 #define SparseNumberArray_std_binary_union(funcname) \
@@ -1076,6 +1082,7 @@ SparseNumberArray_stdfl_unary(nearbyint)
 SparseNumberArray_stdfl_unary(rint)
 
 SparseNumberArray_fl_binary(fmod)
+SparseNumberArray_stdfl_binary(remainder) // dangerous unless y is dense
 SparseNumberArray_stdfl_binary_union(fmax)
 SparseNumberArray_stdfl_binary_union(fmin)
 SparseNumberArray_stdfl_binary_union(fdim)

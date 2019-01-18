@@ -1237,6 +1237,11 @@ SparseNumberStruct_std_binary(funcname##f) \
 SparseNumberStruct_std_binary(funcname##l)
 
 
+#define SparseNumberStruct_stdfl_binary(funcname) \
+SparseNumberStruct_std_binary(funcname) \
+SparseNumberStruct_fl_binary(funcname)
+
+
 #define SparseNumberStruct_std_binary_union(funcname) \
 \
 struct funcname##_Subfunctor { \
@@ -1374,6 +1379,7 @@ SparseNumberStruct_stdfl_unary(nearbyint)
 SparseNumberStruct_stdfl_unary(rint)
 
 SparseNumberStruct_fl_binary(fmod)
+SparseNumberStruct_stdfl_binary(remainder) // dangerous unless y is dense
 SparseNumberStruct_stdfl_binary_union(fmax)
 SparseNumberStruct_stdfl_binary_union(fmin)
 SparseNumberStruct_stdfl_binary_union(fdim)

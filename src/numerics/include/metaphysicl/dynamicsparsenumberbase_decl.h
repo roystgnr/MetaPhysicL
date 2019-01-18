@@ -446,6 +446,7 @@ DynamicSparseNumberBase_decl_stdfl_unary(nearbyint)
 DynamicSparseNumberBase_decl_stdfl_unary(rint)
 
 DynamicSparseNumberBase_decl_fl_binary_union(fmod)
+DynamicSparseNumberBase_decl_std_binary_union(remainder) // TODO: optimize this
 DynamicSparseNumberBase_decl_stdfl_binary_union(fmax)
 DynamicSparseNumberBase_decl_stdfl_binary_union(fmin)
 DynamicSparseNumberBase_decl_stdfl_binary_union(fdim)
