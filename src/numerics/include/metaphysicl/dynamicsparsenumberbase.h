@@ -1160,17 +1160,6 @@ funcname (const DynamicSparseNumberBase<T,I,SubType> & a) \
 }
 
 
-#define DynamicSparseNumberBase_equiv_unary(funcname, equivalent) \
-template <template <typename, typename> class SubType, \
-          typename T, typename I> \
-inline \
-SubType<T, I> \
-funcname (const DynamicSparseNumberBase<T,I,SubType> & a) \
-{ \
-  return std::equivalent(a); \
-}
-
-
 #define DynamicSparseNumberBase_fl_unary(funcname) \
 DynamicSparseNumberBase_std_unary(funcname##f) \
 DynamicSparseNumberBase_std_unary(funcname##l)
@@ -1277,36 +1266,6 @@ funcname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b) \
 }
 
 
-#define DynamicSparseNumberBase_equiv_binary_union(funcname, equivalent) \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I, typename I2> \
-inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, \
-        typename CompareTypes<I,I2>::supertype> \
-funcname (const DynamicSparseNumberBase<T,I,SubType>& a, \
-          const DynamicSparseNumberBase<T2,I2,SubType>& b) \
-{ \
-  return std::equivalent(a,b); \
-} \
- \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
-inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b) \
-{ \
-  return std::equivalent(a,b); \
-} \
- \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
-inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b) \
-{ \
-  return std::equivalent(a,b); \
-}
-
 #define DynamicSparseNumberBase_fl_binary_union(funcname) \
 DynamicSparseNumberBase_std_binary_union(funcname##f) \
 DynamicSparseNumberBase_std_binary_union(funcname##l)
@@ -1367,8 +1326,8 @@ DynamicSparseNumberBase_std_unary(floor)
 DynamicSparseNumberBase_std_binary_union(fmod) // TODO: optimize this
 
 #if __cplusplus >= 201103L
-DynamicSparseNumberBase_equiv_unary(llabs, abs)
-DynamicSparseNumberBase_equiv_unary(imaxabs, abs)
+DynamicSparseNumberBase_std_unary(llabs)
+DynamicSparseNumberBase_std_unary(imaxabs)
 DynamicSparseNumberBase_fl_unary(fabs)
 DynamicSparseNumberBase_stdfl_unary(expm1)
 DynamicSparseNumberBase_fl_unary(sqrt)
