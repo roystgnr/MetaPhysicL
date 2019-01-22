@@ -227,6 +227,23 @@ int test_func_derivatives(const T & random_quant,
   using std::tan;
   using std::tanh;
 
+#if __cplusplus >= 201103L
+  using std::exp2;
+  using std::log2;
+  using std::expm1;
+  using std::log1p;
+  using std::cbrt;
+  using std::asinh;
+  using std::acosh;
+  using std::atanh;
+  using std::erf;
+  using std::erfc;
+  using std::trunc;
+  using std::round;
+  using std::nearbyint;
+  using std::rint;
+#endif // __cplusplus >= 201103L
+
   int returnval = 0;
 
   typedef typename ValueType<T2>::type Scalar;
@@ -261,6 +278,23 @@ int test_func_derivatives(const T & random_quant,
 
   one_test(derivatives(tanh(random_quant)) -
 	   derivatives(sinh(random_quant)/cosh(random_quant)), error_quant);
+
+#if __cplusplus >= 201103L
+  one_test(derivatives(exp2(random_quant)) - exp2(random_quant) *
+           analytic_multiplier * std::log(Scalar(2)), error_quant);
+  one_test(derivatives(log2(random_quant)) - 1 / (random_quant * log(Scalar(2))), error_quant);
+  one_test(derivatives(expm1(random_quant)) - (expm1(random_quant) + 1) * analytic_multiplier, error_quant);
+  one_test(derivatives(log1p(random_quant)) - 1 / (1 + random_quant) * analytic_multiplier, error_quant);
+  one_test(derivatives(cbrt(random_quant)) - pow(random_quant, -Scalar(2)/3) / 3 * analytic_multiplier, error_quant);
+  one_test(pow(derivatives(asinh(random_quant)), 2) - 1 / (random_quant * random_quant + 1) * analytic_multiplier, error_quant);
+  one_test(pow(derivatives(acosh(random_quant+1)), 2) * random_quant - 1 / (random_quant + 2) * analytic_multiplier, error_quant);
+  one_test(derivatives(atanh(random_quant)) - 1 / (1 - random_quant * random_quant), error_quant);
+  one_test(derivatives(trunc(random_quant*10)), error_quant);
+  one_test(derivatives(round(random_quant*10)), error_quant);
+  one_test(derivatives(nearbyint(random_quant*10)), error_quant);
+  one_test(derivatives(rint(random_quant*10)), error_quant);
+
+#endif // __cplusplus >= 201103L
 
   return returnval;
 }
