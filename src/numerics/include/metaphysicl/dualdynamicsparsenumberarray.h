@@ -47,7 +47,7 @@ derivative (const DynamicSparseNumberArray<T, I>& a,
 
   typename DerivativeType<DynamicSparseNumberArray<T, I> >::type returnval;
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = derivative(a.raw_at(i),derivativeindex);
@@ -65,7 +65,7 @@ derivatives (const DynamicSparseNumberArray<T, I>& a)
   typename DerivativesType<DynamicSparseNumberArray<T, I> >::type returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = derivatives(a.raw_at(i));
@@ -82,7 +82,7 @@ DerivativeOf<DynamicSparseNumberArray<T, I>, derivativeindex>::derivative (const
   typename DerivativeType<DynamicSparseNumberArray<T, I> >::type returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = DerivativeOf<T,derivativeindex>::derivative(a.raw_at(i));
@@ -121,7 +121,7 @@ gradient(const DynamicSparseNumberArray<T, I>& a)
   DynamicSparseNumberArray<typename T::derivatives_type, I> returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = gradient(a.raw_at(i));

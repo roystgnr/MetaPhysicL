@@ -557,6 +557,14 @@ DualNumber<T,D> funcname (DualNumber<T,D> in);
 
 #endif
 
+#define DualNumber_decl_fl_unary(funcname) \
+DualNumber_decl_std_unary(funcname##f) \
+DualNumber_decl_std_unary(funcname##l)
+
+#define DualNumber_decl_stdfl_unary(funcname) \
+DualNumber_decl_std_unary(funcname) \
+DualNumber_decl_fl_unary(funcname)
+
 DualNumber_decl_std_unary(sqrt)
 DualNumber_decl_std_unary(exp)
 DualNumber_decl_std_unary(log)
@@ -575,6 +583,41 @@ DualNumber_decl_std_unary(norm)
 DualNumber_decl_std_unary(fabs)
 DualNumber_decl_std_unary(ceil)
 DualNumber_decl_std_unary(floor)
+
+#if __cplusplus >= 201103L
+DualNumber_decl_std_unary(llabs)
+DualNumber_decl_std_unary(imaxabs)
+DualNumber_decl_fl_unary(fabs)
+DualNumber_decl_fl_unary(exp)
+DualNumber_decl_stdfl_unary(exp2)
+DualNumber_decl_stdfl_unary(expm1)
+DualNumber_decl_fl_unary(log)
+DualNumber_decl_fl_unary(log10)
+DualNumber_decl_stdfl_unary(log2)
+DualNumber_decl_stdfl_unary(log1p)
+DualNumber_decl_fl_unary(sqrt)
+DualNumber_decl_stdfl_unary(cbrt)
+DualNumber_decl_fl_unary(sin)
+DualNumber_decl_fl_unary(cos)
+DualNumber_decl_fl_unary(tan)
+DualNumber_decl_fl_unary(asin)
+DualNumber_decl_fl_unary(acos)
+DualNumber_decl_fl_unary(atan)
+DualNumber_decl_fl_unary(sinh)
+DualNumber_decl_fl_unary(cosh)
+DualNumber_decl_fl_unary(tanh)
+DualNumber_decl_stdfl_unary(asinh)
+DualNumber_decl_stdfl_unary(acosh)
+DualNumber_decl_stdfl_unary(atanh)
+DualNumber_decl_stdfl_unary(erf)
+DualNumber_decl_stdfl_unary(erfc)
+DualNumber_decl_fl_unary(ceil)
+DualNumber_decl_fl_unary(floor)
+DualNumber_decl_stdfl_unary(trunc)
+DualNumber_decl_stdfl_unary(round)
+DualNumber_decl_stdfl_unary(nearbyint)
+DualNumber_decl_stdfl_unary(rint)
+#endif // __cplusplus >= 201103L
 
 #define DualNumber_decl_complex_std_unary_real(funcname) \
 template <typename T, typename D> \
@@ -639,13 +682,30 @@ inline \
 typename CompareTypes<DualNumber<T,D>,T2>::supertype \
 funcname (const DualNumber<T,D>& a, const T2& b);
 
-// if_else is necessary here to handle cases where a is negative but b
-// is 0; we should have a contribution of 0 from those, not NaN.
+#define DualNumber_decl_fl_binary(funcname) \
+DualNumber_decl_std_binary(funcname##f) \
+DualNumber_decl_std_binary(funcname##l)
+
+#define DualNumber_decl_stdfl_binary(funcname) \
+DualNumber_decl_std_binary(funcname) \
+DualNumber_decl_fl_binary(funcname)
+
 DualNumber_decl_std_binary(pow)
 DualNumber_decl_std_binary(atan2)
 DualNumber_decl_std_binary(max)
 DualNumber_decl_std_binary(min)
 DualNumber_decl_std_binary(fmod)
+
+#if __cplusplus >= 201103L
+DualNumber_decl_fl_binary(pow)
+DualNumber_decl_fl_binary(fmod)
+DualNumber_decl_stdfl_binary(remainder)
+DualNumber_decl_stdfl_binary(fmax)
+DualNumber_decl_stdfl_binary(fmin)
+DualNumber_decl_stdfl_binary(fdim)
+DualNumber_decl_stdfl_binary(hypot)
+DualNumber_decl_fl_binary(atan2)
+#endif // __cplusplus >= 201103L
 
 template <typename T, typename D>
 class numeric_limits<DualNumber<T, D> > :

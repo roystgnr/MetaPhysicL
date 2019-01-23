@@ -275,6 +275,16 @@ funcname (ShadowNumber<T, S> a) \
 }
 
 
+#define ShadowNumber_fl_unary(funcname) \
+ShadowNumber_std_unary(funcname##f) \
+ShadowNumber_std_unary(funcname##l)
+
+
+#define ShadowNumber_stdfl_unary(funcname) \
+ShadowNumber_std_unary(funcname) \
+ShadowNumber_fl_unary(funcname)
+
+
 #define ShadowNumber_std_binary(funcname) \
 template <typename T, typename S, typename T2, typename S2> \
 inline \
@@ -316,6 +326,17 @@ funcname (const T& a, const ShadowNumber<T2,S>& b) \
              std::funcname(a, b.shadow())); \
 }
 
+
+#define ShadowNumber_fl_binary(funcname) \
+ShadowNumber_std_binary(funcname##f) \
+ShadowNumber_std_binary(funcname##l)
+
+
+#define ShadowNumber_stdfl_binary(funcname) \
+ShadowNumber_std_binary(funcname) \
+ShadowNumber_fl_binary(funcname)
+
+
 ShadowNumber_std_binary(pow)
 ShadowNumber_std_unary(exp)
 ShadowNumber_std_unary(log)
@@ -338,6 +359,53 @@ ShadowNumber_std_binary(min)
 ShadowNumber_std_unary(ceil)
 ShadowNumber_std_unary(floor)
 ShadowNumber_std_binary(fmod)
+
+#if __cplusplus >= 201103L
+ShadowNumber_std_unary(llabs)
+ShadowNumber_std_unary(imaxabs)
+ShadowNumber_fl_unary(fabs)
+ShadowNumber_fl_unary(exp)
+ShadowNumber_stdfl_unary(exp2)
+ShadowNumber_stdfl_unary(expm1)
+ShadowNumber_fl_unary(log)
+ShadowNumber_fl_unary(log10)
+ShadowNumber_stdfl_unary(log2)
+ShadowNumber_stdfl_unary(log1p)
+ShadowNumber_fl_unary(sqrt)
+ShadowNumber_stdfl_unary(cbrt)
+ShadowNumber_fl_unary(sin)
+ShadowNumber_fl_unary(cos)
+ShadowNumber_fl_unary(tan)
+ShadowNumber_fl_unary(asin)
+ShadowNumber_fl_unary(acos)
+ShadowNumber_fl_unary(atan)
+ShadowNumber_fl_unary(sinh)
+ShadowNumber_fl_unary(cosh)
+ShadowNumber_fl_unary(tanh)
+ShadowNumber_stdfl_unary(asinh)
+ShadowNumber_stdfl_unary(acosh)
+ShadowNumber_stdfl_unary(atanh)
+ShadowNumber_stdfl_unary(erf)
+ShadowNumber_stdfl_unary(erfc)
+ShadowNumber_stdfl_unary(tgamma)
+ShadowNumber_stdfl_unary(lgamma)
+ShadowNumber_fl_unary(ceil)
+ShadowNumber_fl_unary(floor)
+ShadowNumber_stdfl_unary(trunc)
+ShadowNumber_stdfl_unary(round)
+ShadowNumber_stdfl_unary(nearbyint)
+ShadowNumber_stdfl_unary(rint)
+
+ShadowNumber_fl_binary(pow)
+ShadowNumber_fl_binary(fmod)
+ShadowNumber_stdfl_binary(remainder)
+ShadowNumber_stdfl_binary(fmax)
+ShadowNumber_stdfl_binary(fmin)
+ShadowNumber_stdfl_binary(fdim)
+ShadowNumber_stdfl_binary(hypot)
+ShadowNumber_fl_binary(atan2)
+#endif // __cplusplus >= 201103L
+
 
 template <typename T, typename S>
 class numeric_limits<ShadowNumber<T, S> > :

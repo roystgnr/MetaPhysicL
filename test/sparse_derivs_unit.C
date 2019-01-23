@@ -58,23 +58,26 @@ template <typename Vector>
 int vectester (Vector zerovec)
 {
   using std::abs;
-  using std::acos;
   using std::asin;
   using std::atan;
   using std::ceil;
-  using std::cos;
-  using std::cosh;
-  using std::exp;
   using std::fabs;
   using std::floor;
-  using std::log;
-  using std::log10;
   using std::pow;
   using std::sin;
   using std::sinh;
   using std::sqrt;
   using std::tan;
   using std::tanh;
+
+#if __cplusplus >= 201103L
+  using std::cbrt;
+  using std::asinh;
+  using std::atanh;
+  // using std::erf;
+  using std::trunc;
+  using std::round;
+#endif // __cplusplus >= 201103L
 
   typedef typename ValueType<Vector>::type DualScalar;
   typedef typename DualScalar::value_type Scalar;
@@ -176,6 +179,30 @@ int vectester (Vector zerovec)
   // one_test(derivatives(tanh(random_vec)) -
   //          derivatives(sinh(random_vec)/cosh(random_vec)));
 
+#if __cplusplus >= 201103L
+  // one_test(exp2(log2(random_vec)) - random_vec);
+  // one_test(expm1(random_vec) - exp(random_vec) + 1);
+  // one_test(log1p(random_vec) - log(random_vec + 1));
+  one_test(cbrt(random_vec) - pow(random_vec, Scalar(1)/3));
+  one_test(asinh(sinh(random_vec)) - random_vec);
+  // one_test(acosh(cosh(random_vec)) - random_vec);
+  one_test(atanh(tanh(random_vec)) - random_vec);
+  // one_test(1 - erf(random_vec) - erfc(random_vec));
+  one_test(trunc(random_vec));
+  one_test(round(random_vec/2));
+
+  // one_test(derivatives(expm1(random_vec)) - (expm1(random_vec) + 1));
+  // one_test(derivatives(log1p(random_vec)) - 1 / (1 + random_vec));
+  // one_test(derivatives(cbrt(random_vec)) - pow(random_vec, -Scalar(2)/3) / 3);
+  // one_test(pow(derivatives(asinh(random_vec)), 2) - 1 / (random_vec * random_vec + 1));
+  // one_test(pow(derivatives(acosh(random_vec+1)), 2) * random_vec - 1 / (random_vec + 2));
+  // one_test(derivatives(atanh(random_vec)) - 1 / (1 - random_vec * random_vec));
+  one_test(derivatives(trunc(random_vec*10)));
+  one_test(derivatives(round(random_vec*10)));
+//  one_test(derivatives(nearbyint(random_vec*10)));
+//  one_test(derivatives(rint(random_vec*10)));
+#endif // __cplusplus >= 201103L
+
   return returnval;
 }
 
@@ -204,16 +231,6 @@ int main(void)
     <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
         2, DualNumber<long double>, 3, DualNumber<long double> >::type());
 
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<float>, 1, DualNumber<float>,
-        2, DualNumber<float>, 3, DualNumber<float> >::type());
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<double>, 1, DualNumber<double>,
-        2, DualNumber<double>, 3, DualNumber<double> >::type());
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
-        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
-
   DynamicSparseNumberArray<DualNumber<float>, unsigned int> float_dsna;
     float_dsna.resize(4);
     float_dsna.raw_index(1) = 1;
@@ -235,7 +252,19 @@ int main(void)
     long_double_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsna);
 
-  DynamicSparseNumberVector<DualNumber<float>, unsigned int> float_dsnv;
+// Many of the functions we test don't make sense for mathematical vectors
+/*
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<float>, 1, DualNumber<float>,
+        2, DualNumber<float>, 3, DualNumber<float> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<double>, 1, DualNumber<double>,
+        2, DualNumber<double>, 3, DualNumber<double> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
+        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
+
+ DynamicSparseNumberVector<DualNumber<float>, unsigned int> float_dsnv;
     float_dsnv.resize(4);
     float_dsnv.raw_index(1) = 1;
     float_dsnv.raw_index(2) = 2;
@@ -255,6 +284,7 @@ int main(void)
     long_double_dsnv.raw_index(2) = 2;
     long_double_dsnv.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsnv);
+*/
 
   return returnval;
 }

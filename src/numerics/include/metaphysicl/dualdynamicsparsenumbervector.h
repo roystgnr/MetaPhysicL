@@ -65,7 +65,7 @@ derivatives (const DynamicSparseNumberVector<T, I>& a)
   typename DerivativesType<DynamicSparseNumberVector<T, I> >::type returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = derivatives(a.raw_at(i));
@@ -83,7 +83,7 @@ DerivativeOf<DynamicSparseNumberVector<T, I>, derivativeindex>::derivative
   typename DerivativeType<DynamicSparseNumberVector<T, I> >::type returnval;
 
   returnval.nude_indices() = a.nude_indices();
-  returnval.resize(index_size);
+  returnval.nude_data().resize(index_size);
 
   for (unsigned int i=0; i != index_size; ++i)
     returnval.raw_at(i) = DerivativeOf<T,derivativeindex>::derivative(a.raw_at(i));

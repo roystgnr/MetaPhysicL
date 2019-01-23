@@ -476,6 +476,16 @@ funcname (NumberArray<N, T> a) \
 }
 
 
+#define NumberArray_fl_unary(funcname) \
+NumberArray_std_unary(funcname##f) \
+NumberArray_std_unary(funcname##l)
+
+
+#define NumberArray_stdfl_unary(funcname) \
+NumberArray_std_unary(funcname) \
+NumberArray_fl_unary(funcname)
+
+
 #define NumberArray_std_binary_abab(funcname, atype, btype, abtypes, aarg, barg) \
 template <std::size_t N, typename T, typename T2> \
 inline \
@@ -515,6 +525,17 @@ NumberArray_std_binary_abab(funcname, NumberArray<N MacroComma T>,              
                             NumberArray<N MacroComma T> MacroComma T2,                              a[i],    b) \
 NumberArray_std_binary_aa(funcname, NumberArray<N MacroComma T>)
 
+
+#define NumberArray_fl_binary(funcname) \
+NumberArray_std_binary(funcname##f) \
+NumberArray_std_binary(funcname##l)
+
+
+#define NumberArray_stdfl_binary(funcname) \
+NumberArray_std_binary(funcname) \
+NumberArray_fl_binary(funcname)
+
+
 NumberArray_std_binary(pow)
 NumberArray_std_unary(exp)
 NumberArray_std_unary(log)
@@ -537,6 +558,53 @@ NumberArray_std_binary(min)
 NumberArray_std_unary(ceil)
 NumberArray_std_unary(floor)
 NumberArray_std_binary(fmod)
+
+#if __cplusplus >= 201103L
+NumberArray_std_unary(llabs)
+NumberArray_std_unary(imaxabs)
+NumberArray_fl_unary(fabs)
+NumberArray_fl_unary(exp)
+NumberArray_stdfl_unary(exp2)
+NumberArray_stdfl_unary(expm1)
+NumberArray_fl_unary(log)
+NumberArray_fl_unary(log10)
+NumberArray_stdfl_unary(log2)
+NumberArray_stdfl_unary(log1p)
+NumberArray_fl_unary(sqrt)
+NumberArray_stdfl_unary(cbrt)
+NumberArray_fl_unary(sin)
+NumberArray_fl_unary(cos)
+NumberArray_fl_unary(tan)
+NumberArray_fl_unary(asin)
+NumberArray_fl_unary(acos)
+NumberArray_fl_unary(atan)
+NumberArray_fl_unary(sinh)
+NumberArray_fl_unary(cosh)
+NumberArray_fl_unary(tanh)
+NumberArray_stdfl_unary(asinh)
+NumberArray_stdfl_unary(acosh)
+NumberArray_stdfl_unary(atanh)
+NumberArray_stdfl_unary(erf)
+NumberArray_stdfl_unary(erfc)
+NumberArray_stdfl_unary(tgamma)
+NumberArray_stdfl_unary(lgamma)
+NumberArray_fl_unary(ceil)
+NumberArray_fl_unary(floor)
+NumberArray_stdfl_unary(trunc)
+NumberArray_stdfl_unary(round)
+NumberArray_stdfl_unary(nearbyint)
+NumberArray_stdfl_unary(rint)
+
+NumberArray_fl_binary(pow)
+NumberArray_fl_binary(fmod)
+NumberArray_stdfl_binary(remainder)
+NumberArray_stdfl_binary(fmax)
+NumberArray_stdfl_binary(fmin)
+NumberArray_stdfl_binary(fdim)
+NumberArray_stdfl_binary(hypot)
+NumberArray_fl_binary(atan2)
+#endif // __cplusplus >= 201103L
+
 
 
 template <std::size_t N, typename T>

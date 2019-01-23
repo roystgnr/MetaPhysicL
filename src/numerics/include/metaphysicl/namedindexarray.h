@@ -350,6 +350,16 @@ funcname (const NamedIndexArray<DataVector, SparseSizeVector> &a) \
 }
 
 
+#define NamedIndexArray_fl_unary(funcname) \
+NamedIndexArray_std_unary(funcname##f) \
+NamedIndexArray_std_unary(funcname##l)
+
+
+#define NamedIndexArray_stdfl_unary(funcname) \
+NamedIndexArray_std_unary(funcname) \
+NamedIndexArray_fl_unary(funcname)
+
+
 #define NamedIndexArray_std_binary(funcname) \
 template <typename DataVector, typename DataVector2, \
           typename SparseSizeVector, typename SparseSizeVector2> \
@@ -422,6 +432,16 @@ funcname (const T& a, \
 }
 
 
+#define NamedIndexArray_fl_binary(funcname) \
+NamedIndexArray_std_binary(funcname##f) \
+NamedIndexArray_std_binary(funcname##l)
+
+
+#define NamedIndexArray_stdfl_binary(funcname) \
+NamedIndexArray_std_binary(funcname) \
+NamedIndexArray_fl_binary(funcname)
+
+
 NamedIndexArray_std_binary(pow)
 NamedIndexArray_std_unary(exp)
 NamedIndexArray_std_unary(log)
@@ -445,6 +465,51 @@ NamedIndexArray_std_unary(ceil)
 NamedIndexArray_std_unary(floor)
 NamedIndexArray_std_binary(fmod)
 
+#if __cplusplus >= 201103L
+NamedIndexArray_std_unary(llabs)
+NamedIndexArray_std_unary(imaxabs)
+NamedIndexArray_fl_unary(fabs)
+NamedIndexArray_fl_unary(exp)
+NamedIndexArray_stdfl_unary(exp2)
+NamedIndexArray_stdfl_unary(expm1)
+NamedIndexArray_fl_unary(log)
+NamedIndexArray_fl_unary(log10)
+NamedIndexArray_stdfl_unary(log2)
+NamedIndexArray_stdfl_unary(log1p)
+NamedIndexArray_fl_unary(sqrt)
+NamedIndexArray_stdfl_unary(cbrt)
+NamedIndexArray_fl_unary(sin)
+NamedIndexArray_fl_unary(cos)
+NamedIndexArray_fl_unary(tan)
+NamedIndexArray_fl_unary(asin)
+NamedIndexArray_fl_unary(acos)
+NamedIndexArray_fl_unary(atan)
+NamedIndexArray_fl_unary(sinh)
+NamedIndexArray_fl_unary(cosh)
+NamedIndexArray_fl_unary(tanh)
+NamedIndexArray_stdfl_unary(asinh)
+NamedIndexArray_stdfl_unary(acosh)
+NamedIndexArray_stdfl_unary(atanh)
+NamedIndexArray_stdfl_unary(erf)
+NamedIndexArray_stdfl_unary(erfc)
+NamedIndexArray_stdfl_unary(tgamma)
+NamedIndexArray_stdfl_unary(lgamma)
+NamedIndexArray_fl_unary(ceil)
+NamedIndexArray_fl_unary(floor)
+NamedIndexArray_stdfl_unary(trunc)
+NamedIndexArray_stdfl_unary(round)
+NamedIndexArray_stdfl_unary(nearbyint)
+NamedIndexArray_stdfl_unary(rint)
+
+NamedIndexArray_fl_binary(pow)
+NamedIndexArray_fl_binary(fmod)
+NamedIndexArray_stdfl_binary(remainder)
+NamedIndexArray_stdfl_binary(fmax)
+NamedIndexArray_stdfl_binary(fmin)
+NamedIndexArray_stdfl_binary(fdim)
+NamedIndexArray_stdfl_binary(hypot)
+NamedIndexArray_fl_binary(atan2)
+#endif // __cplusplus >= 201103L
 
 template <typename DataVector, typename SparseSizeVector>
 class numeric_limits<NamedIndexArray<DataVector, SparseSizeVector> > : 

@@ -1160,6 +1160,16 @@ funcname (const DynamicSparseNumberBase<T,I,SubType> & a) \
 }
 
 
+#define DynamicSparseNumberBase_fl_unary(funcname) \
+DynamicSparseNumberBase_std_unary(funcname##f) \
+DynamicSparseNumberBase_std_unary(funcname##l)
+
+
+#define DynamicSparseNumberBase_stdfl_unary(funcname) \
+DynamicSparseNumberBase_std_unary(funcname) \
+DynamicSparseNumberBase_fl_unary(funcname)
+
+
 #define DynamicSparseNumberBase_std_binary_union(funcname) \
 template <template <typename, typename> class SubType, \
           typename T, typename T2, typename I, typename I2> \
@@ -1256,6 +1266,16 @@ funcname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b) \
 }
 
 
+#define DynamicSparseNumberBase_fl_binary_union(funcname) \
+DynamicSparseNumberBase_std_binary_union(funcname##f) \
+DynamicSparseNumberBase_std_binary_union(funcname##l)
+
+
+#define DynamicSparseNumberBase_stdfl_binary_union(funcname) \
+DynamicSparseNumberBase_std_binary_union(funcname) \
+DynamicSparseNumberBase_fl_binary_union(funcname)
+
+
 // Pow needs its own specialization, both to avoid being confused by
 // pow<T1,T2> and because pow(x,0) isn't 0.
 template <template <typename, typename> class SubType, \
@@ -1304,6 +1324,36 @@ DynamicSparseNumberBase_std_binary_union(min)
 DynamicSparseNumberBase_std_unary(ceil)
 DynamicSparseNumberBase_std_unary(floor)
 DynamicSparseNumberBase_std_binary_union(fmod) // TODO: optimize this
+
+#if __cplusplus >= 201103L
+DynamicSparseNumberBase_std_unary(llabs)
+DynamicSparseNumberBase_std_unary(imaxabs)
+DynamicSparseNumberBase_fl_unary(fabs)
+DynamicSparseNumberBase_stdfl_unary(expm1)
+DynamicSparseNumberBase_fl_unary(sqrt)
+DynamicSparseNumberBase_stdfl_unary(cbrt)
+DynamicSparseNumberBase_fl_unary(sin)
+DynamicSparseNumberBase_fl_unary(tan)
+DynamicSparseNumberBase_fl_unary(asin)
+DynamicSparseNumberBase_fl_unary(atan)
+DynamicSparseNumberBase_stdfl_unary(asinh)
+DynamicSparseNumberBase_stdfl_unary(atanh)
+DynamicSparseNumberBase_stdfl_unary(erf)
+DynamicSparseNumberBase_fl_unary(ceil)
+DynamicSparseNumberBase_fl_unary(floor)
+DynamicSparseNumberBase_stdfl_unary(trunc)
+DynamicSparseNumberBase_stdfl_unary(round)
+DynamicSparseNumberBase_stdfl_unary(nearbyint)
+DynamicSparseNumberBase_stdfl_unary(rint)
+
+DynamicSparseNumberBase_fl_binary_union(fmod)
+DynamicSparseNumberBase_stdfl_binary_union(remainder) // TODO: optimize this
+DynamicSparseNumberBase_stdfl_binary_union(fmax)
+DynamicSparseNumberBase_stdfl_binary_union(fmin)
+DynamicSparseNumberBase_stdfl_binary_union(fdim)
+DynamicSparseNumberBase_stdfl_binary_union(hypot)
+DynamicSparseNumberBase_fl_binary_union(atan2)
+#endif // __cplusplus >= 201103L
 
 #define DynamicSparseNumberBase_std_unary_complex(funcname) \
 template <template <typename, typename> class SubType, \

@@ -1166,6 +1166,16 @@ funcname (SparseNumberStruct<IndexSet> a) \
 }
 
 
+#define SparseNumberStruct_fl_unary(funcname) \
+SparseNumberStruct_std_unary(funcname##f) \
+SparseNumberStruct_std_unary(funcname##l)
+
+
+#define SparseNumberStruct_stdfl_unary(funcname) \
+SparseNumberStruct_std_unary(funcname) \
+SparseNumberStruct_fl_unary(funcname)
+
+
 #define SparseNumberStruct_std_binary(funcname) \
 \
 struct funcname##_Subfunctor { \
@@ -1220,6 +1230,16 @@ funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
  \
   return returnval; \
 }
+
+
+#define SparseNumberStruct_fl_binary(funcname) \
+SparseNumberStruct_std_binary(funcname##f) \
+SparseNumberStruct_std_binary(funcname##l)
+
+
+#define SparseNumberStruct_stdfl_binary(funcname) \
+SparseNumberStruct_std_binary(funcname) \
+SparseNumberStruct_fl_binary(funcname)
 
 
 #define SparseNumberStruct_std_binary_union(funcname) \
@@ -1299,6 +1319,15 @@ funcname (const T& a, const SparseNumberStruct<IndexSet>& b) \
 }
 
 
+#define SparseNumberStruct_fl_binary_union(funcname) \
+SparseNumberStruct_std_binary_union(funcname##f) \
+SparseNumberStruct_std_binary_union(funcname##l)
+
+
+#define SparseNumberStruct_stdfl_binary_union(funcname) \
+SparseNumberStruct_std_binary_union(funcname) \
+SparseNumberStruct_fl_binary_union(funcname)
+
 
 // NOTE: unary functions for which f(0) != 0 are undefined compile-time
 // errors, because there's no efficient way to have them make sense in
@@ -1326,6 +1355,37 @@ SparseNumberStruct_std_binary_union(min)
 SparseNumberStruct_std_unary(ceil)
 SparseNumberStruct_std_unary(floor)
 SparseNumberStruct_std_binary(fmod) // dangerous unless y is dense
+
+
+#if __cplusplus >= 201103L
+SparseNumberStruct_std_unary(llabs)
+SparseNumberStruct_std_unary(imaxabs)
+SparseNumberStruct_fl_unary(fabs)
+SparseNumberStruct_stdfl_unary(expm1)
+SparseNumberStruct_fl_unary(sqrt)
+SparseNumberStruct_stdfl_unary(cbrt)
+SparseNumberStruct_fl_unary(sin)
+SparseNumberStruct_fl_unary(tan)
+SparseNumberStruct_fl_unary(asin)
+SparseNumberStruct_fl_unary(atan)
+SparseNumberStruct_stdfl_unary(asinh)
+SparseNumberStruct_stdfl_unary(atanh)
+SparseNumberStruct_stdfl_unary(erf)
+SparseNumberStruct_fl_unary(ceil)
+SparseNumberStruct_fl_unary(floor)
+SparseNumberStruct_stdfl_unary(trunc)
+SparseNumberStruct_stdfl_unary(round)
+SparseNumberStruct_stdfl_unary(nearbyint)
+SparseNumberStruct_stdfl_unary(rint)
+
+SparseNumberStruct_fl_binary(fmod)
+SparseNumberStruct_stdfl_binary(remainder) // dangerous unless y is dense
+SparseNumberStruct_stdfl_binary_union(fmax)
+SparseNumberStruct_stdfl_binary_union(fmin)
+SparseNumberStruct_stdfl_binary_union(fdim)
+SparseNumberStruct_stdfl_binary_union(hypot)
+SparseNumberStruct_fl_binary_union(atan2)
+#endif // __cplusplus >= 201103L
 
 
 // Defining numeric_limits for heterogenous containers is pretty much

@@ -372,7 +372,20 @@ DualNumber<T,D> funcname (DualNumber<T,D> && in) \
   return in; \
 }
 
-
+#define DualNumber_equiv_unary(funcname, equivalent) \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname (const DualNumber<T,D> & in) \
+{ \
+  return std::equivalent(in); \
+} \
+ \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname (DualNumber<T,D> && in) \
+{ \
+  return std::equivalent(in); \
+}
 
 #else
 
@@ -388,7 +401,20 @@ DualNumber<T,D> funcname (DualNumber<T,D> in) \
   return in; \
 }
 
+#define DualNumber_equiv_unary(funcname, equivalent) \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> funcname (DualNumber<T,D> in) \
+{ \
+  return std::equivalent(in); \
+}
+ 
 #endif
+
+#define DualNumber_equivfl_unary(funcname) \
+DualNumber_equiv_unary(funcname##f, funcname) \
+DualNumber_equiv_unary(funcname##l, funcname)
+
 
 DualNumber_std_unary(sqrt, 1 / (2 * funcval),)
 DualNumber_std_unary(exp, funcval,)
@@ -404,10 +430,61 @@ DualNumber_std_unary(sinh, std::cosh(in.value()),)
 DualNumber_std_unary(cosh, std::sinh(in.value()),)
 DualNumber_std_unary(tanh, sech_in * sech_in, T sech_in = 1 / std::cosh(in.value()))
 DualNumber_std_unary(abs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
-DualNumber_std_unary(fabs, (in.value() > 0) - (in.value() < 0),) // std < and > return 0 or 1
+DualNumber_equiv_unary(fabs, abs)
 DualNumber_std_unary(norm, 2. * in.value(),)
 DualNumber_std_unary(ceil, 0,)
 DualNumber_std_unary(floor, 0,)
+
+#if __cplusplus >= 201103L
+DualNumber_equiv_unary(llabs, abs)
+DualNumber_equiv_unary(imaxabs, abs)
+DualNumber_equivfl_unary(fabs)
+DualNumber_equivfl_unary(exp)
+DualNumber_std_unary(exp2, std::log(T(2))*funcval,)
+DualNumber_equivfl_unary(exp2)
+DualNumber_std_unary(expm1, std::exp(in.value()),)
+DualNumber_equivfl_unary(expm1)
+DualNumber_equivfl_unary(log)
+DualNumber_equivfl_unary(log10)
+DualNumber_std_unary(log2, 1 / in.value() * (1/std::log(T(2))),)
+DualNumber_equivfl_unary(log2)
+DualNumber_std_unary(log1p, 1 / (in.value() + 1),)
+DualNumber_equivfl_unary(log1p)
+DualNumber_equivfl_unary(sqrt)
+DualNumber_std_unary(cbrt, 1 / (3 * funcval * funcval),)
+DualNumber_equivfl_unary(cbrt)
+DualNumber_equivfl_unary(sin)
+DualNumber_equivfl_unary(cos)
+DualNumber_equivfl_unary(tan)
+DualNumber_equivfl_unary(asin)
+DualNumber_equivfl_unary(acos)
+DualNumber_equivfl_unary(atan)
+DualNumber_equivfl_unary(sinh)
+DualNumber_equivfl_unary(cosh)
+DualNumber_equivfl_unary(tanh)
+DualNumber_std_unary(asinh, 1 / sqrt(1 + in.value()*in.value()),)
+DualNumber_equivfl_unary(asinh)
+DualNumber_std_unary(acosh, 1 / sqrt(in.value()*in.value() - 1),)
+DualNumber_equivfl_unary(acosh)
+DualNumber_std_unary(atanh, 1 / (1 - in.value()*in.value()),)
+DualNumber_equivfl_unary(atanh)
+// 2/sqrt(pi) = 1/sqrt(atan(1.0))
+DualNumber_std_unary(erf, 1/sqrt(atan(T(1)))*exp(-in.value()*in.value()),)
+DualNumber_equivfl_unary(erf)
+DualNumber_std_unary(erfc, -1/sqrt(atan(T(1)))*exp(-in.value()*in.value()),)
+DualNumber_equivfl_unary(erfc)
+// FIXME: how do we differentiate tgamma and lgamma without boost?
+DualNumber_equivfl_unary(ceil)
+DualNumber_equivfl_unary(floor)
+DualNumber_std_unary(trunc, 0,)
+DualNumber_equivfl_unary(trunc)
+DualNumber_std_unary(round, 0,)
+DualNumber_equivfl_unary(round)
+DualNumber_std_unary(nearbyint, 0,)
+DualNumber_equivfl_unary(nearbyint)
+DualNumber_std_unary(rint, 0,)
+DualNumber_equivfl_unary(rint)
+#endif // __cplusplus >= 201103L
 
 #define DualNumber_complex_std_unary_real(funcname) \
 template <typename T, typename D> \
@@ -514,6 +591,44 @@ funcname (const DualNumber<T,D>& a, const T2& b) \
   return std::funcname(a, newb); \
 }
 
+#define DualNumber_equiv_binary(funcname, equivalent) \
+template <typename T, typename D, typename T2, typename D2> \
+inline \
+typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype \
+funcname (const DualNumber<T,D>& a, const DualNumber<T2,D2>& b) \
+{ \
+  return std::equivalent(a,b); \
+} \
+ \
+template <typename T, typename D> \
+inline \
+DualNumber<T,D> \
+funcname (const DualNumber<T,D>& a, const DualNumber<T,D>& b) \
+{ \
+  return std::equivalent(a,b); \
+} \
+ \
+template <typename T, typename T2, typename D> \
+inline \
+typename CompareTypes<DualNumber<T2,D>,T,true>::supertype \
+funcname (const T& a, const DualNumber<T2,D>& b) \
+{ \
+  return std::equivalent(a,b); \
+} \
+ \
+template <typename T, typename T2, typename D> \
+inline \
+typename CompareTypes<DualNumber<T,D>,T2>::supertype \
+funcname (const DualNumber<T,D>& a, const T2& b) \
+{ \
+  return std::equivalent(a,b); \
+}
+
+#define DualNumber_equivfl_binary(funcname) \
+DualNumber_equiv_binary(funcname##f, funcname) \
+DualNumber_equiv_binary(funcname##l, funcname)
+
+
 // if_else is necessary here to handle cases where a is negative but b
 // is 0; we should have a contribution of 0 from those, not NaN.
 DualNumber_std_binary(pow,
@@ -527,6 +642,25 @@ DualNumber_std_binary(max,
 DualNumber_std_binary(min,
   (a.value() > b.value()) ? b.derivatives() : a.derivatives())
 DualNumber_std_binary(fmod, a.derivatives())
+
+#if __cplusplus >= 201103L
+DualNumber_equivfl_binary(pow)
+DualNumber_equivfl_binary(fmod)
+DualNumber_std_binary(remainder, a.derivatives())
+DualNumber_equivfl_binary(remainder)
+DualNumber_equiv_binary(fmax, max)
+DualNumber_equivfl_binary(fmax)
+DualNumber_equiv_binary(fmin, min)
+DualNumber_equivfl_binary(fmin)
+DualNumber_std_binary(fdim, if_else(a.value() > b.value(),
+                                    a.derivatives() - b.derivatives(), 0))
+DualNumber_equivfl_binary(fdim)
+DualNumber_std_binary(hypot, (a.value()*a.derivatives() +
+                              b.value()*b.derivatives()) /
+                              hypot(a.value(), b.value()))
+DualNumber_equivfl_binary(hypot)
+DualNumber_equivfl_binary(atan2)
+#endif // __cplusplus >= 201103L
 
 } // namespace std
 

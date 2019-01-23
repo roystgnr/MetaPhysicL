@@ -654,6 +654,19 @@ auto funcname (DualExpression<T,D> in) \
     (std::funcname(in.value()), (derivcalc)*in.derivatives()); \
 }
 
+#define DualExpression_equiv_unary(funcname, equivalent) \
+template <typename T, typename D> \
+inline \
+auto funcname (const DualExpression<T,D> & in) \
+-> decltype(std::equivalent(in)) \
+{ \
+  return std::equivalent(in); \
+}
+
+#define DualExpression_equivfl_unary(funcname) \
+DualExpression_equiv_unary(funcname##f, funcname) \
+DualExpression_equiv_unary(funcname##l, funcname)
+
 DualExpression_std_unary(sqrt, 1 / (2 * std::sqrt(in.value())))
 DualExpression_std_unary(exp, std::exp(in.value()))
 DualExpression_std_unary(log, 1 / in.value())
@@ -668,9 +681,61 @@ DualExpression_std_unary(sinh, std::cosh(in.value()))
 DualExpression_std_unary(cosh, std::sinh(in.value()))
 DualExpression_std_unary(tanh, 1 / std::cosh(in.value()) / std::cosh(in.value()))
 DualExpression_std_unary(abs, (in.value() > 0) - (in.value() < 0)) // std < and > return 0 or 1
-DualExpression_std_unary(fabs, (in.value() > 0) - (in.value() < 0)) // std < and > return 0 or 1
+DualExpression_equivfl_unary(abs)
+DualExpression_equiv_unary(fabs, abs)
 DualExpression_std_unary(ceil, 0)
 DualExpression_std_unary(floor, 0)
+
+#if __cplusplus >= 201103L
+DualExpression_equiv_unary(llabs, abs)
+DualExpression_equiv_unary(imaxabs, abs)
+DualExpression_equivfl_unary(fabs)
+DualExpression_equivfl_unary(exp)
+DualExpression_std_unary(exp2, std::log(T(2))*std::exp2(in.value()))
+DualExpression_equivfl_unary(exp2)
+DualExpression_std_unary(expm1, std::exp(in.value()))
+DualExpression_equivfl_unary(expm1)
+DualExpression_equivfl_unary(log)
+DualExpression_equivfl_unary(log10)
+DualExpression_std_unary(log2, 1 / in.value() * (1/std::log(T(2))))
+DualExpression_equivfl_unary(log2)
+DualExpression_std_unary(log1p, 1 / (in.value() + 1))
+DualExpression_equivfl_unary(log1p)
+DualExpression_equivfl_unary(sqrt)
+DualExpression_std_unary(cbrt, 1 / (3 * std::cbrt(in.value()) * std::cbrt(in.value())))
+DualExpression_equivfl_unary(cbrt)
+DualExpression_equivfl_unary(sin)
+DualExpression_equivfl_unary(cos)
+DualExpression_equivfl_unary(tan)
+DualExpression_equivfl_unary(asin)
+DualExpression_equivfl_unary(acos)
+DualExpression_equivfl_unary(atan)
+DualExpression_equivfl_unary(sinh)
+DualExpression_equivfl_unary(cosh)
+DualExpression_equivfl_unary(tanh)
+DualExpression_std_unary(asinh, 1 / sqrt(1 + in.value()*in.value()))
+DualExpression_equivfl_unary(asinh)
+DualExpression_std_unary(acosh, 1 / sqrt(in.value()*in.value() - 1))
+DualExpression_equivfl_unary(acosh)
+DualExpression_std_unary(atanh, 1 / (1 - in.value()*in.value()))
+DualExpression_equivfl_unary(atanh)
+// 2/sqrt(pi) = 1/sqrt(atan(1.0))
+DualExpression_std_unary(erf, 1/sqrt(atan(T(1)))*exp(-in.value()*in.value()))
+DualExpression_equivfl_unary(erf)
+DualExpression_std_unary(erfc, -1/sqrt(atan(T(1)))*exp(-in.value()*in.value()))
+DualExpression_equivfl_unary(erfc)
+// FIXME: how do we differentiate tgamma and lgamma without boost?
+DualExpression_equivfl_unary(ceil)
+DualExpression_equivfl_unary(floor)
+DualExpression_std_unary(trunc, 0)
+DualExpression_equivfl_unary(trunc)
+DualExpression_std_unary(round, 0)
+DualExpression_equivfl_unary(round)
+DualExpression_std_unary(nearbyint, 0)
+DualExpression_equivfl_unary(nearbyint)
+DualExpression_std_unary(rint, 0)
+DualExpression_equivfl_unary(rint)
+#endif
 
 #define DualExpression_std_binary(funcname, derivative, rightderiv, leftderiv) \
 template <typename T, typename D, typename T2, typename D2> \
@@ -733,6 +798,44 @@ funcname (const DualExpression<T,D>& a, const T2& b) \
     (std::funcname(a.value(), b), leftderiv); \
 }
 
+#define DualExpression_equiv_binary(funcname, equivalent) \
+template <typename T, typename D, typename T2, typename D2> \
+inline \
+auto \
+funcname (const DualExpression<T,D>& a, const DualExpression<T2,D2>& b) \
+-> decltype(std::equivalent(a,b)) \
+{ \
+  return std::equivalent(a,b); \
+} \
+template <typename T, typename D> \
+inline \
+auto \
+funcname (const DualExpression<T,D>& a, const DualExpression<T,D>& b) \
+-> decltype(std::equivalent(a,b)) \
+{ \
+  return std::equivalent(a,b); \
+} \
+template <typename T, typename T2, typename D> \
+inline \
+auto \
+funcname (const T& a, const DualExpression<T2,D>& b) \
+-> decltype(std::equivalent(a,b)) \
+{ \
+  return std::equivalent(a,b); \
+} \
+template <typename T, typename T2, typename D> \
+inline \
+auto \
+funcname (const DualExpression<T,D>& a, const T2& b) \
+-> decltype(std::equivalent(a,b)) \
+{ \
+  return std::equivalent(a,b); \
+}
+
+#define DualExpression_equivfl_binary(funcname) \
+DualExpression_equiv_binary(funcname##f, funcname) \
+DualExpression_equiv_binary(funcname##l, funcname)
+
 // if_else is necessary here to handle cases where a is negative but
 // b' is 0; we should have a contribution of 0 from those, not NaN.
 DualExpression_std_binary(pow,
@@ -758,6 +861,32 @@ DualExpression_std_binary(min,
   (a > b.value()) ? b.derivatives() : 0,
   (a.value() > b) ? 0 : a.derivatives())
 DualExpression_std_binary(fmod, a.derivatives(), 0, a.derivatives())
+
+#if __cplusplus >= 201103L
+DualExpression_equivfl_binary(pow)
+DualExpression_equivfl_binary(fmod)
+DualExpression_std_binary(remainder, a.derivatives(), 0, a.derivatives())
+DualExpression_equivfl_binary(remainder)
+DualExpression_equiv_binary(fmax, max)
+DualExpression_equivfl_binary(fmax)
+DualExpression_equiv_binary(fmin, min)
+DualExpression_equivfl_binary(fmin)
+DualExpression_std_binary(fdim,
+                          if_else(a.value() > b.value(),
+                                  a.derivatives() - b.derivatives(), 0),
+                          if_else(a.value() > b, a.derivatives(), 0),
+                          if_else(a > b.value(), -b.derivatives(), 0))
+DualExpression_equivfl_binary(fdim)
+DualExpression_std_binary(hypot, (a.value()*a.derivatives() +
+                                  b.value()*b.derivatives()) /
+                                  hypot(a.value(), b.value()),
+                                 (a.value()*a.derivatives()) /
+                                  hypot(a.value(), b),
+                                 (b.value()*b.derivatives()) /
+                                  hypot(a, b.value()))
+DualExpression_equivfl_binary(hypot)
+DualExpression_equivfl_binary(atan2)
+#endif // __cplusplus >= 201103L
 
 template <typename T, typename D>
 class numeric_limits<DualExpression<T, D> > : 
