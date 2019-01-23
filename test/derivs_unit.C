@@ -236,8 +236,6 @@ int test_func_derivatives(const T & random_quant,
   using std::asinh;
   using std::acosh;
   using std::atanh;
-  using std::erf;
-  using std::erfc;
   using std::trunc;
   using std::round;
   using std::nearbyint;
