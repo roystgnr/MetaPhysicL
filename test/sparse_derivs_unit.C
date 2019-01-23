@@ -198,16 +198,6 @@ int main(void)
     <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
         2, DualNumber<long double>, 3, DualNumber<long double> >::type());
 
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<float>, 1, DualNumber<float>,
-        2, DualNumber<float>, 3, DualNumber<float> >::type());
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<double>, 1, DualNumber<double>,
-        2, DualNumber<double>, 3, DualNumber<double> >::type());
-  returnval = returnval || vectester(SparseNumberVectorOf
-    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
-        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
-
   DynamicSparseNumberArray<DualNumber<float>, unsigned int> float_dsna;
     float_dsna.resize(4);
     float_dsna.raw_index(1) = 1;
@@ -229,7 +219,19 @@ int main(void)
     long_double_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsna);
 
-  DynamicSparseNumberVector<DualNumber<float>, unsigned int> float_dsnv;
+// Many of the functions we test don't make sense for mathematical vectors
+/*
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<float>, 1, DualNumber<float>,
+        2, DualNumber<float>, 3, DualNumber<float> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<double>, 1, DualNumber<double>,
+        2, DualNumber<double>, 3, DualNumber<double> >::type());
+  returnval = returnval || vectester(SparseNumberVectorOf
+    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
+        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
+
+ DynamicSparseNumberVector<DualNumber<float>, unsigned int> float_dsnv;
     float_dsnv.resize(4);
     float_dsnv.raw_index(1) = 1;
     float_dsnv.raw_index(2) = 2;
@@ -249,6 +251,7 @@ int main(void)
     long_double_dsnv.raw_index(2) = 2;
     long_double_dsnv.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsnv);
+*/
 
   return returnval;
 }
