@@ -58,17 +58,11 @@ template <typename Vector>
 int vectester (Vector zerovec)
 {
   using std::abs;
-  using std::acos;
   using std::asin;
   using std::atan;
   using std::ceil;
-  using std::cos;
-  using std::cosh;
-  using std::exp;
   using std::fabs;
   using std::floor;
-  using std::log;
-  using std::log10;
   using std::pow;
   using std::sin;
   using std::sinh;
