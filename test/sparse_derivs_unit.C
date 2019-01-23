@@ -70,6 +70,15 @@ int vectester (Vector zerovec)
   using std::tan;
   using std::tanh;
 
+#if __cplusplus >= 201103L
+  using std::cbrt;
+  using std::asinh;
+  using std::atanh;
+  // using std::erf;
+  using std::trunc;
+  using std::round;
+#endif // __cplusplus >= 201103L
+
   typedef typename ValueType<Vector>::type DualScalar;
   typedef typename DualScalar::value_type Scalar;
 
@@ -169,6 +178,30 @@ int vectester (Vector zerovec)
 
   // one_test(derivatives(tanh(random_vec)) -
   //          derivatives(sinh(random_vec)/cosh(random_vec)));
+
+#if __cplusplus >= 201103L
+  // one_test(exp2(log2(random_vec)) - random_vec);
+  // one_test(expm1(random_vec) - exp(random_vec) + 1);
+  // one_test(log1p(random_vec) - log(random_vec + 1));
+  one_test(cbrt(random_vec) - pow(random_vec, Scalar(1)/3));
+  one_test(asinh(sinh(random_vec)) - random_vec);
+  // one_test(acosh(cosh(random_vec)) - random_vec);
+  one_test(atanh(tanh(random_vec)) - random_vec);
+  // one_test(1 - erf(random_vec) - erfc(random_vec));
+  one_test(trunc(random_vec));
+  one_test(round(random_vec/2));
+
+  // one_test(derivatives(expm1(random_vec)) - (expm1(random_vec) + 1));
+  // one_test(derivatives(log1p(random_vec)) - 1 / (1 + random_vec));
+  // one_test(derivatives(cbrt(random_vec)) - pow(random_vec, -Scalar(2)/3) / 3);
+  // one_test(pow(derivatives(asinh(random_vec)), 2) - 1 / (random_vec * random_vec + 1));
+  // one_test(pow(derivatives(acosh(random_vec+1)), 2) * random_vec - 1 / (random_vec + 2));
+  // one_test(derivatives(atanh(random_vec)) - 1 / (1 - random_vec * random_vec));
+  one_test(derivatives(trunc(random_vec*10)));
+  one_test(derivatives(round(random_vec*10)));
+//  one_test(derivatives(nearbyint(random_vec*10)));
+//  one_test(derivatives(rint(random_vec*10)));
+#endif // __cplusplus >= 201103L
 
   return returnval;
 }
