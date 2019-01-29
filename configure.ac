@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(metaphysicl, 0.3.3, roystgnr@ices.utexas.edu)
+AC_INIT(metaphysicl, 0.4.0, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADER(metaphysicl_config.h.tmp)
@@ -164,7 +164,7 @@ dnl-----------------------------------------------
 dnl Generate header files
 dnl-----------------------------------------------
 AC_CONFIG_FILES(src/utilities/include/metaphysicl/metaphysicl_version.h)
-            
+
 dnl-----------------------------------------------
 dnl Generate Makefiles
 dnl-----------------------------------------------
