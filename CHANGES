@@ -1,3 +1,9 @@
+Version 0.4.0
+  * Fix norm derivative for DualNumber
+  * Add some assignment overloads for DualNumber
+  * Don't default initialize NumberArray data
+  * Test calculations of DualNumber<T, NumberArray<N,T>>
+  * Add support for many C++11 math functions
 Version 0.3.3
   * Begin incrementing library versioning properly
   * More declarations properly added to _decl headers
