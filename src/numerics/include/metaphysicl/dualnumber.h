@@ -369,7 +369,7 @@ DualNumber<T,D> funcname (DualNumber<T,D> && in) \
   precalc; \
   in.derivatives() *= derivative; \
   in.value() = funcval; \
-  return in; \
+  return std::move(in); \
 }
 
 #define DualNumber_equiv_unary(funcname, equivalent) \
@@ -398,7 +398,7 @@ DualNumber<T,D> funcname (DualNumber<T,D> in) \
   precalc; \
   in.derivatives() *= derivative; \
   in.value() = funcval; \
-  return in; \
+  return std::move(in); \
 }
 
 #define DualNumber_equiv_unary(funcname, equivalent) \
