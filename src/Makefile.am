@@ -113,7 +113,7 @@ STAMPED_FILES = $(libmetaphysicl_la_SOURCES) $(include_HEADERS) $(metaphysicl_ve
 BUILT_SOURCES = .license.stamp
 
 .license.stamp: $(top_srcdir)/LICENSE
-	$(top_srcdir)/src/common/lic_utils/update_license.pl -S=$(top_srcdir)/src $(top_srcdir)/LICENSE $(STAMPED_FILES)
+	$(top_srcdir)/src/common/lic_utils/update_license.pl -S $(top_srcdir)/src $(top_srcdir)/LICENSE $(STAMPED_FILES)
 	echo 'updated source license headers' >$@
 
 CLEANFILES += .license.stamp
