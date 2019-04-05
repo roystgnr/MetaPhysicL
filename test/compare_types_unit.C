@@ -1,4 +1,3 @@
-
 #include "metaphysicl/compare_types.h"
 
 using namespace MetaPhysicL;
@@ -26,11 +25,15 @@ int main (void)
   Instantiator<float, double> i2;
   Instantiator<double, double> i3;
   Instantiator<int, int> i4;
+  Instantiator<long int, long int> i5;
+  Instantiator<long long int, long long int> i6;
 
   i1.foil_unused_variable_warning();
   i2.foil_unused_variable_warning();
   i3.foil_unused_variable_warning();
   i4.foil_unused_variable_warning();
+  i5.foil_unused_variable_warning();
+  i6.foil_unused_variable_warning();
 
   return 0;
 }

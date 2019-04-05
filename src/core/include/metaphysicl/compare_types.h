@@ -116,7 +116,7 @@ namespace boostcopy {
 //
 // Should we store a value or a reference, in ``pass-through''
 // expression cases where we have the option?
-// 
+//
 // Copying underlying storage unnecessarily is wasteful in the best
 // case, and leads to segfaults if we copy into a temporary that gets
 // just referenced in outer expressions.
@@ -164,7 +164,8 @@ ScalarBuiltin_true(bool);
 ScalarBuiltin_true(char);
 ScalarBuiltin_true(short);
 ScalarBuiltin_true(int);
-ScalarBuiltin_true(long);
+ScalarBuiltin_true(long int);
+ScalarBuiltin_true(long long int);
 ScalarBuiltin_true(unsigned char);
 ScalarBuiltin_true(unsigned short);
 ScalarBuiltin_true(unsigned int);
@@ -335,6 +336,8 @@ CompareTypes_single(bool);
 CompareTypes_single(char);
 CompareTypes_single(short);
 CompareTypes_single(int);
+CompareTypes_single(long int);
+CompareTypes_single(long long int);
 CompareTypes_single(float);
 CompareTypes_single(double);
 CompareTypes_single(long double);
@@ -370,6 +373,10 @@ CompareTypes_all(short, long double);
 CompareTypes_all(int, float);
 CompareTypes_all(int, double);
 CompareTypes_all(int, long double);
+CompareTypes_all(long int, double);
+CompareTypes_all(long int, long double);
+CompareTypes_all(long long int, double);
+CompareTypes_all(long long int, long double);
 CompareTypes_all(float, double);
 CompareTypes_all(float, long double);
 CompareTypes_all(double, long double);
