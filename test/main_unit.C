@@ -151,5 +151,12 @@ int main(void)
 
   fsdt / fsdt;
 
+  long int divl = 1;
+  long long int divll = 1;
+  FullFirstDerivType dbl = 2.0;
+  FullFirstDerivType r1 = dbl/divl;
+  FullFirstDerivType r2 = dbl/divll;
+  r1 + r2;
+
   return 0;
 }
