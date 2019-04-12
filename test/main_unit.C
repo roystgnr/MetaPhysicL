@@ -153,10 +153,18 @@ int main(void)
 
   long int divl = 1;
   long long int divll = 1;
+  unsigned long int udivl = 1;
+  unsigned long long int udivll = 1;
+  std::size_t sdiv = 1;
+  std::ptrdiff_t pdiv = 1;
   FullFirstDerivType dbl = 2.0;
   FullFirstDerivType r1 = dbl/divl;
   FullFirstDerivType r2 = dbl/divll;
-  r1 + r2;
+  FullFirstDerivType r3 = dbl/udivl;
+  FullFirstDerivType r4 = dbl/udivll;
+  FullFirstDerivType r5 = dbl/sdiv;
+  FullFirstDerivType r6 = dbl/pdiv;
+  r1 + r2 + r3 + r4 + r5 + r6;
 
   return 0;
 }
