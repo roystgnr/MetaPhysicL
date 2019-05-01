@@ -31,6 +31,7 @@
 
 #include "metaphysicl/dynamicsparsenumbervector_decl.h"
 #include "metaphysicl/dynamicsparsenumberbase.h"
+#include "metaphysicl/metaphysicl_common.h"
 
 namespace MetaPhysicL {
 
@@ -40,7 +41,7 @@ DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector() {}
 
 template <typename T, typename I>
 inline
-DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T& val) {
+DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T& metaphysicl_dbg_var(val)) {
   // This makes no sense unless val is 0!
 #ifndef NDEBUG
   if (val)
@@ -51,7 +52,7 @@ DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T& val) {
 template <typename T, typename I>
 template <typename T2>
 inline
-DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T2& val) {
+DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T2& metaphysicl_dbg_var(val)) {
   // This makes no sense unless val is 0!
 #ifndef NDEBUG
   if (val)
