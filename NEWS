@@ -1,3 +1,10 @@
+0.4.0 -> 0.5.0
+  * Create metaphysicl_dbg_var to eliminate compiler warnings
+  * Add unsigned long / long long support
+  * Add long int type support
+  * Fix Perl GetOptions unknown option error for mingw64
+  * Fix warning with clang 7.x: Prevent copying when returning by name; use std::move
+
 0.3.3 -> 0.4.0
   * Fix norm derivative for DualNumber
   * Add some assignment overloads for DualNumber
