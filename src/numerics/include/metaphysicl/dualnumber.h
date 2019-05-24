@@ -632,8 +632,8 @@ DualNumber_equiv_binary(funcname##l, funcname)
 // if_else is necessary here to handle cases where a is negative but b
 // is 0; we should have a contribution of 0 from those, not NaN.
 DualNumber_std_binary(pow,
-  funcval * (b.value() * a.derivatives() / a.value() +
-  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()), b.derivatives())))
+  std::pow(a.value(), b.value() - 1) * (b.value() * a.derivatives() +
+  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())))
 DualNumber_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
   (b.value() * b.value() + a.value() * a.value()))
