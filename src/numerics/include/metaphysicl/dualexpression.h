@@ -839,11 +839,11 @@ DualExpression_equiv_binary(funcname##l, funcname)
 // if_else is necessary here to handle cases where a is negative but
 // b' is 0; we should have a contribution of 0 from those, not NaN.
 DualExpression_std_binary(pow,
-  std::pow(a.value(), b.value()) * (b.value() * a.derivatives() / a.value() +
-  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()), b.derivatives())),
+  std::pow(a.value(), b.value() - 1) * (b.value() * a.derivatives() +
+  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())),
   std::pow(a, b.value()) *
   MetaPhysicL::if_else(b.derivatives(), (b.derivatives() * std::log(a)), b.derivatives()),
-  std::pow(a.value(), b) * (b * a.derivatives() / a.value())
+  std::pow(a.value(), b - 1) * (b * a.derivatives())
   )
 DualExpression_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
