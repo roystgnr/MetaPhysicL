@@ -204,6 +204,7 @@ int test_func_values(const T & random_quant, T2 & error_quant)
 
 template <typename T, typename T2, typename T3, typename T4>
 int test_func_derivatives(const T & random_quant,
+                          const T & zero_quant,
                           T2 & error_quant,
                           const T3 & function_value,
                           const T4 & analytic_multiplier)
@@ -294,6 +295,9 @@ int test_func_derivatives(const T & random_quant,
 
 #endif // __cplusplus >= 201103L
 
+  // Some non-random tests, too:
+  one_test(derivatives(pow(zero_quant,2)), error_quant);
+
   return returnval;
 }
 
@@ -312,11 +316,18 @@ int scalartester (void)
   std::srand(12345);
 
   random_quant.value() = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+  DN zero_quant = 0;
   for (unsigned int i=0; i != N; ++i)
+    {
       random_quant.derivatives()[i] = 1;
+      zero_quant.derivatives() = 1;
+    }
+
 
   int returnval = test_func_values(random_quant, error_scalar);
-  returnval = returnval || test_func_derivatives(random_quant, error_vec, random_quant.value(), unity_vec);
+  returnval = returnval ||
+    test_func_derivatives(random_quant, zero_quant, error_vec,
+                          random_quant.value(), unity_vec);
 
   return returnval;
 }
@@ -327,7 +338,7 @@ int vectester (void)
   typedef typename ValueType<Vector>::type DualScalar;
   typedef typename DualScalar::value_type Scalar;
 
-  Vector random_quant;
+  Vector random_quant, zero_quant;
 
   typename DerivativeType<Vector>::type error_vec = 0;
 
@@ -338,10 +349,12 @@ int vectester (void)
     {
       random_quant[i] = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
       random_quant[i].derivatives() = 1;
+      zero_quant[i] = 0;
+      zero_quant[i].derivatives() = 1;
     }
 
   int returnval =  test_func_values(random_quant, error_vec);
-  returnval = returnval || test_func_derivatives(random_quant, error_vec, random_quant, 1.);
+  returnval = returnval || test_func_derivatives(random_quant, zero_quant, error_vec, random_quant, 1.);
 
   return returnval;
 }
