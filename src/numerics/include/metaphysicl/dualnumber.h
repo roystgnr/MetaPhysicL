@@ -154,6 +154,46 @@ DualNumber<T,D>::DualNumber(const T2& val,
 // subtle run-time user errors would turn into compile-time user
 // errors.
 
+template <typename T, typename D, typename T2, typename D2>
+void
+calcMultiplyDerivs(DualNumber<T, D> & out, const DualNumber<T2,D2>& in)
+{
+  for (unsigned int i = 0; i < in.derivatives().size(); i++)
+    out.derivatives()[i] = out.derivatives()[i] * in.value() + out.value() * in.derivatives()[i];
+}
+template <typename T, typename T2>
+void
+calcMultiplyDerivs(DualNumber<T, double> & out, const DualNumber<T2,double>& in)
+{
+  out.derivatives() = out.derivatives() * in.value() + out.value() * in.derivatives();
+}
+template <typename T, typename D, typename T2, typename D2>
+void
+calcPlusDerivs(DualNumber<T, D> & out, const DualNumber<T2,D2>& in)
+{
+  for (unsigned int i = 0; i < in.derivatives().size(); i++)
+    out.derivatives()[i] = out.derivatives()[i] + in.derivatives()[i];
+}
+template <typename T, typename T2>
+void
+calcPlusDerivs(DualNumber<T, double> & out, const DualNumber<T2,double>& in)
+{
+  out.derivatives() = out.derivatives() + in.derivatives();
+}
+template <typename T, typename D, typename T2, typename D2>
+void
+calcMinusDerivs(DualNumber<T, D> & out, const DualNumber<T2,D2>& in)
+{
+  for (unsigned int i = 0; i < in.derivatives().size(); i++)
+    out.derivatives()[i] = out.derivatives()[i] - in.derivatives()[i];
+}
+template <typename T, typename T2>
+void
+calcMinusDerivs(DualNumber<T, double> & out, const DualNumber<T2,double>& in)
+{
+  out.derivatives() = out.derivatives() - in.derivatives();
+}
+
 #define DualNumber_preop(opname, functorname, simplecalc, dualcalc) \
 template <typename T, typename D> \
 template <typename T2> \
@@ -265,15 +305,14 @@ operator opname (DualNumber<T,D>&& a, const T2& b) \
         DualNumber_preop(opname, functorname, simplecalc, dualcalc)
 #endif
 
-DualNumber_op(+, Plus, , this->derivatives() += in.derivatives())
+DualNumber_op(+, Plus, , calcPlusDerivs(*this, in))
 
-DualNumber_op(-, Minus, , this->derivatives() -= in.derivatives())
+DualNumber_op(-, Minus, , calcMinusDerivs(*this, in))
 
 DualNumber_op(*,
               Multiplies,
               this->derivatives() *= in,
-              this->derivatives() = this->derivatives() * in.value() +
-                                    this->value() * in.derivatives())
+              calcMultiplyDerivs(*this, in))
 
 DualNumber_op(/,
               Divides,
@@ -408,7 +447,7 @@ DualNumber<T,D> funcname (DualNumber<T,D> in) \
 { \
   return std::equivalent(in); \
 }
- 
+
 #endif
 
 #define DualNumber_equivfl_unary(funcname) \
