@@ -158,8 +158,13 @@ template <typename T, typename D, typename T2, typename D2>
 void
 calcMultiplyDerivs(DualNumber<T, D> & out, const DualNumber<T2,D2>& in)
 {
-  for (unsigned int i = 0; i < in.derivatives().size(); i++)
-    out.derivatives()[i] = out.derivatives()[i] * in.value() + out.value() * in.derivatives()[i];
+  auto& din = in.derivatives();
+  auto& dout = out.derivatives();
+  const auto vin = in.value();
+  const auto vout = out.value();
+  const auto n = dout.size();
+  for (int i = 0; i < n; i++)
+    dout[i] = vin * dout[i] + vout * din[i];
 }
 template <typename T, typename T2>
 void
