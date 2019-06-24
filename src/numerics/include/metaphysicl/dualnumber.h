@@ -146,25 +146,7 @@ DualNumber<T,D>::DualNumber(const T2& val,
   _val  (DualNumberConstructor<T,D>::value(val,deriv)),
   _deriv(DualNumberConstructor<T,D>::deriv(val,deriv)) {}
 
-// // Some helpers for reducing temporary creation and memset, memcpy calls
-
-// template <typename T>
-// struct HasBracketOperator
-// {
-//   template <typename C>
-//   static constexpr decltype(std::declval<C>()[0], bool()) test(int /*unused*/)
-//   {
-//     return true;
-//   }
-
-//   template <typename C>
-//   static constexpor bool test(...)
-//   {
-//     return false;
-//   }
-
-//   static constexpr bool value = test<T>(int());
-// };
+// Some helpers for reducing temporary creation and memset, memcpy calls
 
 template <typename T,
           template <std::size_t, typename>
