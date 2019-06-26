@@ -146,6 +146,67 @@ DualNumber<T,D>::DualNumber(const T2& val,
   _val  (DualNumberConstructor<T,D>::value(val,deriv)),
   _deriv(DualNumberConstructor<T,D>::deriv(val,deriv)) {}
 
+// Some helpers for reducing temporary creation and memset, memcpy calls
+
+template <typename T,
+          template <std::size_t, typename>
+          class D,
+          std::size_t N,
+          typename DT,
+          template <std::size_t, typename>
+          class D2,
+          typename T2,
+          typename DT2,
+          typename std::enable_if<ScalarTraits<T>::value && ScalarTraits<T2>::value, int>::type = 0>
+inline void
+derivative_multiply_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D2<N, DT2>> & in)
+{
+  auto & din = in.derivatives();
+  auto & dout = out.derivatives();
+  const auto vin = in.value();
+  const auto vout = out.value();
+  const auto n = dout.size();
+  for (decltype(dout.size()) i = 0; i < n; i++)
+    dout[i] = vin * dout[i] + vout * din[i];
+}
+
+template <typename T, typename D, typename T2, typename D2>
+inline void
+derivative_multiply_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
+{
+  out.derivatives() = out.derivatives() * in.value() + out.value() * in.derivatives();
+}
+
+template <typename T,
+          template <std::size_t, typename>
+          class D,
+          std::size_t N,
+          typename DT,
+          template <std::size_t, typename>
+          class D2,
+          typename T2,
+          typename DT2,
+          typename std::enable_if<ScalarTraits<T>::value && ScalarTraits<T2>::value, int>::type = 0>
+inline void
+derivative_division_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D2<N, DT2>> & in)
+{
+  auto & din = in.derivatives();
+  auto & dout = out.derivatives();
+  const auto vin = in.value();
+  const auto vout = out.value();
+  const auto n = dout.size();
+  for (decltype(dout.size()) i = 0; i < n; i++)
+    dout[i] = dout[i] / vin - din[i] * vout / (vin * vin);
+}
+
+template <typename T, typename D, typename T2, typename D2>
+inline void
+derivative_division_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
+{
+  out.derivatives() =
+      out.derivatives() / in.value() - in.derivatives() * out.value() / (in.value() * in.value());
+}
+
 // FIXME: these operators currently do automatic type promotion when
 // encountering DualNumbers of differing levels of recursion and
 // differentiability.  But what we really want is automatic type
@@ -226,7 +287,6 @@ operator opname (const DualNumber<T,D>& a, const T2& b) \
 }
 
 
-
 // With C++11, define "move operations" where possible.  We should be
 // more complete and define the move-from-b alternatives as well, but
 // those would require additional support to correctly handle
@@ -272,15 +332,12 @@ DualNumber_op(-, Minus, , this->derivatives() -= in.derivatives())
 DualNumber_op(*,
               Multiplies,
               this->derivatives() *= in,
-              this->derivatives() = this->derivatives() * in.value() +
-                                    this->value() * in.derivatives())
+              derivative_multiply_helper(*this, in))
 
 DualNumber_op(/,
               Divides,
               this->derivatives() /= in,
-              this->derivatives() = this->derivatives() / in.value() -
-                                    in.derivatives() * this->value() /
-                                        (in.value() * in.value()))
+              derivative_division_helper(*this, in))
 
 
 #define DualNumber_compare(opname)                          \
@@ -408,7 +465,7 @@ DualNumber<T,D> funcname (DualNumber<T,D> in) \
 { \
   return std::equivalent(in); \
 }
- 
+
 #endif
 
 #define DualNumber_equivfl_unary(funcname) \
