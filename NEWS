@@ -1,3 +1,8 @@
+0.5.0 -> 0.5.1
+  * Optimizations for multiply and derivative operations of DualNumbers using
+    statically sized derivative storage types
+  * Added robustness for pow(Dual*)
+
 0.4.0 -> 0.5.0
   * Create metaphysicl_dbg_var to eliminate compiler warnings
   * Add unsigned long / long long support

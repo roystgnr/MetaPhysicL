@@ -1,3 +1,7 @@
+Version 0.5.1
+  * Reduce temporary creation and foster loop fusion for derivative calculations
+    with static storage types
+  * Fix std::pow(0,b>1) derivatives
 Version 0.5.0
   * Create metaphysicl_dbg_var to eliminate compiler warnings
   * Add unsigned long / long long support
