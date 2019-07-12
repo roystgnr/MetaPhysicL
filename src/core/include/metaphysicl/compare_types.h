@@ -328,7 +328,10 @@ struct CompareTypes<std::complex<T>, T, reverseorder, Enable> {
         CompareTypes_super(std::complex<mysuper>, std::complex<mysub>, std::complex<mysuper>)
 
 #define CompareTypes_single(mytype) \
-        CompareTypes_super(mytype, mytype, mytype)
+        CompareTypes_super(mytype, mytype, mytype); \
+        CompareTypes_super(std::complex<mytype>, mytype, std::complex<mytype>); \
+        CompareTypes_super(mytype, std::complex<mytype>, std::complex<mytype>); \
+        CompareTypes_super(std::complex<mytype>, std::complex<mytype>, std::complex<mytype>)
 
 CompareTypes_single(unsigned char);
 CompareTypes_single(unsigned short);
