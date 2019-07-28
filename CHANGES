@@ -1,3 +1,5 @@
+Version 0.5.2
+  * Define CompareTypes between T and std::complex<T>
 Version 0.5.1
   * Reduce temporary creation and foster loop fusion for derivative calculations
     with static storage types
