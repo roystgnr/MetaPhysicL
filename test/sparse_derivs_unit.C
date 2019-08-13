@@ -5,6 +5,7 @@
 #include "metaphysicl_config.h"
 
 #include "metaphysicl/dualdynamicsparsenumberarray.h"
+#include "metaphysicl/dualsemidynamicsparsenumberarray.h"
 #include "metaphysicl/dualdynamicsparsenumbervector.h"
 #include "metaphysicl/dualsparsenumberstruct.h"
 #include "metaphysicl/dualsparsenumberarray.h"
@@ -251,6 +252,27 @@ int main(void)
     long_double_dsna.raw_index(2) = 2;
     long_double_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(long_double_dsna);
+
+  SemiDynamicSparseNumberArray<DualNumber<float>, unsigned int, NWrapper<4>> float_sdsna;
+    float_dsna.resize(4);
+    float_dsna.raw_index(1) = 1;
+    float_dsna.raw_index(2) = 2;
+    float_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(float_sdsna);
+
+  SemiDynamicSparseNumberArray<DualNumber<double>, unsigned int, NWrapper<4>> double_sdsna;
+    double_dsna.resize(4);
+    double_dsna.raw_index(1) = 1;
+    double_dsna.raw_index(2) = 2;
+    double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(double_sdsna);
+
+  SemiDynamicSparseNumberArray<DualNumber<long double>, unsigned int, NWrapper<4>> long_double_sdsna;
+    long_double_dsna.resize(4);
+    long_double_dsna.raw_index(1) = 1;
+    long_double_dsna.raw_index(2) = 2;
+    long_double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(long_double_sdsna);
 
 // Many of the functions we test don't make sense for mathematical vectors
 /*

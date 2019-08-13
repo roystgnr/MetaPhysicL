@@ -33,7 +33,6 @@
 #include <functional>
 #include <stdexcept>
 #include <ostream>
-#include <vector>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
@@ -44,11 +43,13 @@
 
 namespace MetaPhysicL {
 
-// Data type T, index type I
-template <typename T, typename I, template <typename, typename> class SubType>
+template <typename Data, typename Indices, template <class...> class SubType, class... SubTypeArgs>
 class DynamicSparseNumberBase
 {
 public:
+  typedef typename Data::value_type T;
+  typedef typename Indices::value_type I;
+
   typedef T value_type;
 
   template <unsigned int i>
@@ -66,28 +67,33 @@ public:
 
 #if __cplusplus >= 201103L
   // Move constructors are useful when all your data is on the heap
-  DynamicSparseNumberBase(DynamicSparseNumberBase<T, I, SubType> && src) = default;
+  DynamicSparseNumberBase(DynamicSparseNumberBase && src) = default;
 
   // Move assignment avoids heap operations too
-  DynamicSparseNumberBase& operator= (DynamicSparseNumberBase<T, I, SubType> && src) = default;
+  DynamicSparseNumberBase& operator= (DynamicSparseNumberBase && src) = default;
 
   // Standard copy operations get implicitly deleted upon move
   // constructor definition, so we manually enable them.
-  DynamicSparseNumberBase(const DynamicSparseNumberBase<T, I, SubType> & src) = default;
+  DynamicSparseNumberBase(const DynamicSparseNumberBase & src) = default;
 
-  DynamicSparseNumberBase& operator= (const DynamicSparseNumberBase<T, I, SubType> & src) = default;
+  DynamicSparseNumberBase& operator= (const DynamicSparseNumberBase & src) = default;
 #endif
 
-  template <typename T2, typename I2>
-  DynamicSparseNumberBase(const DynamicSparseNumberBase<T2, I2, SubType> & src);
+  template <typename Data2, typename Indices2, class... SubTypeArgs2>
+  DynamicSparseNumberBase(
+      const DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> & src);
+
+  template <typename Data2, typename Indices2, class... SubTypeArgs2>
+  DynamicSparseNumberBase(
+      DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> && src);
 
   T* raw_data();
 
   const T* raw_data() const;
 
-  typename std::vector<T>::reference raw_at(unsigned int i);
+  typename Data::reference raw_at(unsigned int i);
 
-  typename std::vector<T>::const_reference raw_at(unsigned int i) const;
+  typename Data::const_reference raw_at(unsigned int i) const;
 
   I& raw_index(unsigned int i);
 
@@ -95,13 +101,13 @@ public:
 
   // FIXME: these encapsulation violations are necessary for std::pow
   // until I can figure out the right friend declaration.
-  const std::vector<T>& nude_data() const;
+  const Data& nude_data() const;
 
-  std::vector<T>& nude_data();
+  Data& nude_data();
 
-  const std::vector<I>& nude_indices() const;
+  const Indices& nude_indices() const;
 
-  std::vector<I>& nude_indices();
+  Indices& nude_indices();
 
   std::size_t runtime_index_query(index_value_type i) const;
 
@@ -127,51 +133,47 @@ public:
 
   bool boolean_test() const;
 
-  SubType<T,I> operator- () const;
+  SubType<SubTypeArgs...> operator- () const;
 
   // Since this is a dynamically allocated sparsity pattern, we can
   // increase it as needed to support e.g. operator+=
-  template <typename I2>
-  void sparsity_union (const std::vector<I2>& new_indices);
+  template <typename Indices2>
+  void sparsity_union (const Indices2& new_indices);
 
   // Since this is a dynamically allocated sparsity pattern, we can
   // decrease it when possible for efficiency
-  template <typename I2>
-  void sparsity_intersection (const std::vector<I2>& new_indices);
+  template <typename Indices2>
+  void sparsity_intersection (const Indices2& new_indices);
 
   // Since this is a dynamically allocated sparsity pattern, we can
   // decrease it when possible for efficiency
   void sparsity_trim ();
 
   // Not defineable since !0 != 0
-  // SubType<T,I> operator! () const;
+  // SubType<SubTypeArgs...> operator! () const;
 
-  template <typename T2, typename I2>
-  SubType<T,I>&
-    operator+= (const SubType<T2,I2>& a);
+  template <class... SubTypeArgs2>
+  SubType<SubTypeArgs...> & operator+=(const SubType<SubTypeArgs2...> & a);
 
-  template <typename T2, typename I2>
-  SubType<T,I>&
-    operator-= (const SubType<T2,I2>& a);
+  template <class... SubTypeArgs2>
+  SubType<SubTypeArgs...> & operator-=(const SubType<SubTypeArgs2...> & a);
 
-  template <typename T2, typename I2>
-  SubType<T,I>&
-    operator*= (const SubType<T2,I2>& a);
+  template <class... SubTypeArgs2>
+  SubType<SubTypeArgs...> & operator*=(const SubType<SubTypeArgs2...> & a);
 
-  template <typename T2, typename I2>
-  SubType<T,I>&
-    operator/= (const SubType<T2,I2>& a);
+  template <class... SubTypeArgs2>
+  SubType<SubTypeArgs...> & operator/=(const SubType<SubTypeArgs2...> & a);
 
   template <typename T2>
-  SubType<T,I>& operator*= (const T2& a);
+  SubType<SubTypeArgs...> & operator*=(const T2 & a);
 
   template <typename T2>
-  SubType<T,I>& operator/= (const T2& a);
+  SubType<SubTypeArgs...> & operator/=(const T2 & a);
 
 protected:
 
-  std::vector<T> _data;
-  std::vector<I> _indices;
+  Data _data;
+  Indices _indices;
 };
 
 
@@ -179,99 +181,132 @@ protected:
 // Non-member functions
 //
 
-template <template <typename, typename> class SubType,
-          typename B, typename IB,
-          typename T, typename I,
-          typename T2, typename I2>
-inline
-SubType<typename CompareTypes<T,T2>::supertype,
-        typename CompareTypes<IB,I2>::supertype>
-if_else (const DynamicSparseNumberBase<B, IB,SubType> & condition,
-         const DynamicSparseNumberBase<T, I, SubType> & if_true,
-         const DynamicSparseNumberBase<T2,I2,SubType> & if_false);
+template <template <class...> class SubType,
+          typename BoolData,
+          typename BoolIndices,
+          class... BoolSubTypeArgs,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename Data2,
+          typename Indices2,
+          class... SubTypeArgs2>
+inline typename SubType<SubTypeArgs...>::template rebind<
+    typename CompareTypes<typename Data::value_type, typename Data2::value_type>::supertype,
+    typename CompareTypes<typename Indices::value_type,
+                          typename Indices2::value_type>::supertype>::other
+if_else(const DynamicSparseNumberBase<BoolData, BoolIndices, SubType, BoolSubTypeArgs...> &
+            condition,
+        const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & if_true,
+        const DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> & if_false);
 
 
 
-#define DynamicSparseNumberBase_decl_op_ab(opname, atype, btype, functorname) \
-template <typename T, typename T2, typename I, typename I2> \
-inline \
-typename Symmetric##functorname##Type<atype,btype>::supertype \
-operator opname (const atype& a, const btype& b);
+#define DynamicSparseNumberBase_decl_op_ab(opname, subtypename, functorname) \
+template <class... AArgs, class... BArgs> \
+inline typename Symmetric##functorname##Type<subtypename<AArgs...>, \
+                                             subtypename<BArgs...>>::supertype \
+operator opname(const subtypename<AArgs...> & a, const subtypename<BArgs...> & b);
 
 
 #if __cplusplus >= 201103L
 
 #define DynamicSparseNumberBase_decl_op(subtypename, opname, functorname) \
-DynamicSparseNumberBase_decl_op_ab(opname, subtypename<T MacroComma I>, subtypename<T2 MacroComma I2>, functorname) \
+DynamicSparseNumberBase_decl_op_ab(opname, subtypename, functorname) \
  \
-template <typename T, typename T2, typename I, typename I2> \
-inline \
-typename Symmetric##functorname##Type<subtypename<T,I>,subtypename<T2,I2> >::supertype \
-operator opname (subtypename<T,I>&& a, \
-                 const subtypename<T2,I2>& b);
+template <class... AArgs, class... BArgs> \
+inline typename Symmetric##functorname##Type<subtypename<AArgs...>, \
+                                             subtypename<BArgs...>>::supertype \
+operator opname(subtypename<AArgs...> && a, const subtypename<BArgs...> & b);
 
 #else
 
 #define DynamicSparseNumberBase_decl_op(subtypename, opname, functorname) \
-DynamicSparseNumberBase_decl_op_ab(opname, subtypename<T MacroComma I>, subtypename<T2 MacroComma I2>, functorname)
+DynamicSparseNumberBase_decl_op_ab(opname, subtypename, functorname)
 
 #endif
 
 // Let's also allow scalar times vector.
 // Scalar plus vector, etc. remain undefined in the sparse context.
 
-template <template <typename, typename> class SubType,
-          typename T, typename T2, typename I>
-inline
-typename MultipliesType<SubType<T2,I>,T,true>::supertype
-operator * (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b);
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T>
+inline typename MultipliesType<SubType<SubTypeArgs...>, T, true>::supertype
+operator*(const T & a,
+          const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & b);
 
-template <template <typename, typename> class SubType,
-          typename T, typename T2, typename I>
-inline
-typename MultipliesType<SubType<T,I>,T2>::supertype
-operator * (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b);
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T>
+inline typename MultipliesType<SubType<SubTypeArgs...>, T>::supertype
+operator*(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a,
+          const T & b);
 
-template <template <typename, typename> class SubType,
-          typename T, typename T2, typename I>
-inline
-typename DividesType<SubType<T,I>,T2>::supertype
-operator / (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b);
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T>
+inline typename DividesType<SubType<SubTypeArgs...>, T>::supertype
+operator/(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a,
+          const T & b);
 
 #if __cplusplus >= 201103L
-template <template <typename, typename> class SubType,
-          typename T, typename T2, typename I>
-inline
-typename MultipliesType<SubType<T,I>,T2>::supertype
-operator * (DynamicSparseNumberBase<T,I,SubType>&& a, const T2& b);
 
-template <template <typename, typename> class SubType,
-          typename T, typename T2, typename I>
-inline
-typename DividesType<SubType<T,I>,T2>::supertype
-operator / (DynamicSparseNumberBase<T,I,SubType>&& a, const T2& b);
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T>
+inline typename MultipliesType<SubType<SubTypeArgs...>, T>::supertype
+operator*(DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> && a, const T & b);
+
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T>
+inline typename DividesType<SubType<SubTypeArgs...>, T>::supertype
+operator/(DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> && a, const T & b);
+
 #endif
 
-
 #define DynamicSparseNumberBase_decl_operator_binary(opname, functorname) \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I, typename I2> \
-inline \
-SubType<bool, typename CompareTypes<I,I2>::supertype> \
-operator opname (const DynamicSparseNumberBase<T,I,SubType>& a, \
-                 const DynamicSparseNumberBase<T2,I2,SubType>& b); \
+template <template <class...> class SubType, \
+          typename Data, \
+          typename Indices, \
+          class... SubTypeArgs, \
+          typename Data2, \
+          typename Indices2, \
+          class... SubTypeArgs2> \
+inline typename SubType<SubTypeArgs...>::template rebind< \
+    bool, \
+    typename CompareTypes<typename Indices::value_type, \
+                          typename Indices2::value_type>::supertype>::other \
+operator opname( \
+    const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a, \
+    const DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> & b); \
  \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
-inline \
-SubType<bool, I> \
-operator opname (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b); \
+template <template <class...> class SubType, \
+          typename Data, \
+          typename Indices, \
+          class... SubTypeArgs, \
+          typename T> \
+inline typename SubType<SubTypeArgs...>::template rebind<bool>::other operator opname( \
+    const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a, const T & b); \
  \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
-inline \
-SubType<bool, I> \
-operator opname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b);
+template <template <class...> class SubType, \
+          typename Data, \
+          typename Indices, \
+          class... SubTypeArgs, \
+          typename T> \
+inline typename SubType<SubTypeArgs...>::template rebind<bool>::other operator opname( \
+    const T & a, const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & b);
 
 // NOTE: unary functions for which 0-op-0 is true are undefined compile-time
 // errors, because there's no efficient way to have them make sense in
@@ -299,21 +334,35 @@ operator<< (std::ostream& output, const DynamicSparseNumberBase<T,I,SubType>& a)
 // CompareTypes, RawType, ValueType specializations
 
 #define DynamicSparseNumberBase_comparisons(subtypename, templatename) \
-template<typename T, typename I, bool reverseorder> \
-struct templatename<subtypename<T,I>, subtypename<T,I>, reverseorder> { \
-  typedef subtypename<T,I> supertype; \
+template <class... SubTypeArgs, bool reverseorder> \
+struct templatename<subtypename<SubTypeArgs...>, subtypename<SubTypeArgs...>, reverseorder> \
+{ \
+  typedef subtypename<SubTypeArgs...> supertype; \
 }; \
  \
-template<typename T, typename T2, typename I, typename I2, bool reverseorder> \
-struct templatename<subtypename<T,I>, subtypename<T2,I2>, reverseorder> { \
-  typedef subtypename<typename Symmetric##templatename<T, T2, reverseorder>::supertype, \
-                      typename CompareTypes<I,I2>::supertype> supertype; \
+template <class... SubTypeArgs, class... SubTypeArgs2, bool reverseorder> \
+struct templatename<subtypename<SubTypeArgs...>, subtypename<SubTypeArgs2...>, reverseorder> \
+{ \
+  typedef typename subtypename<SubTypeArgs...>::template rebind< \
+      typename Symmetric##templatename<typename subtypename<SubTypeArgs...>::T, \
+                                       typename subtypename<SubTypeArgs2...>::T, \
+                                       reverseorder>::supertype, \
+      typename CompareTypes<typename subtypename<SubTypeArgs...>::I, \
+                            typename subtypename<SubTypeArgs2...>::I>::supertype>::other \
+      supertype; \
 }; \
  \
-template<typename T, typename T2, typename I, bool reverseorder> \
-struct templatename<subtypename<T, I>, T2, reverseorder, \
-                    typename boostcopy::enable_if<BuiltinTraits<T2> >::type> { \
-  typedef subtypename<typename Symmetric##templatename<T, T2, reverseorder>::supertype, I> supertype; \
+template <typename T, class... SubTypeArgs, bool reverseorder> \
+struct templatename<subtypename<SubTypeArgs...>, \
+                    T, \
+                    reverseorder, \
+                    typename boostcopy::enable_if<BuiltinTraits<T>>::type> \
+{ \
+  typedef typename subtypename<SubTypeArgs...>::template rebind< \
+      typename Symmetric##templatename<typename subtypename<SubTypeArgs...>::T, \
+                                       T, \
+                                       reverseorder>::supertype, \
+      typename subtypename<SubTypeArgs...>::I>::other supertype; \
 }
 
 } // namespace MetaPhysicL
@@ -325,35 +374,43 @@ using MetaPhysicL::DynamicSparseNumberBase;
 using MetaPhysicL::SymmetricCompareTypes;
 
 #define DynamicSparseNumberBase_decl_std_unary(funcname) \
-template <template <typename, typename> class SubType, \
-          typename T, typename I> \
+template <template <class...> class SubType, \
+          typename Data, typename Indices, class... SubTypeArgs>  \
 inline \
-SubType<T, I> \
-funcname (const DynamicSparseNumberBase<T,I,SubType> & a);
+SubType<SubTypeArgs...> \
+funcname (const DynamicSparseNumberBase<Data,Indices,SubType,SubTypeArgs...> & a);
 
 
 #define DynamicSparseNumberBase_decl_std_binary_union(funcname) \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I, typename I2> \
+template <template <class...> class SubType, \
+          typename Data, typename Indices, class... SubTypeArgs, \
+          typename Data2, typename Indices2, class... SubTypeArgs2> \
 inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, \
-        typename CompareTypes<I,I2>::supertype> \
-funcname (const DynamicSparseNumberBase<T,I,SubType>& a, \
-          const DynamicSparseNumberBase<T2,I2,SubType>& b); \
+typename SubType<SubTypeArgs...>::template rebind< \
+      typename SymmetricCompareTypes<typename SubType<SubTypeArgs...>::T, \
+                                     typename SubType<SubTypeArgs2...>::T>::supertype, \
+      typename CompareTypes<typename SubType<SubTypeArgs...>::I, \
+                            typename SubType<SubTypeArgs2...>::I>::supertype>::other \
+funcname (const DynamicSparseNumberBase<Data,Indices,SubType,SubTypeArgs...>& a, \
+          const DynamicSparseNumberBase<Data2,Indices2,SubType,SubTypeArgs2...>& b); \
  \
  \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
+template <template <class...> class SubType, \
+          typename Data, typename Indices, class... SubTypeArgs, typename T> \
 inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b); \
+typename SubType<SubTypeArgs...>::template rebind< \
+      typename SymmetricCompareTypes<typename SubType<SubTypeArgs...>::T, T>::supertype, \
+      typename SubType<SubTypeArgs...>::I>::other \
+funcname (const DynamicSparseNumberBase<Data,Indices,SubType,SubTypeArgs...>& a, const T& b); \
  \
  \
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I> \
+template <template <class...> class SubType, \
+          typename Data, typename Indices, class... SubTypeArgs, typename T> \
 inline \
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, I> \
-funcname (const T& a, const DynamicSparseNumberBase<T2,I,SubType>& b);
+typename SubType<SubTypeArgs...>::template rebind< \
+      typename SymmetricCompareTypes<T, typename SubType<SubTypeArgs...>::T>::supertype, \
+      typename SubType<SubTypeArgs...>::I>::other \
+funcname (const T& a, const DynamicSparseNumberBase<Data,Indices,SubType,SubTypeArgs...>& b);
 
 
 #define DynamicSparseNumberBase_decl_fl_unary(funcname) \
@@ -377,12 +434,15 @@ DynamicSparseNumberBase_decl_fl_binary_union(funcname)
 
 // Pow needs its own specialization, both to avoid being confused by
 // pow<T1,T2> and because pow(x,0) isn't 0.
-template <template <typename, typename> class SubType, \
-          typename T, typename T2, typename I>
-inline
-SubType<typename SymmetricCompareTypes<T,T2>::supertype, I>
-pow (const DynamicSparseNumberBase<T,I,SubType>& a, const T2& b);
-
+template <template <class...> class SubType,
+          typename Data,
+          typename Indices,
+          class... SubTypeArgs,
+          typename T2>
+inline typename SubType<SubTypeArgs...>::template rebind<
+    typename SymmetricCompareTypes<typename Data::value_type, T2>::supertype,
+    typename Indices::value_type>::other
+pow(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a, const T2 & b);
 
 // NOTE: unary functions for which f(0) != 0 are undefined compile-time
 // errors, because there's no efficient way to have them make sense in
@@ -455,10 +515,15 @@ DynamicSparseNumberBase_decl_fl_binary_union(atan2)
 #endif // __cplusplus >= 201103L
 
 #define DynamicSparseNumberBase_decl_std_unary_complex(funcname) \
-template <template <typename, typename> class SubType, \
-          typename T, typename I> \
-inline auto \
-funcname (const DynamicSparseNumberBase<T,I,SubType> & in) -> SubType<decltype(std::funcname(T())), I>
+template <template <class...> class SubType, \
+          typename Data, \
+          typename Indices, \
+          class... SubTypeArgs> \
+inline auto funcname( \
+    const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & in) \
+    ->typename SubType<SubTypeArgs...>::template rebind<decltype(std::funcname( \
+                                                            typename Data::value_type())), \
+                                                        typename Indices::value_type>::other
 
 DynamicSparseNumberBase_decl_std_unary_complex(real);
 DynamicSparseNumberBase_decl_std_unary_complex(imag);

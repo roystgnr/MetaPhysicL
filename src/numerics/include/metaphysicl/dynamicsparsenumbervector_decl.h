@@ -29,6 +29,8 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERVECTOR_DECL_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERVECTOR_DECL_H
 
+#include <vector>
+
 #include "metaphysicl/dynamicsparsenumberbase_decl.h"
 
 namespace MetaPhysicL {
@@ -64,13 +66,13 @@ struct SumType<DynamicSparseNumberVector<S, I> > {
 
 template <typename T, typename I>
 class DynamicSparseNumberVector :
-  public DynamicSparseNumberBase<T,I,DynamicSparseNumberVector>,
+    public DynamicSparseNumberBase<std::vector<T>,std::vector<I>,DynamicSparseNumberVector,T,I>,
   public safe_bool<DynamicSparseNumberVector<T,I> >
 {
 public:
-  template <typename T2>
+  template <typename T2, typename I2 = I>
   struct rebind {
-    typedef DynamicSparseNumberVector<T2, I> other;
+    typedef DynamicSparseNumberVector<T2, I2> other;
   };
 
   DynamicSparseNumberVector();
@@ -95,7 +97,10 @@ public:
 #endif
 
   template <typename T2, typename I2>
-  DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> src);
+  DynamicSparseNumberVector(const DynamicSparseNumberVector<T2, I2> & src);
+
+  template <typename T2, typename I2>
+  DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> && src);
 
   template <typename T2, typename I2>
   typename MultipliesType<T,T2>::supertype
