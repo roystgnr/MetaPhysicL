@@ -153,13 +153,9 @@ template <typename T,
           class D,
           std::size_t N,
           typename DT,
-          template <std::size_t, typename>
-          class D2,
-          typename T2,
-          typename DT2,
-          typename std::enable_if<ScalarTraits<T>::value && ScalarTraits<T2>::value, int>::type = 0>
+          typename std::enable_if<ScalarTraits<T>::value, int>::type = 0>
 inline void
-derivative_multiply_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D2<N, DT2>> & in)
+derivative_multiply_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T, D<N, DT>> & in)
 {
   auto & din = in.derivatives();
   auto & dout = out.derivatives();
@@ -170,11 +166,25 @@ derivative_multiply_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D
     dout[i] = vin * dout[i] + vout * din[i];
 }
 
+template <typename T, typename D>
+inline void
+derivative_multiply_helper(DualNumber<T, D> & out, const DualNumber<T, D> & in)
+{
+  if (&in == &out)
+    out.derivatives() = out.derivatives() * in.value() + out.value() * in.derivatives();
+  else
+  {
+    out.derivatives() *= in.value();
+    out.derivatives() += out.value() * in.derivatives();
+  }
+}
+
 template <typename T, typename D, typename T2, typename D2>
 inline void
 derivative_multiply_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
 {
-  out.derivatives() = out.derivatives() * in.value() + out.value() * in.derivatives();
+  out.derivatives() *= in.value();
+  out.derivatives() += out.value() * in.derivatives();
 }
 
 template <typename T,
@@ -182,13 +192,9 @@ template <typename T,
           class D,
           std::size_t N,
           typename DT,
-          template <std::size_t, typename>
-          class D2,
-          typename T2,
-          typename DT2,
-          typename std::enable_if<ScalarTraits<T>::value && ScalarTraits<T2>::value, int>::type = 0>
+          typename std::enable_if<ScalarTraits<T>::value, int>::type = 0>
 inline void
-derivative_division_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D2<N, DT2>> & in)
+derivative_division_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T, D<N, DT>> & in)
 {
   auto & din = in.derivatives();
   auto & dout = out.derivatives();
@@ -199,12 +205,26 @@ derivative_division_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T2, D
     dout[i] = dout[i] / vin - din[i] * vout / (vin * vin);
 }
 
+template <typename T, typename D>
+inline void
+derivative_division_helper(DualNumber<T, D> & out, const DualNumber<T, D> & in)
+{
+  if (&in == &out)
+    out.derivatives() =
+      out.derivatives() / in.value() - out.value() / (in.value() * in.value()) * in.derivatives();
+  else
+  {
+    out.derivatives() /= in.value();
+    out.derivatives() -= out.value()/(in.value()*in.value()) * in.derivatives();
+  }
+}
+
 template <typename T, typename D, typename T2, typename D2>
 inline void
 derivative_division_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
 {
-  out.derivatives() =
-      out.derivatives() / in.value() - in.derivatives() * out.value() / (in.value() * in.value());
+  out.derivatives() /= in.value();
+  out.derivatives() -= out.value()/(in.value()*in.value()) * in.derivatives();
 }
 
 // FIXME: these operators currently do automatic type promotion when
