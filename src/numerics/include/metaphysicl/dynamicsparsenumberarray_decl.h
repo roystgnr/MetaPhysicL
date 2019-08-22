@@ -29,6 +29,8 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERARRAY_DECL_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERARRAY_DECL_H
 
+#include <vector>
+
 #include "metaphysicl/dynamicsparsenumberbase_decl.h"
 
 namespace MetaPhysicL {
@@ -69,13 +71,14 @@ struct SumType<DynamicSparseNumberArray<S, I> > {
 
 template <typename T, typename I>
 class DynamicSparseNumberArray :
-  public DynamicSparseNumberBase<T,I,DynamicSparseNumberArray>,
+    public DynamicSparseNumberBase<std::vector<T>,std::vector<I>,
+                                   DynamicSparseNumberArray,T,I>,
   public safe_bool<DynamicSparseNumberArray<T,I> >
 {
 public:
-  template <typename T2>
+  template <typename T2, typename I2 = I>
   struct rebind {
-    typedef DynamicSparseNumberArray<T2, I> other;
+    typedef DynamicSparseNumberArray<T2, I2> other;
   };
 
   DynamicSparseNumberArray();
@@ -100,7 +103,10 @@ public:
 #endif
 
   template <typename T2, typename I2>
-  DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src);
+  DynamicSparseNumberArray(const DynamicSparseNumberArray<T2, I2> & src);
+
+  template <typename T2, typename I2>
+  DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> && src);
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray

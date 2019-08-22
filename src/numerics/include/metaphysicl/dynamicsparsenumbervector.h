@@ -63,8 +63,14 @@ DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const T2& metaphysicl_
 template <typename T, typename I>
 template <typename T2, typename I2>
 inline
-DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> src) :
-  DynamicSparseNumberBase<T,I,MetaPhysicL::DynamicSparseNumberVector>(src) {}
+DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(const DynamicSparseNumberVector<T2, I2> & src) :
+    DynamicSparseNumberBase<std::vector<T>,std::vector<I>,MetaPhysicL::DynamicSparseNumberVector,T,I>(src) {}
+
+template <typename T, typename I>
+template <typename T2, typename I2>
+inline
+DynamicSparseNumberVector<T,I>::DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> && src) :
+  DynamicSparseNumberBase<std::vector<T>,std::vector<I>,MetaPhysicL::DynamicSparseNumberVector,T,I>(src) {}
 
 
 template <typename T, typename I>

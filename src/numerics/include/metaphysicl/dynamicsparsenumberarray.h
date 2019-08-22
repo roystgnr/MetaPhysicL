@@ -66,8 +66,14 @@ DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(const T2& val) {
 template <typename T, typename I>
 template <typename T2, typename I2>
 inline
-DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> src) :
-  DynamicSparseNumberBase<T,I,MetaPhysicL::DynamicSparseNumberArray>(src) {}
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(const DynamicSparseNumberArray<T2, I2> & src) :
+    DynamicSparseNumberBase<std::vector<T>,std::vector<I>,MetaPhysicL::DynamicSparseNumberArray,T,I>(src) {}
+
+template <typename T, typename I>
+template <typename T2, typename I2>
+inline
+DynamicSparseNumberArray<T,I>::DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> && src) :
+    DynamicSparseNumberBase<std::vector<T>,std::vector<I>,MetaPhysicL::DynamicSparseNumberArray,T,I>(src) {}
 
 
 template <typename T, typename I>
