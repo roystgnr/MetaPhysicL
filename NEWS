@@ -1,3 +1,9 @@
+0.5.2 -> 0.6.0
+  * Implement SemiDynamicSparseNumberArray which leverages sparse functionality
+    like DynamicSparseNumberArray/Vector but which uses static std::array
+    background storage
+  * Optimization for DualNumber product and quotient rules
+
 0.5.1 -> 0.5.2
   * Defined CompareTypes between T and std::complex<T>
 
