@@ -1083,7 +1083,7 @@ operator opname(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArg
     const IS index_out = *index_out_it; \
     const TS data_a  = (index_a_it == a.nude_indices().end()) ? 0: *data_a_it; \
     const TS data_b  = (index_b_it == b.nude_indices().end()) ? 0: *data_b_it; \
-    typename std::vector<TS>::reference data_out = *data_out_it; \
+    TS & data_out = *data_out_it; \
  \
     if (index_a == index_out) { \
       if (index_b == index_out) { \
@@ -1272,7 +1272,7 @@ funcname(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> &
     const IS index_out = *index_out_it; \
     const TS data_a  = (index_a_it == a.nude_indices.end()) ? 0: *data_a_it; \
     const TS data_b  = (index_b_it == b.nude_indices.end()) ? 0: *data_b_it; \
-    typename std::vector<TS>::reference data_out = *data_out_it; \
+    TS & data_out = *data_out_it; \
  \
     if (index_a == index_out) { \
       if (index_b == index_out) { \
