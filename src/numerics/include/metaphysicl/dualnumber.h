@@ -34,6 +34,8 @@
 
 namespace MetaPhysicL {
 
+static bool do_derivatives = true;
+
 template <typename T, typename D>
 class NotADuckDualNumber;
 
@@ -79,6 +81,9 @@ DualNumber<T,D> &
 DualNumber<T,D>::operator=(const DualNumber<T2,D2> & dn)
 {
   _val = dn.value();
+
+  if (!::MetaPhysicL::do_derivatives)
+    return *this;
   _deriv = dn.derivatives();
   return *this;
 }
@@ -90,6 +95,8 @@ DualNumber<T,D> &
 DualNumber<T,D>::operator=(const NotADuckDualNumber<T2,D2> & nd_dn)
 {
   _val = nd_dn.value();
+  if (!::MetaPhysicL::do_derivatives)
+    return *this;
   _deriv = nd_dn.derivatives();
   return *this;
 }
@@ -99,6 +106,8 @@ template <typename T2, typename D2>
 inline
 DualNumber<T,D>::DualNumber(const DualNumberSurrogate<T2,D2> & dns) : _val(dns.value())
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   auto size = dns.derivatives().size();
   for (decltype(size) i = 0; i < size; ++i)
     _deriv[i] = *dns.derivatives()[i];
@@ -111,6 +120,8 @@ DualNumber<T,D> &
 DualNumber<T,D>::operator=(const DualNumberSurrogate<T2,D2> & dns)
 {
   _val = dns.value();
+  if (!::MetaPhysicL::do_derivatives)
+    return *this;
   auto size = dns.derivatives().size();
   for (decltype(size) i = 0; i < size; ++i)
     _deriv[i] = *dns.derivatives()[i];
@@ -124,6 +135,8 @@ DualNumber<T,D> &
 DualNumber<T,D>::operator=(const T2 & scalar)
 {
   _val = scalar;
+  if (!::MetaPhysicL::do_derivatives)
+    return *this;
   _deriv = 0;
   return *this;
 }
@@ -157,6 +170,8 @@ template <typename T,
 inline void
 derivative_multiply_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T, D<N, DT>> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   auto & din = in.derivatives();
   auto & dout = out.derivatives();
   const auto vin = in.value();
@@ -170,6 +185,8 @@ template <typename T, typename D>
 inline void
 derivative_multiply_helper(DualNumber<T, D> & out, const DualNumber<T, D> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   if (&in == &out)
     out.derivatives() = out.derivatives() * in.value() + out.value() * in.derivatives();
   else
@@ -183,6 +200,8 @@ template <typename T, typename D, typename T2, typename D2>
 inline void
 derivative_multiply_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   out.derivatives() *= in.value();
   out.derivatives() += out.value() * in.derivatives();
 }
@@ -196,6 +215,8 @@ template <typename T,
 inline void
 derivative_division_helper(DualNumber<T, D<N, DT>> & out, const DualNumber<T, D<N, DT>> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   auto & din = in.derivatives();
   auto & dout = out.derivatives();
   const auto vin = in.value();
@@ -209,6 +230,8 @@ template <typename T, typename D>
 inline void
 derivative_division_helper(DualNumber<T, D> & out, const DualNumber<T, D> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   if (&in == &out)
     out.derivatives() =
       out.derivatives() / in.value() - out.value() / (in.value() * in.value()) * in.derivatives();
@@ -223,6 +246,8 @@ template <typename T, typename D, typename T2, typename D2>
 inline void
 derivative_division_helper(DualNumber<T, D> & out, const DualNumber<T2, D2> & in)
 {
+  if (!::MetaPhysicL::do_derivatives)
+    return;
   out.derivatives() /= in.value();
   out.derivatives() -= out.value()/(in.value()*in.value()) * in.derivatives();
 }
@@ -432,8 +457,11 @@ DualNumber<T,D> funcname (const DualNumber<T,D> & in) \
 { \
   DualNumber<T,D> returnval = in; \
   T funcval = std::funcname(in.value()); \
-  precalc; \
-  returnval.derivatives() *= derivative; \
+  if (::MetaPhysicL::do_derivatives) \
+  { \
+    precalc; \
+    returnval.derivatives() *= derivative; \
+  } \
   returnval.value() = funcval; \
   return returnval; \
 } \
@@ -443,8 +471,11 @@ inline \
 DualNumber<T,D> funcname (DualNumber<T,D> && in) \
 { \
   T funcval = std::funcname(in.value()); \
-  precalc; \
-  in.derivatives() *= derivative; \
+  if (::MetaPhysicL::do_derivatives) \
+  { \
+    precalc; \
+    in.derivatives() *= derivative; \
+  } \
   in.value() = funcval; \
   return std::move(in); \
 }
@@ -472,8 +503,11 @@ inline \
 DualNumber<T,D> funcname (DualNumber<T,D> in) \
 { \
   T funcval = std::funcname(in.value()); \
-  precalc; \
-  in.derivatives() *= derivative; \
+  if (::MetaPhysicL::do_derivatives) \
+  { \
+    precalc; \
+    in.derivatives() *= derivative; \
+  } \
   in.value() = funcval; \
   return std::move(in); \
 }
@@ -636,6 +670,8 @@ funcname (const DualNumber<T,D>& a, const DualNumber<T2,D2>& b) \
   typedef typename CompareTypes<DualNumber<T,D>,DualNumber<T2,D2> >::supertype type; \
  \
   TS funcval = std::funcname(a.value(), b.value()); \
+  if (!::MetaPhysicL::do_derivatives) \
+    return type(funcval, 0); \
   return type(funcval, derivative); \
 } \
  \
@@ -645,6 +681,8 @@ DualNumber<T,D> \
 funcname (const DualNumber<T,D>& a, const DualNumber<T,D>& b) \
 { \
   T funcval = std::funcname(a.value(), b.value()); \
+  if (!::MetaPhysicL::do_derivatives) \
+    return DualNumber<T,D>(funcval, 0); \
   return DualNumber<T,D>(funcval, derivative); \
 } \
  \
