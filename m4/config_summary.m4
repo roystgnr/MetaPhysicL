@@ -23,7 +23,7 @@ echo Package version............... : $PACKAGE-$VERSION
 echo
 echo C++ compiler.................. : $CXX
 echo C++ compiler flags............ : $CXXFLAGS
-echo Install dir................... : $prefix 
+echo Install dir................... : $prefix
 echo Build user.................... : $USER
 echo Build host.................... : $BUILD_HOST
 echo Configure date................ : $BUILD_DATE
@@ -45,6 +45,18 @@ if test "x$HAVE_VEXCL" = "x1"; then
   echo '  'VEXCL_LIBS.................. : $VEXCL_LIBS
 else
   echo '  'VEXCL....................... : no
+fi
+if test "x$HAVE_TIMPI" = "x1"; then
+  echo '  'TIMPI....................... : yes
+  echo '  'TIMPI_CPPFLAGS.............. : $TIMPI_CPPFLAGS
+  if test "x$HAVE_TIMPI_LIB" = "x1"; then
+    echo '  'TIMPI_LIB................... : yes
+    echo '  'TIMPI_LIBS.................. : $TIMPI_LIBS
+  else
+    echo '  'TIMPI_LIB................... : no
+  fi
+else
+  echo '  'TIMPI....................... : no
 fi
 echo
 echo '-------------------------------------------------------------------------------'

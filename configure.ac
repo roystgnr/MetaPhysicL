@@ -114,6 +114,9 @@ if (test x$HAVE_VEXCL = x1); then
   antioch_optional_test_LIBS="$VEXCL_LIBS $antioch_optional_test_LIBS"
 fi
 
+dnl Optional check for TIMPI
+AX_PATH_TIMPI(0.0.0, no)
+
 dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
