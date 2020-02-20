@@ -80,6 +80,8 @@ public:
   };
 
   NumberArray() = default;
+  NumberArray(const NumberArray &) = default;
+  NumberArray & operator=(const NumberArray &) = default;
 
   NumberArray(const T& val)
     { std::fill(_data, _data+N, val); }
@@ -88,7 +90,7 @@ public:
     { std::copy(vals, vals+N, _data); }
 
   template <typename T2>
-  NumberArray(NumberArray<N, T2> src)
+  NumberArray(const NumberArray<N, T2> & src)
     { if (N) std::copy(&src[0], &src[0]+N, _data); }
 
   template <typename T2>
