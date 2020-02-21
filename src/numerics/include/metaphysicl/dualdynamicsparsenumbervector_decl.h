@@ -92,9 +92,9 @@ gradient(const DynamicSparseNumberVector<T, I>& a);
 // DualNumber is subordinate to DynamicSparseNumberVector
 
 #define DualDynamicSparseNumberVector_comparisons(templatename) \
-template<typename T, typename T2, typename D, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberVector<T2, I>, DualNumber<T, D>, reverseorder> { \
-  typedef DynamicSparseNumberVector<typename Symmetric##templatename<T2,DualNumber<T, D>,reverseorder>::supertype, I> supertype; \
+template<typename T, typename T2, typename D, typename I, bool asd, bool reverseorder> \
+struct templatename<DynamicSparseNumberVector<T2, I>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef DynamicSparseNumberVector<typename Symmetric##templatename<T2,DualNumber<T, D, asd>,reverseorder>::supertype, I> supertype; \
 }
 
 DualDynamicSparseNumberVector_comparisons(CompareTypes);

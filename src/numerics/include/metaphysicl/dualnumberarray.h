@@ -134,9 +134,9 @@ gradient(const NumberArray<size, T>& a)
 // DualNumber is subordinate to NumberArray
 
 #define DualNumberArray_comparisons(templatename) \
-template<typename T, typename D, std::size_t size, typename T2, bool reverseorder> \
-struct templatename<NumberArray<size, T2>, DualNumber<T, D>, reverseorder> { \
-  typedef NumberArray<size, typename Symmetric##templatename<DualNumber<T, D>, T2, reverseorder>::supertype> supertype; \
+template<typename T, typename D, std::size_t size, typename T2, bool asd, bool reverseorder> \
+struct templatename<NumberArray<size, T2>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef NumberArray<size, typename Symmetric##templatename<DualNumber<T, D, asd>, T2, reverseorder>::supertype> supertype; \
 }
 
 DualNumberArray_comparisons(CompareTypes);

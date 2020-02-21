@@ -1,11 +1,10 @@
 #ifndef METAPHYSICL_DUALNUMBER_SURROGATE_DECL_H
 #define METAPHYSICL_DUALNUMBER_SURROGATE_DECL_H
 
+#include "metaphysicl/dualnumber_forward.h"
+
 namespace MetaPhysicL
 {
-
-template <typename T, typename D>
-class DualNumber;
 
 // Surrogate structure that refers/points to a component of a DualNumber, e.g. it might correspond
 // to the ij'th component of a DualNumber<TypeTensor<T>, N>

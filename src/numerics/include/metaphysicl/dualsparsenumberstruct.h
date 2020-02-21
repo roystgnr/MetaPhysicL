@@ -202,7 +202,7 @@ inline
 typename DerivativeType<typename MetaPhysicL::ContainerSupertype<IndexSet>::type>::type
 divergence(const SparseNumberStruct<IndexSet>& a)
 {
-  typedef typename 
+  typedef typename
     DerivativeType<
       typename MetaPhysicL::ContainerSupertype<IndexSet>::type
     >::type
@@ -268,25 +268,25 @@ gradient(const SparseNumberStruct<IndexSet>& a)
 
 
 #define DualSparseNumberStruct_comparisons(templatename) \
-template<typename T, typename D, typename IndexSet, bool reverseorder> \
-struct templatename<SparseNumberStruct<IndexSet>, DualNumber<T, D>, reverseorder> { \
-  typedef SparseNumberStruct<typename Symmetric##templatename<IndexSet, DualNumber<T, D>, reverseorder>::supertype> supertype; \
+template<typename T, typename D, typename IndexSet, bool asd, bool reverseorder> \
+struct templatename<SparseNumberStruct<IndexSet>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef SparseNumberStruct<typename Symmetric##templatename<IndexSet, DualNumber<T, D, asd>, reverseorder>::supertype> supertype; \
 }; \
  \
-template<typename T, typename D, bool reverseorder> \
-struct templatename<DualNumber<T, D>, MetaPhysicL::NullType, reverseorder> { \
-  typedef DualNumber<T, D> supertype; \
+template<typename T, typename D, bool asd, bool reverseorder> \
+struct templatename<DualNumber<T, D, asd>, MetaPhysicL::NullType, reverseorder> { \
+  typedef DualNumber<T, D, asd> supertype; \
 }; \
  \
-template<typename T, typename D, typename HeadType, typename TailSet, typename Comparison, bool reverseorder> \
-struct templatename<MetaPhysicL::Container<HeadType,TailSet,Comparison>, DualNumber<T,D>, reverseorder> { \
+template<typename T, typename D, typename HeadType, typename TailSet, typename Comparison, bool asd, bool reverseorder> \
+struct templatename<MetaPhysicL::Container<HeadType,TailSet,Comparison>, DualNumber<T,D,asd>, reverseorder> { \
   typedef typename \
-    MetaPhysicL::Container<HeadType,TailSet,Comparison>::template UpgradeType<DualNumber<T, D> >::type \
+    MetaPhysicL::Container<HeadType,TailSet,Comparison>::template UpgradeType<DualNumber<T, D, asd> >::type \
       supertype; \
 }; \
  \
-template<typename NullHeadType, typename T, typename D, bool reverseorder> \
-struct templatename<MetaPhysicL::NullContainer<NullHeadType>, DualNumber<T, D>, reverseorder> { \
+template<typename NullHeadType, typename T, typename D, bool asd, bool reverseorder> \
+struct templatename<MetaPhysicL::NullContainer<NullHeadType>, DualNumber<T, D, asd>, reverseorder> { \
   typedef MetaPhysicL::NullContainer<NullHeadType> supertype; \
 }
 
