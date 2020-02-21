@@ -21,37 +21,17 @@
 //
 //-----------------------------------------------------------------------el-
 //
-// $Id: core.h 37197 2013-02-21 05:49:09Z roystgnr $
+// $Id$
 //
 //--------------------------------------------------------------------------
 
-#ifndef METAPHYSICL_DUALSHADOW_H
-#define METAPHYSICL_DUALSHADOW_H
+#ifndef METAPHYSICL_DUALNUMBER_FORWARD_H
+#define METAPHYSICL_DUALNUMBER_FORWARD_H
 
-// Order of declarations is important here?
-#include "metaphysicl/shadownumber.h"
-#include "metaphysicl/dualnumber.h"
-
-// ShadowNumber is subordinate to DualNumber:
-
-#define DualShadow_comparisons(templatename) \
-template<typename T, typename D, typename T2, typename S, bool asd, bool reverseorder> \
-struct templatename<DualNumber<T, D, asd>, ShadowNumber<T2, S>, reverseorder> { \
-  typedef DualNumber<typename Symmetric##templatename<T, ShadowNumber<T2, S>, reverseorder>::supertype, \
-                     typename Symmetric##templatename<D, ShadowNumber<T2, S>, reverseorder>::supertype, \
-                     asd> supertype; \
+namespace MetaPhysicL
+{
+template <typename T, typename D = T, bool asd = false>
+class DualNumber;
 }
 
-namespace MetaPhysicL {
-
-DualShadow_comparisons(CompareTypes);
-DualShadow_comparisons(PlusType);
-DualShadow_comparisons(MinusType);
-DualShadow_comparisons(MultipliesType);
-DualShadow_comparisons(DividesType);
-DualShadow_comparisons(AndType);
-DualShadow_comparisons(OrType);
-
-} // namespace MetaPhysicL
-
-#endif // METAPHYSICL_DUALSHADOW_H
+#endif

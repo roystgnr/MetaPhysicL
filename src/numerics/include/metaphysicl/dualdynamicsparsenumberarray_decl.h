@@ -92,9 +92,9 @@ gradient(const DynamicSparseNumberArray<T, I>& a);
 // DualNumber is subordinate to DynamicSparseNumberArray
 
 #define DualDynamicSparseNumberArray_comparisons(templatename) \
-template<typename T, typename T2, typename D, typename I, bool reverseorder> \
-struct templatename<DynamicSparseNumberArray<T2, I>, DualNumber<T, D>, reverseorder> { \
-  typedef DynamicSparseNumberArray<typename Symmetric##templatename<T2,DualNumber<T, D>,reverseorder>::supertype, I> supertype; \
+template<typename T, typename T2, typename D, typename I, bool asd, bool reverseorder> \
+struct templatename<DynamicSparseNumberArray<T2, I>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef DynamicSparseNumberArray<typename Symmetric##templatename<T2,DualNumber<T, D, asd>,reverseorder>::supertype, I> supertype; \
 }
 
 DualDynamicSparseNumberArray_comparisons(CompareTypes);

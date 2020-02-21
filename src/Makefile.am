@@ -39,6 +39,7 @@ include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumbervector.h
 include_HEADERS += numerics/include/metaphysicl/dualdynamicsparsenumbervector_decl.h
 include_HEADERS += numerics/include/metaphysicl/dualexpression.h
 include_HEADERS += numerics/include/metaphysicl/dualnamedarray.h
+include_HEADERS += numerics/include/metaphysicl/dualnumber_forward.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber.h
 include_HEADERS += numerics/include/metaphysicl/dualnumber_decl.h
 include_HEADERS += numerics/include/metaphysicl/nddualnumber.h

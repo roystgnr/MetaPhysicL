@@ -105,7 +105,7 @@ struct DerivativeOf<NumberVector<size, T>, derivativeindex>
     typename DerivativeType<NumberVector<size, T> >::type returnval;
     for (unsigned int i=0; i != size; ++i)
       returnval[i] = DerivativeOf<T,derivativeindex>::derivative(a[i]);
-  
+
     return returnval;
   }
 };
@@ -164,9 +164,9 @@ gradient(const NumberVector<size, T>& a)
 // DualNumber is subordinate to NumberVector
 
 #define DualNumberVector_comparisons(templatename) \
-template<typename T, typename D, std::size_t size, typename T2, bool reverseorder> \
-struct templatename<NumberVector<size, T2>, DualNumber<T, D>, reverseorder> { \
-  typedef NumberVector<size, typename Symmetric##templatename<DualNumber<T, D>, T2, reverseorder>::supertype> supertype; \
+template<typename T, typename D, std::size_t size, typename T2, bool asd, bool reverseorder> \
+struct templatename<NumberVector<size, T2>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef NumberVector<size, typename Symmetric##templatename<DualNumber<T, D, asd>, T2, reverseorder>::supertype> supertype; \
 }
 
 DualNumberVector_comparisons(CompareTypes);

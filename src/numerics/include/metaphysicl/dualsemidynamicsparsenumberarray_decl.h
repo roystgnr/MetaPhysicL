@@ -73,11 +73,17 @@ gradient(const SemiDynamicSparseNumberArray<T, I, N> & a);
 // DualNumber is subordinate to SemiDynamicSparseNumberArray
 
 #define DualSemiDynamicSparseNumberArray_comparisons(templatename)                                 \
-  template <typename T, typename T2, typename D, typename I, typename N, bool reverseorder>        \
-  struct templatename<SemiDynamicSparseNumberArray<T2, I, N>, DualNumber<T, D>, reverseorder>      \
+  template <typename T,                                                                            \
+            typename T2,                                                                           \
+            typename D,                                                                            \
+            typename I,                                                                            \
+            typename N,                                                                            \
+            bool asd,                                                                              \
+            bool reverseorder>                                                                     \
+  struct templatename<SemiDynamicSparseNumberArray<T2, I, N>, DualNumber<T, D, asd>, reverseorder> \
   {                                                                                                \
     typedef SemiDynamicSparseNumberArray<                                                          \
-        typename Symmetric##templatename<T2, DualNumber<T, D>, reverseorder>::supertype,           \
+        typename Symmetric##templatename<T2, DualNumber<T, D, asd>, reverseorder>::supertype,      \
         I,                                                                                         \
         N>                                                                                         \
         supertype;                                                                                 \

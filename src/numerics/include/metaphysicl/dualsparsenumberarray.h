@@ -105,7 +105,7 @@ struct DivergenceArrayFunctor {
   DivergenceArrayFunctor
     (const T* in, typename DerivativeType<T>::type& out) :
       _in(in), _out(out) { out = 0; }
-    
+
   template <typename ValueType>
   inline void operator()() const {
     const unsigned int
@@ -171,9 +171,9 @@ gradient(const SparseNumberArray<T, IndexSet>& a)
 // DualNumber is subordinate to SparseNumberArray
 
 #define DualSparseNumberArray_comparisons(templatename) \
-template<typename T, typename T2, typename D, typename IndexSet, bool reverseorder> \
-struct templatename<SparseNumberArray<T2, IndexSet>, DualNumber<T, D>, reverseorder> { \
-  typedef SparseNumberArray<typename Symmetric##templatename<T2,DualNumber<T, D>,reverseorder>::supertype, IndexSet> supertype; \
+template<typename T, typename T2, typename D, typename IndexSet, bool asd, bool reverseorder> \
+struct templatename<SparseNumberArray<T2, IndexSet>, DualNumber<T, D, asd>, reverseorder> { \
+  typedef SparseNumberArray<typename Symmetric##templatename<T2,DualNumber<T, D, asd>,reverseorder>::supertype, IndexSet> supertype; \
 }
 
 DualSparseNumberArray_comparisons(CompareTypes);
