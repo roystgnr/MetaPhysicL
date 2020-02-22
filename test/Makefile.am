@@ -37,6 +37,12 @@ if CXX11_ENABLED
   check_PROGRAMS += physics_unit
 endif
 
+if TIMPI_ENABLED
+if TIMPI_LIB_ENABLED
+  check_PROGRAMS += parallel_unit
+endif
+endif
+
 AM_CPPFLAGS  =
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
@@ -111,8 +117,9 @@ vector_navier_unit_SOURCES += testing.h
 vector_pde_unit_SOURCES =  vector_pde_unit.C
 vector_pde_unit_SOURCES += pde_unit.h
 vector_pde_unit_SOURCES += testing.h
+parallel_unit_SOURCES = parallel_unit.C
 
-#Define tests to actually be run
+#Define tests to actually be run. TESTS is a special automake variable
 TESTS  =
 TESTS += compare_types_unit
 TESTS += derivs_unit
@@ -169,6 +176,7 @@ if TIMPI_ENABLED
   AM_CPPFLAGS += $(TIMPI_CPPFLAGS)
 if TIMPI_LIB_ENABLED
   LIBS += $(TIMPI_LIBS)
+  TESTS += parallel_unit
 endif
 endif
 
