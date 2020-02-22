@@ -42,7 +42,7 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
-AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
+AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h, metaphysicl_config.h
 
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
