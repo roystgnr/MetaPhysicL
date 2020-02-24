@@ -35,6 +35,9 @@
 // C++
 #include <typeinfo> // std::bad_cast
 
+namespace MetaPhysicL
+{
+
 // cast_ref and cast_ptr do a dynamic cast and assert the result, if
 // we're debugging, but they just do a faster static cast if we're
 // built with NDEBUG.
@@ -89,5 +92,24 @@ inline Tnew cast_ptr (Told * oldvar)
   return(static_cast<Tnew>(oldvar));
 #endif
 }
+
+
+// cast_int asserts that the value of the castee is within the
+// bounds which are exactly representable by the output type, if we're
+// in debug or development modes, but it just does a faster static
+// cast if we're in optimized mode.
+//
+// Use these casts when you're certain that a cast will succeed in
+// correct code but you want to be able to double-check.
+template <typename Tnew, typename Told>
+inline Tnew cast_int (Told oldvar)
+{
+  metaphysicl_assert_equal_to
+    (oldvar, static_cast<Told>(static_cast<Tnew>(oldvar)));
+
+  return(static_cast<Tnew>(oldvar));
+}
+
+} // namespace MetaPhysicL
 
 #endif // METAPHYSICL_CAST_H
