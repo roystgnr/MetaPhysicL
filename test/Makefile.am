@@ -37,12 +37,18 @@ if CXX11_ENABLED
   check_PROGRAMS += physics_unit
 endif
 
+if TIMPI_ENABLED
+if TIMPI_LIB_ENABLED
+  check_PROGRAMS += parallel_unit
+endif
+endif
+
 AM_CPPFLAGS  =
 AM_CPPFLAGS += -I$(top_srcdir)/src/core/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
-AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
+AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h, metaphysicl_config.h
 
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
@@ -111,8 +117,9 @@ vector_navier_unit_SOURCES += testing.h
 vector_pde_unit_SOURCES =  vector_pde_unit.C
 vector_pde_unit_SOURCES += pde_unit.h
 vector_pde_unit_SOURCES += testing.h
+parallel_unit_SOURCES = parallel_unit.C
 
-#Define tests to actually be run
+#Define tests to actually be run. TESTS is a special automake variable
 TESTS  =
 TESTS += compare_types_unit
 TESTS += derivs_unit
@@ -163,6 +170,14 @@ if VEXCL_ENABLED
   AM_CPPFLAGS += $(VEXCL_CPPFLAGS)
   AM_LDFLAGS  += $(VEXCL_LDFLAGS)
   LIBS        += $(VEXCL_LIBS)
+endif
+
+if TIMPI_ENABLED
+  AM_CPPFLAGS += $(TIMPI_CPPFLAGS)
+if TIMPI_LIB_ENABLED
+  LIBS += $(TIMPI_LIBS)
+  TESTS += parallel_unit
+endif
 endif
 
 CLEANFILES =

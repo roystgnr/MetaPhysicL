@@ -4,7 +4,7 @@
 # software. Intended for use with autotools based projects. In
 # particular, if a ".in" version of an input src file exists, the .in
 # version will be updated in favor of named src file.
-# 
+#
 # Originally: August 2010 (ks)
 # --------------------------------------------------------------------
 # $Id: update_license.pl 29234 2012-04-05 16:38:55Z karl $
@@ -39,7 +39,7 @@ if (@opt_S) {
     @top_srcdir = @opt_S;
  }
 
-# Verify license file 
+# Verify license file
 # existence and cache contents.
 
 if ( ! -s $license_file ) {
@@ -64,7 +64,7 @@ if ($opt_c2f_comment) {
     my @license_tmp=();
 
     foreach $line (@license_text) {
-	if ($line =~ s/^\/\//!!/) { 
+	if ($line =~ s/^\/\//!!/) {
 	    push(@license_tmp,$line);
 	} else {
 	    push(@license_tmp,$line);
@@ -81,7 +81,7 @@ if ($opt_c2sh_comment) {
     my @license_tmp=();
 
     foreach $line (@license_text) {
-	if ($line =~ s/^\/\//#/) { 
+	if ($line =~ s/^\/\//#/) {
 	    push(@license_tmp,$line);
 	} else {
 	    push(@license_tmp,$line);
@@ -97,7 +97,7 @@ if ($opt_c2sh_comment) {
 
 my $found_delim = 0;
 
-while (@ARGV) 
+while (@ARGV)
 {
     $found_delim = 0;
 
@@ -107,11 +107,15 @@ while (@ARGV)
 	$infile_test = "@top_srcdir/$infile_test";
     }
 
-    # autoconf support - look for ".in" version of the src file
+    # autoconf support - look for "tmp.in" or ".in" version of the src file
 
     if ( -e "$infile_test.in" ) {
 	$infile = "$infile_test.in";
-    } else {
+    }
+    elsif ( -e "$infile_test.tmp.in") {
+        $infile = "$infile_test.tmp.in";
+    }
+    else {
 	$infile = "$infile_test";
     }
 
@@ -157,9 +161,3 @@ while (@ARGV)
 	unlink($tmpfile) || die "Unable to remove temporary file\n";
     }
 }
-
-
-
-
-
-

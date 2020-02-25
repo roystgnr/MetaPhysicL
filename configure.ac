@@ -5,9 +5,9 @@ AC_PREREQ(2.61)
 AC_INIT(metaphysicl, 0.6.0, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_CONFIG_HEADER(metaphysicl_config.h.tmp)
+AC_CONFIG_HEADER(src/utilities/include/metaphysicl/metaphysicl_config.h.tmp)
 dnl Prefixes everything in the temporary file with METAPHYSICL_
-AX_PREFIX_CONFIG_H(metaphysicl_config.h,METAPHYSICL,metaphysicl_config.h.tmp)
+AX_PREFIX_CONFIG_H(src/utilities/include/metaphysicl/metaphysicl_config.h,METAPHYSICL,src/utilities/include/metaphysicl/metaphysicl_config.h.tmp)
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CANONICAL_TARGET()
@@ -113,6 +113,9 @@ if (test x$HAVE_VEXCL = x1); then
   antioch_optional_test_LDFLAGS="$VEXCL_LDFLAGS $antioch_optional_test_LDFLAGS"
   antioch_optional_test_LIBS="$VEXCL_LIBS $antioch_optional_test_LIBS"
 fi
+
+dnl Optional check for TIMPI
+AX_PATH_TIMPI(0.0.0, no)
 
 dnl--------------------------
 dnl Checks for code coverage
