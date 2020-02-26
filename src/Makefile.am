@@ -75,6 +75,8 @@ include_HEADERS += numerics/include/metaphysicl/dualsemidynamicsparsenumberarray
 include_HEADERS += numerics/include/metaphysicl/dualsemidynamicsparsenumberarray_decl.h
 include_HEADERS += numerics/include/metaphysicl/semidynamicsparsenumberarray.h
 include_HEADERS += numerics/include/metaphysicl/semidynamicsparsenumberarray_decl.h
+include_HEADERS += numerics/include/metaphysicl/parallel_dualnumber.h
+include_HEADERS += numerics/include/metaphysicl/parallel_dynamicsparsenumberarray.h
 
 # utilities
 include_HEADERS += utilities/include/metaphysicl/metaphysicl_asserts.h
