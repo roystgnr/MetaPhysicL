@@ -10,11 +10,6 @@
 #include <timpi/timpi_init.h>
 
 #include <vector>
-#include <cstdlib>
-#include <unistd.h>
-#include <cstdio>
-#include <iostream>
-#include <thread>
 
 #define METAPHYSICL_UNIT_ASSERT(expr)                                                              \
   if (!(expr))                                                                                     \
@@ -54,6 +49,7 @@ testContainerAllGather()
   for (std::size_t i = 0; i < vec_size; ++i)
   {
     const auto & dn = vals[i];
+    METAPHYSICL_UNIT_ASSERT(dn.derivatives().size() == 1);
     METAPHYSICL_UNIT_FP_ASSERT(dn.value(), double(i), TOLERANCE);
     METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(1), TOLERANCE);
   }
@@ -64,43 +60,6 @@ main(int argc, const char * const * argv)
 {
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
-
-  // volatile int i = 0;
-  // char hostname[256];
-  // gethostname(hostname, sizeof(hostname));
-  // printf("PID %d on %s ready for attach\n", getpid(), hostname);
-  // fflush(stdout);
-  // while (0 == i)
-  //   sleep(5);
-
-  // std::string command = "/usr/bin/lldb";
-
-  // std::cout << "Starting in debugger using: " << command << std::endl;
-
-  // char hostname[256];
-  // gethostname(hostname, sizeof(hostname));
-
-  // std::stringstream command_stream;
-
-  // // This will start XTerm and print out some info first... then run the debugger
-  // command_stream << "xterm -e \"echo 'Rank: " << TestCommWorld->rank() << "  Hostname: " << hostname
-  //                << "  PID: " << getpid() << "'; echo ''; ";
-
-  // // Figure out how to run the debugger
-  // if (command.find("lldb") != std::string::npos || command.find("gdb") != std::string::npos)
-  //   command_stream << command << " -p " << getpid();
-
-  // // Finish up the command
-  // command_stream << "\""
-  //                << " & ";
-
-  // std::string command_string = command_stream.str();
-  // std::cout << "Running: " << command_string << std::endl;
-
-  // int ret = std::system(command_string.c_str());
-
-  // // Sleep to allow time for the debugger to attach
-  // std::this_thread::sleep_for(std::chrono::seconds(10));
 
   testContainerAllGather();
 
