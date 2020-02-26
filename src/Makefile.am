@@ -104,11 +104,6 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 
-# optional TIMPI include
-if TIMPI_ENABLED
-  AM_CPPFLAGS += $(TIMPI_CPPFLAGS)
-endif
-
 CLEANFILES =
 
 #--------------
