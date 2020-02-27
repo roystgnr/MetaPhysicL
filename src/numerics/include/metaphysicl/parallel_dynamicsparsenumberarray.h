@@ -38,6 +38,8 @@
 #include "timpi/standard_type.h"
 #include "timpi/packing.h"
 
+#include <cstring> // for std::memcpy
+
 namespace TIMPI
 {
 using MetaPhysicL::DynamicSparseNumberArray;
