@@ -74,27 +74,6 @@ MOSTLYCLEANFILES  =
 MOSTLYCLEANFILES += $(DX_CLEANFILES)
 MOSTLYCLEANFILES += docs/lcov
 
-# Files to be deleted by 'make maintainer-clean'
-MAINTAINERCLEANFILES  = aclocal.m4
-MAINTAINERCLEANFILES += aminclude.am
-MAINTAINERCLEANFILES += autom4te.cache/*
-MAINTAINERCLEANFILES += $(AUX_DIST)
-MAINTAINERCLEANFILES += config.log
-MAINTAINERCLEANFILES += config.status
-MAINTAINERCLEANFILES += config.sub
-MAINTAINERCLEANFILES += configure
-MAINTAINERCLEANFILES += src/utilities/include/metaphysicl/metaphysicl_config.h.tmp.in
-MAINTAINERCLEANFILES += src/utilities/include/metaphysicl/metaphysicl_config.h.tmp.in~
-MAINTAINERCLEANFILES += Makefile.in
-MAINTAINERCLEANFILES += src/Makefile.in
-MAINTAINERCLEANFILES += test/Makefile.in
-MAINTAINERCLEANFILES += doxygen/Makefile.in
-MAINTAINERCLEANFILES += m4/libtool.m4
-MAINTAINERCLEANFILES += m4/ltoptions.m4
-MAINTAINERCLEANFILES += m4/ltsugar.m4
-MAINTAINERCLEANFILES += m4/ltversion.m4
-MAINTAINERCLEANFILES += m4/lt~obsolete.m4
-
 # -------------------------------------------
 # Optional support for code coverage analysis
 # -------------------------------------------

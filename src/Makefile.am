@@ -75,6 +75,8 @@ include_HEADERS += numerics/include/metaphysicl/dualsemidynamicsparsenumberarray
 include_HEADERS += numerics/include/metaphysicl/dualsemidynamicsparsenumberarray_decl.h
 include_HEADERS += numerics/include/metaphysicl/semidynamicsparsenumberarray.h
 include_HEADERS += numerics/include/metaphysicl/semidynamicsparsenumberarray_decl.h
+include_HEADERS += numerics/include/metaphysicl/parallel_dualnumber.h
+include_HEADERS += numerics/include/metaphysicl/parallel_dynamicsparsenumberarray.h
 
 # utilities
 include_HEADERS += utilities/include/metaphysicl/metaphysicl_asserts.h
@@ -101,11 +103,6 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/graphs/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
-
-# optional TIMPI include
-if TIMPI_ENABLED
-  AM_CPPFLAGS += $(TIMPI_CPPFLAGS)
-endif
 
 CLEANFILES =
 

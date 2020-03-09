@@ -18,8 +18,6 @@ dnl Turn off AM_MAINTAINER_MODE for bootstrapped release by
 dnl uncommenting this:
 dnl AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
 
-LT_INIT
-
 dnl Release versioning
 AX_SPLIT_VERSION
 GENERIC_MAJOR_VERSION=$AX_MAJOR_VERSION
@@ -47,13 +45,30 @@ AC_DEFINE_UNQUOTED([MINOR_VERSION],$GENERIC_MINOR_VERSION,[Minor version])
 AC_DEFINE_UNQUOTED([MICRO_VERSION],$GENERIC_MICRO_VERSION,[Micro version])
 
 
+#---------------------------------------------------------------------------
+# Check for whether to enable TIMPI which can influence what we do about MPI
+#---------------------------------------------------------------------------
+TIMPI_CONTROL_ARGS
+
+#--------------------------------------------------------------------------------------
+# Check for whether to enable MPI and PETSc which will influence our choice of compiler
+#--------------------------------------------------------------------------------------
+AS_IF([test "$enable_future_timpi" = yes || test "$enable_installed_timpi" = yes],
+      [enable_mpi_search=yes], [enable_mpi_search=no])
+COMPILER_CONTROL_ARGS([$enable_mpi_search])
+
+#-----------------------------------------------------------------------
+# Scrape PETSc configure information for their CXX, MPI_INCLUDE, MPI_LIB
+#-----------------------------------------------------------------------
+SCRAPE_PETSC_CONFIGURE
 
 dnl------------------------------
 dnl Checks for compilers
 dnl------------------------------
 
 AC_PROG_CC
-AC_PROG_CXX
+
+METAPHYSICL_SET_CXX
 
 dnl Added for AX_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
@@ -114,13 +129,45 @@ if (test x$HAVE_VEXCL = x1); then
   antioch_optional_test_LIBS="$VEXCL_LIBS $antioch_optional_test_LIBS"
 fi
 
-dnl Optional check for TIMPI
-AX_PATH_TIMPI(0.0.0, no)
+dnl build dependencies from right to left, so mpi before timpi
+AS_IF([test "x$enablempi" = xyes],
+      [
+        ACX_MPI
+        AS_IF([test "x$enablempi" = xyes],
+              [
+                AS_IF([test x"$MPI_INCLUDES" = x],,[TIMPI_CPPFLAGS="$MPI_INCLUDES $TIMPI_CPPFLAGS"])
+                AS_IF([test x"$MPI_LIBS" != x], [TIMPI_LIBS="$MPI_LIBS $TIMPI_LIBS"])
+                AS_IF([test x"$MPI_LDFLAGS" != x], [TIMPI_LIBS="$MPI_LDFLAGS $TIMPI_LIBS"])
+              ])
+      ])
+
+HAVE_TIMPI=0
+HAVE_TIMPI_LIB=0
+AS_IF([test "$enable_installed_timpi" = yes],
+      [AX_PATH_TIMPI(0.0.0, yes)],
+      [test "$enable_future_timpi" = yes],
+      [
+        HAVE_TIMPI=1
+        HAVE_TIMPI_LIB=1
+        AC_DEFINE(HAVE_TIMPI,1,[Define if TIMPI headers are available])
+        AC_DEFINE(HAVE_TIMPI_LIB,1,[Define if a TIMPI library is available])
+        TIMPI_CPPFLAGS="-I$TIMPI_PREFIX/include $TIMPI_CPPFLAGS"
+        TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_opt $TIMPI_LIBS"
+      ],
+      [])
+
+AM_CONDITIONAL(TIMPI_ENABLED,test x$HAVE_TIMPI = x1)
+AM_CONDITIONAL(TIMPI_LIB_ENABLED,test x$HAVE_TIMPI_LIB = x1)
+AC_SUBST(TIMPI_CPPFLAGS)
+AC_SUBST(TIMPI_LIBS)
+
 
 dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
 AX_CODE_COVERAGE
+
+LT_INIT
 
 dnl---------------------------------
 dnl Query configuration environment
