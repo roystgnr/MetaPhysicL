@@ -21,10 +21,11 @@ git add .gitignore
 
 git commit -m "Don't ignore bootstrap output"
 
-git add Makefile.in aclocal.m4 metaphysicl_config.h.tmp.in build-aux \
+git add Makefile.in aclocal.m4 build-aux \
         configure doxygen/Makefile.in m4/libtool.m4 m4/ltoptions.m4 \
         m4/ltsugar.m4 m4/ltversion.m4 m4/lt~obsolete.m4 \
-        src/Makefile.in test/Makefile.in configure.ac
+        src/Makefile.in test/Makefile.in configure.ac \
+        src/utilities/include/metaphysicl/metaphysicl_config.h.tmp.in
 
 git commit -m "Add bootstrap output"
 
