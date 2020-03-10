@@ -112,6 +112,8 @@ AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 dnl -Wall warnings, -Wall the time.
 AX_CXXFLAGS_WARN_ALL
 
+LT_INIT
+
 dnl---------------------------------------------------------
 dnl Checks for  library prerequisites for other libraries...
 dnl---------------------------------------------------------
@@ -166,8 +168,6 @@ dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
 AX_CODE_COVERAGE
-
-LT_INIT
 
 dnl---------------------------------
 dnl Query configuration environment
