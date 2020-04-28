@@ -55,12 +55,12 @@ TIMPI_CONTROL_ARGS
 #--------------------------------------------------------------------------------------
 AS_IF([test "$enable_future_timpi" = yes || test "$enable_installed_timpi" = yes],
       [enable_mpi_search=yes], [enable_mpi_search=no])
-COMPILER_CONTROL_ARGS([$enable_mpi_search])
+ACSM_COMPILER_CONTROL_ARGS([$enable_mpi_search])
 
 #-----------------------------------------------------------------------
 # Scrape PETSc configure information for their CXX, MPI_INCLUDE, MPI_LIB
 #-----------------------------------------------------------------------
-SCRAPE_PETSC_CONFIGURE
+ACSM_SCRAPE_PETSC_CONFIGURE
 
 dnl------------------------------
 dnl Checks for compilers
@@ -70,7 +70,7 @@ AC_PROG_CC
 
 METAPHYSICL_SET_CXX
 
-dnl Added for AX_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
+dnl Added for ACSM_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
 
 dnl We're going to need at least C++11 for some of our test cases
@@ -134,7 +134,7 @@ fi
 dnl build dependencies from right to left, so mpi before timpi
 AS_IF([test "x$enablempi" = xyes],
       [
-        ACX_MPI
+        ACSM_MPI
         AS_IF([test "x$enablempi" = xyes],
               [
                 AS_IF([test x"$MPI_INCLUDES" = x],,[TIMPI_CPPFLAGS="$MPI_INCLUDES $TIMPI_CPPFLAGS"])
@@ -167,7 +167,7 @@ AC_SUBST(TIMPI_LIBS)
 dnl--------------------------
 dnl Checks for code coverage
 dnl--------------------------
-AX_CODE_COVERAGE
+ACSM_CODE_COVERAGE
 
 dnl---------------------------------
 dnl Query configuration environment

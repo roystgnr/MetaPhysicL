@@ -2,8 +2,8 @@
 # -------------------------------------------------------------
 AC_DEFUN([MAYBE_MPICXX_COMPILER],
 [
-  AC_REQUIRE([COMPILER_CONTROL_ARGS])
-  AC_REQUIRE([SCRAPE_PETSC_CONFIGURE])
+  AC_REQUIRE([ACSM_COMPILER_CONTROL_ARGS])
+  AC_REQUIRE([ACSM_SCRAPE_PETSC_CONFIGURE])
 
   # --------------------------------------------------------------
   # look for a decent C++ compiler or honor --with-cxx=...

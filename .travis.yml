@@ -25,6 +25,11 @@ matrix:
             - clang-3.6
       env:
         - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
-
+# Turn git submodules into something Travis-CI can handle
+git:
+    submodules: false
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
+    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+    - git submodule update --init --recursive
     - eval "${MATRIX_EVAL}"
