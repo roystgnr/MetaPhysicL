@@ -3,7 +3,7 @@ include $(top_srcdir)/doxygen/aminclude.am
 
 # AUTOMAKE_OPTIONS = foreign # Conflicts with libMesh options
 AUTOMAKE_OPTIONS = gnu
-ACLOCAL_AMFLAGS  = -I m4 -I m4/common
+ACLOCAL_AMFLAGS  = -I m4 -I m4/common -I m4/autoconf-submodule
 
 SUBDIRS          = src test doxygen
 EXTRA_DIST       = CHANGES LICENSE COPYING share docs
