@@ -1,3 +1,6 @@
+1.0.0 -> 1.0.1
+  * Autoconf submodule refactoring
+
 0.6.0 -> 1.0.0
   * MetaPhysicL may now be optionally configured with TIMPI
   * Add StandardType and Packing specializations for parallel communication of
