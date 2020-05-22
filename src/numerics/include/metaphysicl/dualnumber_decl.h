@@ -31,7 +31,6 @@
 
 #include <ostream>
 #include <limits>
-#include <vector>
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/dualderivatives.h"
@@ -323,38 +322,6 @@ struct RawType<DualNumber<T, D, asd> >
   typedef typename RawType<T>::value_type value_type;
 
   static value_type value(const DualNumber<T, D, asd>& a) { return raw_value(a.value()); }
-};
-
-// vector specialization
-template <typename T, typename D, bool asd>
-struct RawType<std::vector<DualNumber<T,D,asd>>>
-{
-  typedef std::vector<typename RawType<T>::value_type> value_type;
-
-  static value_type value(const std::vector<DualNumber<T,D,asd>> & in)
-  {
-    value_type ret_val(in.size());
-    for (std::size_t i = 0; i < in.size(); ++i)
-      ret_val[i] = raw_value(in[i]);
-  }
-};
-
-// vector of vectors specialization
-template <typename T, typename D, bool asd>
-struct RawType<std::vector<std::vector<DualNumber<T,D,asd>>>>
-{
-  typedef std::vector<std::vector<typename RawType<T>::value_type>> value_type;
-
-  static value_type value(const std::vector<std::vector<DualNumber<T,D,asd>>> & in)
-  {
-    value_type ret_val(in.size());
-    for (std::size_t i = 0; i < in.size(); ++i)
-    {
-      ret_val[i].resize(in[i].size());
-      for (std::size_t j = 0; j < in[i].size(); ++j)
-        ret_val[i][j] = raw_value(in[i][j]);
-    }
-  }
 };
 
 template<typename T, typename T2, typename D, bool asd, bool reverseorder>

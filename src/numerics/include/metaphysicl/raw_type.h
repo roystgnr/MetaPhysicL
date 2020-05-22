@@ -28,12 +28,16 @@
 #ifndef METAPHYSICL_RAW_TYPE_H
 #define METAPHYSICL_RAW_TYPE_H
 
+#include "metaphysicl/compare_types.h"
+
 #include <limits>
+#include <utility>
+#include <vector>
 
 
 namespace MetaPhysicL {
 
-// ValueType strips the dimensionality off of 
+// ValueType strips the dimensionality off of
 // vector types.  Differentiable types remain differentiable.
 template <typename T>
 struct ValueType
@@ -47,9 +51,9 @@ struct ValueType<const T>
   typedef const typename ValueType<T>::type type;
 };
 
-// RawType strips the derivatives, shadow magic, etc. off of 
+// RawType strips the derivatives, shadow magic, etc. off of
 // types.  Vector types remain vector types.
-template <typename T>
+template <typename T, typename Enable = void>
 struct RawType
 {
   typedef T value_type;
@@ -65,13 +69,45 @@ struct RawType<const T>
   static value_type value(const T& a) { return RawType<T>::value(a); }
 };
 
-
 // Make the user syntax slightly nicer
 template <typename T>
 inline
 typename RawType<T>::value_type
 raw_value(const T& a) { return RawType<T>::value(a); }
 
+template <typename T> struct IsRawSame
+{
+  static constexpr bool value =
+      std::is_same<T, typename RawType<T>::value_type>::value;
+};
+
+// specialization when conversion needs to happen
+template <typename T>
+struct RawType<std::vector<T>,
+               typename std::enable_if<!IsRawSame<T>::value>::type>
+{
+  typedef std::vector<typename RawType<T>::value_type> value_type;
+
+  static value_type value(const std::vector<T> & in)
+  {
+    value_type ret_val(in.size());
+    for (std::size_t i = 0; i < in.size(); ++i)
+      ret_val[i] = raw_value(in[i]);
+  }
+};
+
+// specialization when we can just pass through
+template <typename T>
+struct RawType<std::vector<T>,
+               typename std::enable_if<IsRawSame<T>::value>::type>
+{
+  typedef const std::vector<T> & value_type;
+
+  static value_type value(const std::vector<T> & in)
+  {
+    return in;
+  }
+};
 
 template <typename NewType, typename OldType>
 class raw_numeric_limits
