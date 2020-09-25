@@ -45,16 +45,10 @@ namespace TIMPI
 using MetaPhysicL::DynamicSparseNumberArray;
 
 template <typename T, typename I>
-class StandardType<DynamicSparseNumberArray<T, I>>
+class StandardType<DynamicSparseNumberArray<T, I>> : public NotADataType
 {
 public:
-  static const bool is_fixed_type = false;
-
-private:
-  /**
-   * we make the constructor private to catch mistakes at compile-time rather than link-time.
-   */
-  StandardType(const DynamicSparseNumberArray<T, I> * example = nullptr);
+  StandardType(const DynamicSparseNumberArray<T, I> *) {}
 };
 
 } // namespace TIMPI

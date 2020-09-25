@@ -98,24 +98,17 @@ public:
   }
 
   ~StandardType() { this->free(); }
-
-  static const bool is_fixed_type = true;
 };
 
 // Not fixed size DualNumber
 template <typename T, typename D>
 class StandardType<DualNumber<T, D>,
                    typename std::enable_if<!(StandardType<T>::is_fixed_type &&
-                                             StandardType<D>::is_fixed_type)>::type>
+                                             StandardType<D>::is_fixed_type)>::type> :
+    public NotADataType
 {
 public:
-  static const bool is_fixed_type = false;
-
-private:
-  /**
-   * we make the constructor private to catch mistakes at compile-time rather than link-time.
-   */
-  StandardType(const DualNumber<T, D> * example = nullptr);
+  StandardType(const DualNumber<T, D> *) {}
 };
 } // namespace TIMPI
 
