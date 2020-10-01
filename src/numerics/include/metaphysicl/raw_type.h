@@ -93,6 +93,8 @@ struct RawType<std::vector<T>,
     value_type ret_val(in.size());
     for (std::size_t i = 0; i < in.size(); ++i)
       ret_val[i] = raw_value(in[i]);
+
+    return ret_val;
   }
 };
 
