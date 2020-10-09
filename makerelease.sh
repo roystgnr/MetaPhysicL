@@ -7,6 +7,8 @@ fi
 
 VERSION=$(grep AC_INIT configure.ac | sed 's/.*[ ,]\([0-9]\+\(\.[0-9]\+\)\+\).*/\1/')
 
+git submodule update --init
+
 git tag v${VERSION} -m "MetaPhysicL $VERSION release"
 
 git checkout -b branch_$VERSION
