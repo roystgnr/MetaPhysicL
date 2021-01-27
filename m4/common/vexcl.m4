@@ -70,12 +70,12 @@ if test "${with_vexcl}" != no ; then
     if test -e "${VEXCL_PREFIX}/vexcl/vexcl.hpp" ; then
        VEXCL_CPPFLAGS="-I${VEXCL_PREFIX}"
        AS_IF([test x$HAVE_CXX11 = x1], [],
-             [AX_CXX_COMPILE_STDCXX_11(noext)])
+             [AX_CXX_COMPILE_STDCXX(11,noext)])
     elif test -e "${VEXCL_PREFIX}/include/vexcl/vexcl.hpp" ; then
        VEXCL_INCLUDE="${VEXCL_PREFIX}/include"
        VEXCL_CPPFLAGS="-I${VEXCL_PREFIX}/include"
        AS_IF([test x$HAVE_CXX11 = x1], [],
-             [AX_CXX_COMPILE_STDCXX_11(noext)])
+             [AX_CXX_COMPILE_STDCXX(11,noext)])
     else
        AC_MSG_NOTICE([${VEXCL_PREFIX}/vexcl/vexcl.hpp not found])
        AC_MSG_NOTICE([${VEXCL_PREFIX}/include/vexcl/vexcl.hpp not found])
