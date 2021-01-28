@@ -39,6 +39,9 @@
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
 
+// We now depend on std::function and kin
+#if __cplusplus >= 201103L
+
 namespace MetaPhysicL {
 
 // Forward declarations
@@ -1357,7 +1360,6 @@ SparseNumberStruct_std_unary(floor)
 SparseNumberStruct_std_binary(fmod) // dangerous unless y is dense
 
 
-#if __cplusplus >= 201103L
 SparseNumberStruct_std_unary(llabs)
 SparseNumberStruct_std_unary(imaxabs)
 SparseNumberStruct_fl_unary(fabs)
@@ -1385,8 +1387,6 @@ SparseNumberStruct_stdfl_binary_union(fmin)
 SparseNumberStruct_stdfl_binary_union(fdim)
 SparseNumberStruct_stdfl_binary_union(hypot)
 SparseNumberStruct_fl_binary_union(atan2)
-#endif // __cplusplus >= 201103L
-
 
 // Defining numeric_limits for heterogenous containers is pretty much
 // impossible
@@ -1397,6 +1397,8 @@ class numeric_limits<SparseNumberStruct<IndexSet> > :
 */
 
 } // namespace std
+
+#endif // __cplusplus >= 201103L
 
 
 #endif // METAPHYSICL_SPARSENUMBERSTRUCT_H

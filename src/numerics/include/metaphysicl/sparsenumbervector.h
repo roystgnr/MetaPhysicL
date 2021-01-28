@@ -41,6 +41,9 @@
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
 
+// We now depend on std::function and kin
+#if __cplusplus >= 201103L
+
 namespace MetaPhysicL {
 
 // Forward declarations
@@ -256,13 +259,11 @@ public:
     return returnval;
   }
 
-#if  __cplusplus >= 201103L
   std::array<T,index_size>& raw_data_array()
     { return _data; }
 
   const std::array<T,index_size>& raw_data_array() const
     { return _data; }
-#endif
 
   T* raw_data()
     { return index_size?&_data[0]:NULL; }
@@ -409,11 +410,7 @@ public:
   }
 
 private:
-#if  __cplusplus >= 201103L
   std::array<T,index_size> _data;
-#else
-  T _data[index_size];
-#endif
 };
 
 
@@ -1031,6 +1028,8 @@ class numeric_limits<SparseNumberVector<T, IndexSet> > :
   public MetaPhysicL::raw_numeric_limits<SparseNumberVector<T, IndexSet>, T> {};
 
 } // namespace std
+
+#endif // __cplusplus >= 201103L
 
 
 #endif // METAPHYSICL_SPARSENUMBERVECTOR_H

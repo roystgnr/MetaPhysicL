@@ -42,6 +42,9 @@
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
 
+// We now depend on std::function and kin
+#if __cplusplus >= 201103L
+
 namespace MetaPhysicL {
 
 // Forward declarations
@@ -260,13 +263,11 @@ public:
     return returnval;
   }
 
-#if  __cplusplus >= 201103L
   std::array<T,index_size>& raw_data_array()
     { return _data; }
 
   const std::array<T,index_size>& raw_data_array() const
     { return _data; }
-#endif
 
   T* raw_data()
     { return index_size?&_data[0]:NULL; }
@@ -413,11 +414,7 @@ public:
   }
 
 private:
-#if  __cplusplus >= 201103L
   std::array<T,index_size> _data;
-#else
-  T _data[index_size];
-#endif
 };
 
 
@@ -1057,7 +1054,6 @@ SparseNumberArray_std_unary(ceil)
 SparseNumberArray_std_unary(floor)
 SparseNumberArray_std_binary(fmod) // dangerous unless y is dense
 
-#if __cplusplus >= 201103L
 SparseNumberArray_std_unary(llabs)
 SparseNumberArray_std_unary(imaxabs)
 SparseNumberArray_fl_unary(fabs)
@@ -1085,7 +1081,6 @@ SparseNumberArray_stdfl_binary_union(fmin)
 SparseNumberArray_stdfl_binary_union(fdim)
 SparseNumberArray_stdfl_binary_union(hypot)
 SparseNumberArray_fl_binary_union(atan2)
-#endif // __cplusplus >= 201103L
 
 
 
@@ -1094,5 +1089,7 @@ class numeric_limits<SparseNumberArray<T, IndexSet> > :
   public MetaPhysicL::raw_numeric_limits<SparseNumberArray<T, IndexSet>, T> {};
 
 } // namespace std
+
+#endif // __cplusplus >= 201103L
 
 #endif // METAPHYSICL_SPARSENUMBERARRAY_H
