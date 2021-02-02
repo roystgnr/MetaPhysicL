@@ -1,3 +1,10 @@
+Version 1.2.0
+  * C++17 standard library compatibility
+Version 1.1.0
+  * Add RawType<vector<DualNumber>> and RawType<vector<vector<DualNumber>>>
+  * Add IsRawSame helper
+  * Use new TIMPI NotADataType class
+  * Use "-f" when using mv to overwrite our own files
 Version 1.0.1, 1.0.2
   * Autoconf submodule refactoring
 Version 1.0.0

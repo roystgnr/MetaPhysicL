@@ -1,3 +1,6 @@
+1.1.0 -> 1.2.0
+  * C++17 standard library compatibility
+
 1.0.2 -> 1.1.0
   * Add RawType<vector<DualNumber>> and RawType<vector<vector<DualNumber>>>
   * Add IsRawSame helper
