@@ -42,6 +42,9 @@
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
 
+// We now depend on std::function and kin
+#if __cplusplus >= 201103L
+
 namespace MetaPhysicL {
 
 // Forward declarations
@@ -260,13 +263,11 @@ public:
     return returnval;
   }
 
-#if  __cplusplus >= 201103L
   std::array<T,index_size>& raw_data_array()
     { return _data; }
 
   const std::array<T,index_size>& raw_data_array() const
     { return _data; }
-#endif
 
   T* raw_data()
     { return index_size?&_data[0]:NULL; }
@@ -407,17 +408,13 @@ public:
 //      (BinaryVectorFunctor<std::pointer_to_binary_function<T,T2,TS>,
 //       IndexSet, IndexSet2, IndexSetS, T, T2, TS>
 //        (this->raw_data(), a.raw_data(), returnval.raw_data(),
-//         MetaPhysicL::binary_ptr_fun(outerproduct));
+//         outerproduct);
 
     return returnval;
   }
 
 private:
-#if  __cplusplus >= 201103L
   std::array<T,index_size> _data;
-#else
-  T _data[index_size];
-#endif
 };
 
 
@@ -666,11 +663,11 @@ operator opname (const SparseNumberArray<T,IndexSet>& a, const SparseNumberArray
     (BinaryVectorFunctor<std::functorname<TS>,IndexSet,IndexSet2,IndexSetS,T,T2,bool> \
       (std::functorname<TS>(), a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet,IndexSetS,T,bool> \
-      (std::bind2nd(std::functorname<T>(),TS(0)), a.raw_data(), returnval.raw_data())); \
+    (UnaryVectorFunctor<std::function<bool(T)>,IndexSet,IndexSetS,T,bool> \
+      (std::bind(std::functorname<T>(),std::placeholders::_1,TS(0)), a.raw_data(), returnval.raw_data())); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<T,bool>,IndexSet2,IndexSetS,T2,bool> \
-      (std::bind1st(std::functorname<T2>(),T2(0)), b.raw_data(), returnval.raw_data())); \
+    (UnaryVectorFunctor<std::function<bool(T)>,IndexSet2,IndexSetS,T2,bool> \
+      (std::bind(std::functorname<T2>(),T2(0),std::placeholders::_1), b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
 } \
@@ -815,7 +812,6 @@ using MetaPhysicL::SymmetricCompareTypes;
 using MetaPhysicL::UnaryVectorFunctor;
 using MetaPhysicL::BinaryVectorFunctor;
 using MetaPhysicL::call_traits;
-using MetaPhysicL::binary_bind2nd;
 
 #define SparseNumberArray_std_unary(funcname) \
 template <typename T, typename IndexSet> \
@@ -850,9 +846,9 @@ funcname (const SparseNumberArray<T, IndexSet>& a, const SparseNumberArray<T2, I
   SparseNumberArray<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (BinaryVectorFunctor<std::pointer_to_binary_function<TS,TS,TS>, \
+    (BinaryVectorFunctor<std::function<TS(TS,TS)>, \
      IndexSet,IndexSet2,IndexSet,T,T2,TS> \
-      (MetaPhysicL::binary_ptr_fun(std::funcname<TS>), \
+      (std::funcname<TS>, \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -867,8 +863,8 @@ funcname (const SparseNumberArray<T, IndexSet>& a, const T2& b) \
   SparseNumberArray<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,IndexSet,T,TS> \
-      (std::bind2nd(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),b), \
+    (UnaryVectorFunctor<std::function<TS(TS)>,IndexSet,IndexSet,T,TS> \
+      (std::bind(std::funcname<TS>,std::placeholders::_1,b), \
        a.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -883,8 +879,8 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
   SparseNumberArray<TS, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<std::unary_function<TS,TS>,IndexSet,IndexSet,T2,TS> \
-      (std::bind1st(MetaPhysicL::binary_ptr_fun(std::funcname<TS>),a), \
+    (UnaryVectorFunctor<std::function<TS(TS)>,IndexSet,IndexSet,T2,TS> \
+      (std::bind(std::funcname<TS>(),a,std::placeholders::_1), \
        b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -916,16 +912,16 @@ funcname (const SparseNumberArray<T, IndexSet>& a, const SparseNumberArray<T2, I
   unambiguous = std::funcname<TS>; \
  \
   typename IndexSet::template Intersection<IndexSet2>::type::ForEach() \
-    (BinaryVectorFunctor<std::pointer_to_binary_function<const TS&,const TS&,const TS&>,IndexSet,IndexSet2,IndexSetS,T,T2,TS> \
-      (MetaPhysicL::binary_ptr_fun(unambiguous), \
+    (BinaryVectorFunctor<std::function<const TS&(const TS&,const TS&)>,IndexSet,IndexSet2,IndexSetS,T,T2,TS> \
+      (unambiguous, \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
   typename IndexSet::template Difference<IndexSet2>::type::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSetS,T,TS> \
-      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(unambiguous),TS(0)), \
+    (UnaryVectorFunctor<std::function<const TS&(const TS&)>,IndexSet,IndexSetS,T,TS> \
+      (std::bind(unambiguous,std::placeholders::_1,TS(0)), \
        a.raw_data(), returnval.raw_data())); \
   typename IndexSet2::template Difference<IndexSet>::type::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet2,IndexSetS,T2,TS> \
-      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(unambiguous),TS(0)), \
+    (UnaryVectorFunctor<std::function<const TS&(const TS&)>,IndexSet2,IndexSetS,T2,TS> \
+      (std::bind(unambiguous,TS(0),std::placeholders::_1), \
        b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -939,8 +935,8 @@ funcname (const SparseNumberArray<T, IndexSet>& a, const SparseNumberArray<T, In
   SparseNumberArray<T, IndexSet> returnval; \
  \
   typename IndexSet::ForEach() \
-    (BinaryVectorFunctor<std::pointer_to_binary_function<const T&,const T&,const T&>,IndexSet,IndexSet,IndexSet,T,T,T> \
-      (MetaPhysicL::binary_ptr_fun(std::funcname<T>), \
+    (BinaryVectorFunctor<std::function<const T&(const T&,const T&)>,IndexSet,IndexSet,IndexSet,T,T,T> \
+      (std::funcname<T>, \
        a.raw_data(), b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -958,8 +954,8 @@ funcname (const SparseNumberArray<T, IndexSet>& a, const T2& b) \
   unambiguous = std::funcname<TS>; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_second<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T,TS> \
-      (MetaPhysicL::binary_bind2nd(MetaPhysicL::binary_ptr_fun(unambiguous),TS(b)), \
+    (UnaryVectorFunctor<std::function<const TS&(const TS&)>,IndexSet,IndexSet,T,TS> \
+      (std::bind(unambiguous,std::placeholders::_1,TS(b)), \
        a.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -977,8 +973,8 @@ funcname (const T& a, const SparseNumberArray<T2, IndexSet>& b) \
   unambiguous = std::funcname<TS>; \
  \
   typename IndexSet::ForEach() \
-    (UnaryVectorFunctor<MetaPhysicL::bound_first<std::pointer_to_binary_function<const TS&,const TS&,const TS&> >,IndexSet,IndexSet,T2,TS> \
-      (MetaPhysicL::binary_bind1st(MetaPhysicL::binary_ptr_fun(unambiguous),TS(a)), \
+    (UnaryVectorFunctor<std::function<const TS&(const TS&)>,IndexSet,IndexSet,T2,TS> \
+      (std::bind(unambiguous,TS(a),std::placeholders::_1), \
        b.raw_data(), returnval.raw_data())); \
  \
   return returnval; \
@@ -1020,13 +1016,11 @@ pow (const SparseNumberArray<T, IndexSet>& a, const T2& b)
   typedef typename SymmetricCompareTypes<TP,TP2>::supertype TS;
   SparseNumberArray<TS, IndexSet> returnval;
 
-  typedef std::pointer_to_binary_function<TP, TP2, TS> binary_functype;
-  typedef MetaPhysicL::bound_second<binary_functype> unary_functype;
+  typedef std::function<TS(TP)> unary_functype;
 
   typename IndexSet::ForEach()
     (UnaryVectorFunctor<unary_functype,IndexSet,IndexSet,T,TS>
-      (binary_bind2nd(MetaPhysicL::binary_ptr_fun
-         (static_cast<TS (*)(TP, TP2)>(sna_pow)),b),
+      (std::bind((static_cast<TS (*)(TP, TP2)>(sna_pow)),std::placeholders::_1,b),
        a.raw_data(), returnval.raw_data()));
 
   return returnval;
@@ -1060,7 +1054,6 @@ SparseNumberArray_std_unary(ceil)
 SparseNumberArray_std_unary(floor)
 SparseNumberArray_std_binary(fmod) // dangerous unless y is dense
 
-#if __cplusplus >= 201103L
 SparseNumberArray_std_unary(llabs)
 SparseNumberArray_std_unary(imaxabs)
 SparseNumberArray_fl_unary(fabs)
@@ -1088,7 +1081,6 @@ SparseNumberArray_stdfl_binary_union(fmin)
 SparseNumberArray_stdfl_binary_union(fdim)
 SparseNumberArray_stdfl_binary_union(hypot)
 SparseNumberArray_fl_binary_union(atan2)
-#endif // __cplusplus >= 201103L
 
 
 
@@ -1098,5 +1090,6 @@ class numeric_limits<SparseNumberArray<T, IndexSet> > :
 
 } // namespace std
 
+#endif // __cplusplus >= 201103L
 
 #endif // METAPHYSICL_SPARSENUMBERARRAY_H

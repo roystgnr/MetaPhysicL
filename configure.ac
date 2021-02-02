@@ -102,11 +102,10 @@ AS_IF([test x$enablecxx14 != xno -a x$enablecxx11 != xno],
 
 AM_CONDITIONAL(CXX14_ENABLED,test x$HAVE_CXX14 = x1)
 
-AS_IF([test x$HAVE_CXX14 = x1],
-      [HAVE_CXX11=1],
-      [AS_IF([test x$enablecxx11 != xno],
-             [AX_CXX_COMPILE_STDCXX(11,noext,optional)],
-             [HAVE_CXX11=0])])
+AS_IF([test x$enablecxx11 != xno],
+      [AX_CXX_COMPILE_STDCXX(11,noext,optional)],
+      [HAVE_CXX11=0])
+
 AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 
 dnl -Wall warnings, -Wall the time.
