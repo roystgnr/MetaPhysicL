@@ -73,38 +73,15 @@ METAPHYSICL_SET_CXX
 dnl Added for ACSM_CODE_COVERAGE macro to work correctly, even though there's no Fortran here.
 AC_PROG_FC
 
-dnl We're going to need at least C++11 for some of our test cases
-AC_ARG_ENABLE(cxx11,
-              AC_HELP_STRING([--disable-cxx11],
-                             [build without C++11 support]),
-              [AS_CASE("${enableval}",
-                       [yes], [enablecxx11=yes],
-                       [no],  [enablecxx11=no],
-                       [AC_MSG_ERROR(bad value ${enableval} for --disable-cxx11)])],
-              [enablecxx11=auto])
-
-dnl We're going to need at least C++14 for some of our test cases
-AC_ARG_ENABLE(cxx14,
-              AC_HELP_STRING([--disable-cxx14],
-                             [build without C++14 support]),
-              [AS_CASE("${enableval}",
-                       [yes], [enablecxx14=yes],
-                       [no],  [enablecxx14=no],
-                       [AC_MSG_ERROR(bad value ${enableval} for --disable-cxx14)])],
-              [enablecxx14=auto])
-
-AS_IF([test x$enablecxx14 = xyes -a x$enablecxx11 = xno],
-      [AC_MSG_ERROR(can't enable C++14 while disabling C++11)])
-
-AS_IF([test x$enablecxx14 != xno -a x$enablecxx11 != xno],
-      [AX_CXX_COMPILE_STDCXX(14,noext,optional)],
-      [HAVE_CXX14=0])
+# --------------------------------------------------------------
+# Autoconf macro for determining the proper -std=c++??
+# flag, for the current compiler, for the user's requested C++
+# standards level.  Adds the required flag to CXXFLAGS if
+# one is found.  Exits if no acceptable flag is found.
+# --------------------------------------------------------------
+ACSM_CXX_COMPILER_STANDARD([2011], [2017])
 
 AM_CONDITIONAL(CXX14_ENABLED,test x$HAVE_CXX14 = x1)
-
-AS_IF([test x$enablecxx11 != xno],
-      [AX_CXX_COMPILE_STDCXX(11,noext,optional)],
-      [HAVE_CXX11=0])
 
 AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 
