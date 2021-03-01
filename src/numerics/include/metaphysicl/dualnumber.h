@@ -198,9 +198,9 @@ DualNumber<T,D,asd>::operator=(const T2 & scalar)
 
 // permit construction from another dual number if both value and derivative types are convertible
 template <typename T, typename D, bool asd>
-template <typename T2>
+template <typename T2, typename D2>
 inline
-DualNumber<T,D,asd>::DualNumber(const T2& val, typename std::enable_if<std::is_convertible<typename T2::value_type,T>::value && std::is_convertible<typename T2::derivatives_type,D>::value, void*>::type) :
+DualNumber<T,D,asd>::DualNumber(const DualNumber<T2, D2, asd> & val, typename std::enable_if<std::is_convertible<T2,T>::value && std::is_convertible<D2,D>::value, void*>::type) :
     _val  (DualNumberConstructor<T,D,asd>::value(val))
 {
   if (!allow_skipping_derivatives || do_derivatives)
