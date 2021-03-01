@@ -361,7 +361,20 @@ class NotADuckDualNumber<VectorValue<double>, D> : public DualNumber<VectorValue
 public:
   NotADuckDualNumber() : DualNumber<VectorValue<double>, D>() {}
 
-  using DualNumber<VectorValue<double>, D>::DualNumber;
+  template <typename T2, typename D2>
+  NotADuckDualNumber(const DualNumber<T2, D2>& val, typename std::enable_if<std::is_convertible<T2,VectorValue<double>>::value && std::is_convertible<D2,D>::value, void*>::type = nullptr) : DualNumber<VectorValue<double>,D>(val) {}
+
+  template <typename T2>
+  NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<T2,VectorValue<double>>::value, void*>::type = nullptr) : DualNumber<VectorValue<double>,D>(val) {}
+
+  template <typename T2, typename D2>
+  NotADuckDualNumber(const T2& val, const D2& deriv) : DualNumber<VectorValue<double>,D>(val, deriv) {}
+
+  template <bool asd>
+  NotADuckDualNumber(DualNumber<VectorValue<double>, D, asd> && src) : DualNumber<VectorValue<double>,D>(std::move(src)) {}
+
+  template <bool asd>
+  NotADuckDualNumber(const DualNumber<VectorValue<double>, D, asd> & src) : DualNumber<VectorValue<double>,D>(src) {}
 
   typedef typename D::template resize<3>::other ResizedDerivatives;
   typedef typename D::template rebind<double>::other::template resize<3>::other DuckNumberDerivatives;
@@ -450,7 +463,21 @@ public:
           TensorValue<double>(row1.derivatives()[i], row2.derivatives()[i], row3.derivatives()[i]);
   }
 
-  using DualNumber<TensorValue<double>, D>::DualNumber;
+  template <typename T2>
+  NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<typename T2::value_type,TensorValue<double>>::value && std::is_convertible<typename T2::derivatives_type,D>::value, void*>::type = nullptr) : DualNumber<TensorValue<double>,D>(val) {}
+
+  template <typename T2>
+  NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<T2,TensorValue<double>>::value, void*>::type = nullptr) : DualNumber<TensorValue<double>,D>(val) {}
+
+  template <typename T2, typename D2>
+  NotADuckDualNumber(const T2& val, const D2& deriv) : DualNumber<TensorValue<double>,D>(val, deriv) {}
+
+  template <bool asd>
+  NotADuckDualNumber(DualNumber<TensorValue<double>, D, asd> && src) : DualNumber<TensorValue<double>,D>(std::move(src)) {}
+
+  template <bool asd>
+  NotADuckDualNumber(const DualNumber<TensorValue<double>, D, asd> & src) : DualNumber<TensorValue<double>,D>(src) {}
+
 
   typedef typename D::template resize<9>::other ResizedDerivatives;
   typedef typename D::template rebind<double>::other::template resize<9>::other DuckNumberDerivatives;
