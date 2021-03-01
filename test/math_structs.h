@@ -361,8 +361,8 @@ class NotADuckDualNumber<VectorValue<double>, D> : public DualNumber<VectorValue
 public:
   NotADuckDualNumber() : DualNumber<VectorValue<double>, D>() {}
 
-  template <typename T2>
-  NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<typename T2::value_type,VectorValue<double>>::value && std::is_convertible<typename T2::derivatives_type,D>::value, void*>::type = nullptr) : DualNumber<VectorValue<double>,D>(val) {}
+  template <typename T2, typename D2>
+  NotADuckDualNumber(const DualNumber<T2, D2>& val, typename std::enable_if<std::is_convertible<T2,VectorValue<double>>::value && std::is_convertible<D2,D>::value, void*>::type = nullptr) : DualNumber<VectorValue<double>,D>(val) {}
 
   template <typename T2>
   NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<T2,VectorValue<double>>::value, void*>::type = nullptr) : DualNumber<VectorValue<double>,D>(val) {}

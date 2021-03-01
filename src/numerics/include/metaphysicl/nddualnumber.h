@@ -15,8 +15,8 @@ class NotADuckDualNumber : public DualNumber<T, D>
 public:
   NotADuckDualNumber() = default;
 
-  template <typename T2>
-  NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<typename T2::value_type,T>::value && std::is_convertible<typename T2::derivatives_type,D>::value, void*>::type = nullptr) : DualNumber<T,D>(val) {}
+  template <typename T2, typename D2>
+  NotADuckDualNumber(const DualNumber<T2, D2> & val, typename std::enable_if<std::is_convertible<T2,T>::value && std::is_convertible<D2,D>::value, void*>::type = nullptr) : DualNumber<T,D>(val) {}
 
   template <typename T2>
   NotADuckDualNumber(const T2& val, typename std::enable_if<std::is_convertible<T2,T>::value, void*>::type = nullptr) : DualNumber<T,D>(val) {}
