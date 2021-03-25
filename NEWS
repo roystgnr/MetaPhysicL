@@ -1,4 +1,7 @@
-1.1.0 -> 1.2.1
+1.2.1 -> 1.2.2
+  * Restrict implicit conversions (fix for Eigen compatibility)
+
+1.2.0 -> 1.2.1
   * New configure options for selecting C++ standard
 
 1.1.0 -> 1.2.0
