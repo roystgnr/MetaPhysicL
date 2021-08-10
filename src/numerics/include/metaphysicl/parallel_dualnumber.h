@@ -43,21 +43,20 @@
 namespace TIMPI
 {
 using MetaPhysicL::DualNumber;
-using MetaPhysicL::DynamicSparseNumberArray;
 
 // Handle fixed size DualNumber first
 
-template <typename T, typename D>
+template <typename T, typename D, bool asd>
 class StandardType<
-    DualNumber<T, D>,
+    DualNumber<T, D, asd>,
     typename std::enable_if<StandardType<T>::is_fixed_type && StandardType<D>::is_fixed_type>::type>
   : public DataType
 {
 public:
-  explicit StandardType(const DualNumber<T, D> * example = nullptr)
+  explicit StandardType(const DualNumber<T, D, asd> * example = nullptr)
   {
     // We need an example for MPI_Address to use
-    static const DualNumber<T, D> p;
+    static const DualNumber<T, D, asd> p(0);
     if (!example)
       example = &p;
 
@@ -72,7 +71,7 @@ public:
     int blocklengths[] = {1, 1};
     MPI_Aint displs[2], start;
 
-    timpi_call_mpi(MPI_Get_address(const_cast<DualNumber<T, D> *>(example), &start));
+    timpi_call_mpi(MPI_Get_address(const_cast<DualNumber<T, D, asd> *>(example), &start));
     timpi_call_mpi(MPI_Get_address(const_cast<T *>(&example->value()), &displs[0]));
     timpi_call_mpi(MPI_Get_address(const_cast<D *>(&example->derivatives()), &displs[1]));
     displs[0] -= start;
@@ -84,7 +83,7 @@ public:
     timpi_call_mpi(MPI_Type_commit(&tmptype));
 
     // resize the structure type to account for padding, if any
-    timpi_call_mpi(MPI_Type_create_resized(tmptype, 0, sizeof(DualNumber<T, D>), &_datatype));
+    timpi_call_mpi(MPI_Type_create_resized(tmptype, 0, sizeof(DualNumber<T, D, asd>), &_datatype));
     timpi_call_mpi(MPI_Type_free(&tmptype));
 
     this->commit();
@@ -92,23 +91,25 @@ public:
 #endif // TIMPI_HAVE_MPI
   }
 
-  StandardType(const StandardType<DualNumber<T, D>> & timpi_mpi_var(t))
+  StandardType(const StandardType<DualNumber<T, D, asd>> & timpi_mpi_var(t))
   {
     timpi_call_mpi(MPI_Type_dup(t._datatype, &_datatype));
   }
 
   ~StandardType() { this->free(); }
+
+  static const bool is_fixed_type = true;
 };
 
 // Not fixed size DualNumber
-template <typename T, typename D>
-class StandardType<DualNumber<T, D>,
+template <typename T, typename D, bool asd>
+class StandardType<DualNumber<T, D, asd>,
                    typename std::enable_if<!(StandardType<T>::is_fixed_type &&
-                                             StandardType<D>::is_fixed_type)>::type> :
-    public NotADataType
+                                             StandardType<D>::is_fixed_type)>::type>
+  : public NotADataType
 {
 public:
-  StandardType(const DualNumber<T, D> *) {}
+  StandardType(const DualNumber<T, D, asd> *) {}
 };
 } // namespace TIMPI
 
@@ -118,24 +119,25 @@ namespace Parallel
 {
 using MetaPhysicL::DualNumber;
 
-template <typename T, typename D>
-class Packing<DualNumber<T, D>,
-              typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D>>::is_fixed_type>::type>
+template <typename T, typename D, bool asd>
+class Packing<
+    DualNumber<T, D, asd>,
+    typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>
 {
 public:
   typedef std::size_t buffer_type;
 
   template <typename OutputIter, typename Context>
-  static void pack(const DualNumber<T, D> & dn, OutputIter data_out, const Context * context);
+  static void pack(const DualNumber<T, D, asd> & dn, OutputIter data_out, const Context * context);
 
   template <typename Context>
-  static unsigned int packable_size(const DualNumber<T, D> & dn, const Context * context);
+  static unsigned int packable_size(const DualNumber<T, D, asd> & dn, const Context * context);
 
   template <typename BufferIter>
   static unsigned int packed_size(BufferIter iter);
 
   template <typename BufferIter, typename Context>
-  static DualNumber<T, D> unpack(BufferIter in, Context * ctx);
+  static DualNumber<T, D, asd> unpack(BufferIter in, Context * ctx);
 
 private:
   template <typename T2>
@@ -205,33 +207,33 @@ private:
   }
 };
 
-template <typename T, typename D>
+template <typename T, typename D, bool asd>
 template <typename Context>
 unsigned int
-Packing<DualNumber<T, D>,
-        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D>>::is_fixed_type>::type>::
-    packable_size(const DualNumber<T, D> & dn, const Context * ctx)
+Packing<DualNumber<T, D, asd>,
+        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
+    packable_size(const DualNumber<T, D, asd> & dn, const Context * ctx)
 {
   return 1 + packable_size_comp(dn.value(), ctx) + packable_size_comp(dn.derivatives(), ctx);
 }
 
-template <typename T, typename D>
+template <typename T, typename D, bool asd>
 template <typename BufferIter>
 unsigned int
-Packing<DualNumber<T, D>,
-        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D>>::is_fixed_type>::type>::
+Packing<DualNumber<T, D, asd>,
+        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     packed_size(BufferIter iter)
 {
   // We recorded the size in the first buffer entry
   return *iter;
 }
 
-template <typename T, typename D>
+template <typename T, typename D, bool asd>
 template <typename OutputIter, typename Context>
 void
-Packing<DualNumber<T, D>,
-        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D>>::is_fixed_type>::type>::
-    pack(const DualNumber<T, D> & dn, OutputIter data_out, const Context * ctx)
+Packing<DualNumber<T, D, asd>,
+        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
+    pack(const DualNumber<T, D, asd> & dn, OutputIter data_out, const Context * ctx)
 {
   unsigned int size = packable_size(dn, ctx);
 
@@ -249,14 +251,14 @@ Packing<DualNumber<T, D>,
   pack_comp(dn.derivatives(), data_out, ctx);
 }
 
-template <typename T, typename D>
+template <typename T, typename D, bool asd>
 template <typename BufferIter, typename Context>
-DualNumber<T, D>
-Packing<DualNumber<T, D>,
-        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D>>::is_fixed_type>::type>::
+DualNumber<T, D, asd>
+Packing<DualNumber<T, D, asd>,
+        typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     unpack(BufferIter in, Context * ctx)
 {
-  DualNumber<T, D> dn;
+  DualNumber<T, D, asd> dn;
 
   // We don't care about the size
   in++;
