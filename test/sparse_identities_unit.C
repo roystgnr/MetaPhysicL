@@ -78,7 +78,7 @@ int vectester (Vector zerovec)
 
   // Avoid divide by zero errors or acos(x>1) NaNs later
   for (unsigned int i=0; i != random_vec.size(); ++i)
-    random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+    random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX)/2);
 
   int returnval = 0;
 
@@ -118,7 +118,7 @@ int if_else_tester (Vector zerovec)
   std::srand(12345); // Fixed seed for reproduceability of failures
 
   for (unsigned int i=0; i != random_vec.size(); ++i)
-    random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX);
+    random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX));
 
   int returnval = 0;
 

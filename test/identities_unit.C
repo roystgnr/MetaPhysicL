@@ -80,7 +80,7 @@ int vectester (void)
 
   // Avoid divide by zero errors or acos(x>1) NaNs later
   for (unsigned int i=0; i != random_vec.size(); ++i)
-    random_vec[i] = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+    random_vec[i] = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX)/2);
 
   Scalar pi = acos(Scalar(-1));
 
