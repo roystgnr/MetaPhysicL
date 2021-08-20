@@ -66,4 +66,11 @@ main(int argc, const char * const * argv)
   return 0;
 }
 
+#else
+
+int main()
+{
+  return 0;
+}
+
 #endif // METAPHYSICL_HAVE_TIMPI && METAPHYSICL_HAVE_TIMPI_LIB
