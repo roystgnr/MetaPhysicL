@@ -28,6 +28,7 @@ check_PROGRAMS += testopt_unit
 check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
 check_PROGRAMS += parallel_unit
+check_PROGRAMS += pde_unit
 
 if CXX14_ENABLED
   check_PROGRAMS += dualnamedarray_unit
@@ -113,6 +114,8 @@ vector_pde_unit_SOURCES =  vector_pde_unit.C
 vector_pde_unit_SOURCES += pde_unit.h
 vector_pde_unit_SOURCES += testing.h
 parallel_unit_SOURCES = parallel_unit.C
+pde_unit_SOURCES = pde_unit.C
+pde_unit_SOURCES += testing.h
 
 #Define tests to actually be run. TESTS is a special automake variable
 TESTS  = run_unit_tests.sh

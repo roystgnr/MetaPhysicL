@@ -23,17 +23,14 @@ using namespace MetaPhysicL;
 
 int main(void)
 {
-  int err = 0;
   int N   = 10; // mesh pts. in x and y
-  double su,sv,s2u,s2v,sp,se,s2e,s2p;
+#ifdef METAPHYSICL_HAVE_MASA
+  int err = 0;
+  double su,sv,sp,se,s2u,s2v,s2e,s2p;
   double pnorm, unorm, vnorm, enorm;
-  double pnorm_max, unorm_max, vnorm_max, enorm_max;
+  double pnorm_max = 0., unorm_max = 0., vnorm_max = 0., enorm_max = 0.;
   double prnorm_max = 0., urnorm_max = 0., vrnorm_max = 0., ernorm_max = 0.;
-
-  unorm_max = 0;
-  vnorm_max = 0;
-  pnorm_max = 0;
-  enorm_max = 0;
+#endif
 
   typedef VectorUnitVector<NDIM,0,RawScalar>::type XVector;
   XVector xvec = VectorUnitVector<NDIM,0,RawScalar>::value();
@@ -77,14 +74,14 @@ int main(void)
 	{
           xy.get<1>() = YADType(j*h, yvec);
 
+#ifdef METAPHYSICL_HAVE_MASA
 	  // AD source terms
 	  s2u = evaluate_q(xy,1);
 	  s2v = evaluate_q(xy,2);
 	  s2p = evaluate_q(xy,3);
 	  s2e = evaluate_q(xy,4);
 
-#ifdef METAPHYSICL_HAVE_MASA
-	  // evaluate masa source terms
+          // evaluate masa source terms
 	  su  = masa_eval_source_rho_u<double>(i*h,j*h);
 	  sv  = masa_eval_source_rho_v<double>(i*h,j*h);
 	  sp  = masa_eval_source_rho  <double>(i*h,j*h);
