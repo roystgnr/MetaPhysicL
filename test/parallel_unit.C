@@ -4,6 +4,7 @@
 
 #include <metaphysicl/parallel_dynamicsparsenumberarray.h>
 #include <metaphysicl/parallel_dualnumber.h>
+#include <metaphysicl/parallel_semidynamicsparsenumberarray.h>
 
 #include <timpi/communicator.h>
 #include <timpi/parallel_implementation.h>
@@ -26,10 +27,11 @@ using namespace MetaPhysicL;
 
 Communicator * TestCommWorld;
 
+template <typename D, bool asd>
 void
 testContainerAllGather()
 {
-  typedef DualNumber<double, DynamicSparseNumberArray<double, unsigned int>> DualReal;
+  typedef DualNumber<double, D, asd> DualReal;
 
   std::vector<DualReal> vals;
   const unsigned int my_rank = TestCommWorld->rank();
@@ -61,8 +63,18 @@ main(int argc, const char * const * argv)
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
 
-  testContainerAllGather();
+  testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
 
+  return 0;
+}
+
+#else
+
+int main()
+{
   return 0;
 }
 

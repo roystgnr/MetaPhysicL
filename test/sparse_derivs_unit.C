@@ -92,7 +92,7 @@ int vectester (Vector zerovec)
   // Avoid divide by zero errors or acos(x>1) NaNs later
   for (unsigned int i=0; i != N; ++i)
     {
-      random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+      random_vec.raw_at(i) = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX)/2);
       random_vec.raw_at(i).derivatives() = 1;
     }
 

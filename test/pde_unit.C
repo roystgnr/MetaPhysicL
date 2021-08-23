@@ -23,17 +23,14 @@ using namespace MetaPhysicL;
 
 int main(void)
 {
-  int err = 0;
   int N   = 10; // mesh pts. in x and y
-  double su,sv,s2u,s2v,sp,se,s2e,s2p;
+#ifdef METAPHYSICL_HAVE_MASA
+  int err = 0;
+  double su,sv,sp,se,s2u,s2v,s2e,s2p;
   double pnorm, unorm, vnorm, enorm;
-  double pnorm_max, unorm_max, vnorm_max, enorm_max;
+  double pnorm_max = 0., unorm_max = 0., vnorm_max = 0., enorm_max = 0.;
   double prnorm_max = 0., urnorm_max = 0., vrnorm_max = 0., ernorm_max = 0.;
-
-  unorm_max = 0;
-  vnorm_max = 0;
-  pnorm_max = 0;
-  enorm_max = 0;
+#endif
 
   typedef VectorUnitVector<NDIM,0,RawScalar>::type XVector;
   XVector xvec = VectorUnitVector<NDIM,0,RawScalar>::value();
@@ -54,7 +51,7 @@ int main(void)
 #ifdef METAPHYSICL_HAVE_MASA
   // initialize the problem in MASA
   err += masa_init("euler-maple","euler_2d");
-  
+
   // call the sanity check routine
   // (tests that all variables have been initialized)
   err += masa_sanity_check();
@@ -65,8 +62,8 @@ int main(void)
   xy.get<0>() = XADType(1., xvec);
   xy.get<1>() = YADType(1., yvec);
 
-  // the input argument xyz is another NumberVector 
-  // a vector just like Q_rho_u, a spatial location rather 
+  // the input argument xyz is another NumberVector
+  // a vector just like Q_rho_u, a spatial location rather
   // than a vector-valued forcing function.
   double h = 1.0/N;
   for (int i=0; i != N+1; ++i)
@@ -77,27 +74,27 @@ int main(void)
 	{
           xy.get<1>() = YADType(j*h, yvec);
 
+#ifdef METAPHYSICL_HAVE_MASA
 	  // AD source terms
 	  s2u = evaluate_q(xy,1);
 	  s2v = evaluate_q(xy,2);
 	  s2p = evaluate_q(xy,3);
 	  s2e = evaluate_q(xy,4);
 
-#ifdef METAPHYSICL_HAVE_MASA
-	  // evaluate masa source terms
+          // evaluate masa source terms
 	  su  = masa_eval_source_rho_u<double>(i*h,j*h);
 	  sv  = masa_eval_source_rho_v<double>(i*h,j*h);
 	  sp  = masa_eval_source_rho  <double>(i*h,j*h);
 	  se  = masa_eval_source_rho_e<double>(i*h,j*h);
 
-	  unorm = fabs(su-s2u);	  
+	  unorm = fabs(su-s2u);
 	  vnorm = fabs(sv-s2v);
-	  pnorm = fabs(sp-s2p);	  
+	  pnorm = fabs(sp-s2p);
 	  enorm = fabs(se-s2e);
 
-	  double urnorm = fabs(su-s2u)/std::max(su,s2u);	  
+	  double urnorm = fabs(su-s2u)/std::max(su,s2u);
 	  double vrnorm = fabs(sv-s2v)/std::max(sv,s2v);
-	  double prnorm = fabs(sp-s2p)/std::max(sp,s2p);	  
+	  double prnorm = fabs(sp-s2p)/std::max(sp,s2p);
 	  double ernorm = fabs(se-s2e)/std::max(se,s2e);
 
           unorm_max = std::max(unorm, unorm_max);
@@ -113,7 +110,7 @@ int main(void)
 
 	}
     }
- 
+
 #ifdef METAPHYSICL_HAVE_MASA
   std::cout << "max error in u      : " << unorm_max << std::endl;
   std::cout << "max error in v      : " << vnorm_max << std::endl;
@@ -200,7 +197,7 @@ double evaluate_q (const Vector& xyz, const int ret)
     {
 
       // u
-    case 1: 
+    case 1:
       return Q_rho_u.template get<0>();
       break;
 

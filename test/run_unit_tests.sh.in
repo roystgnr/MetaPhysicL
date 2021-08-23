@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+# dynamic_sparse_vector_navier_unit and shadow_dynamic_sparse_vector_navier_unit
+# are currently broken
+
+for prog in compare_types complex_derivs derivs divgrad dualnamedarray \
+    dynamic_sparse_vector_pde identities instantiations main namedindexarray \
+    nd_derivs parallel pde physics shadow_dynamic_sparse_vector_pde \
+    shadow_sparse_struct_navier shadow_sparse_struct_pde \
+    shadow_sparse_vector_navier shadow_sparse_vector_pde shadow_vector_navier \
+    shadow_vector_pde sparse_derivs sparse_identities sparse_struct_navier \
+    sparse_struct_pde sparse_vector_navier sparse_vector_pde testheaders testopt \
+    vector_navier vector_pde; do
+
+    echo $METAPHYSICL_RUN ./${prog}_unit
+    $METAPHYSICL_RUN ./${prog}_unit
+done

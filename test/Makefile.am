@@ -27,6 +27,8 @@ check_PROGRAMS += testheaders_unit
 check_PROGRAMS += testopt_unit
 check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
+check_PROGRAMS += parallel_unit
+check_PROGRAMS += pde_unit
 
 if CXX14_ENABLED
   check_PROGRAMS += dualnamedarray_unit
@@ -35,12 +37,6 @@ endif
 
 if CXX11_ENABLED
   check_PROGRAMS += physics_unit
-endif
-
-if TIMPI_ENABLED
-if TIMPI_LIB_ENABLED
-  check_PROGRAMS += parallel_unit
-endif
 endif
 
 AM_CPPFLAGS  =
@@ -118,45 +114,11 @@ vector_pde_unit_SOURCES =  vector_pde_unit.C
 vector_pde_unit_SOURCES += pde_unit.h
 vector_pde_unit_SOURCES += testing.h
 parallel_unit_SOURCES = parallel_unit.C
+pde_unit_SOURCES = pde_unit.C
+pde_unit_SOURCES += testing.h
 
 #Define tests to actually be run. TESTS is a special automake variable
-TESTS  =
-TESTS += compare_types_unit
-TESTS += derivs_unit
-TESTS += nd_derivs_unit
-TESTS += complex_derivs_unit
-TESTS += divgrad_unit
-#TESTS += dynamic_sparse_vector_navier_unit
-TESTS += dynamic_sparse_vector_pde_unit
-TESTS += identities_unit
-TESTS += instantiations_unit
-TESTS += main_unit
-#TESTS += shadow_dynamic_sparse_vector_navier_unit
-TESTS += shadow_dynamic_sparse_vector_pde_unit
-TESTS += shadow_sparse_struct_navier_unit
-TESTS += shadow_sparse_struct_pde_unit
-TESTS += shadow_sparse_vector_navier_unit
-TESTS += shadow_sparse_vector_pde_unit
-TESTS += shadow_vector_navier_unit
-TESTS += shadow_vector_pde_unit
-TESTS += sparse_derivs_unit
-TESTS += sparse_identities_unit
-TESTS += sparse_struct_navier_unit
-TESTS += sparse_struct_pde_unit
-TESTS += sparse_vector_navier_unit
-TESTS += sparse_vector_pde_unit
-TESTS += testheaders_unit
-TESTS += testopt_unit
-TESTS += vector_navier_unit
-TESTS += vector_pde_unit
-
-if CXX14_ENABLED
-  TESTS += dualnamedarray_unit
-  TESTS += namedindexarray_unit
-endif
-if CXX11_ENABLED
-  TESTS += physics_unit
-endif
+TESTS  = run_unit_tests.sh
 
 #-------------
 # MASA support
@@ -176,7 +138,6 @@ if TIMPI_ENABLED
   AM_CPPFLAGS += $(TIMPI_CPPFLAGS)
 if TIMPI_LIB_ENABLED
   LIBS += $(TIMPI_LIBS)
-  TESTS += parallel_unit
 endif
 endif
 

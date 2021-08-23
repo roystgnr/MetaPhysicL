@@ -316,7 +316,7 @@ int scalartester (void)
 
   std::srand(12345);
 
-  random_quant.value() = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+  random_quant.value() = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX)/2);
   DN zero_quant = 0;
   for (unsigned int i=0; i != N; ++i)
     {
@@ -348,7 +348,7 @@ int vectester (void)
   // Avoid divide by zero errors or acos(x>1) NaNs later
   for (unsigned int i=0; i != N; ++i)
     {
-      random_quant[i] = .25 + (static_cast<Scalar>(std::rand())/RAND_MAX/2);
+      random_quant[i] = .25 + (static_cast<Scalar>(std::rand())/static_cast<Scalar>(RAND_MAX)/2);
       random_quant[i].derivatives() = 1;
       zero_quant[i] = 0;
       zero_quant[i].derivatives() = 1;

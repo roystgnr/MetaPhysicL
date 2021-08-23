@@ -25,6 +25,11 @@
 #define METAPHYSICL_DYNAMIC_STD_ARRAY_WRAPPER_H
 
 #include "metaphysicl/metaphysicl_asserts.h"
+#include "metaphysicl/metaphysicl_config.h"
+
+#ifdef METAPHYSICL_HAVE_TIMPI
+#include "timpi/standard_type_forward.h"
+#endif
 
 #include <array>
 
@@ -137,6 +142,9 @@ public:
   const_reverse_iterator rend() const { return _data.rend(); }
 
 private:
+#ifdef METAPHYSICL_HAVE_TIMPI
+  friend class TIMPI::StandardType<DynamicStdArrayWrapper<T, NType>>;
+#endif
   std::array<T, N> _data;
   std::size_t _dynamic_n = 0;
 };

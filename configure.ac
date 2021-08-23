@@ -203,6 +203,8 @@ AC_CONFIG_FILES([
   test/Makefile
   ])
 
+AC_CONFIG_FILES(test/run_unit_tests.sh, [chmod +x test/run_unit_tests.sh])
+
 # Must still call AC_OUTPUT() after generating all the files
 AC_OUTPUT()
 
