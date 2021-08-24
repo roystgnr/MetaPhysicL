@@ -30,13 +30,16 @@ check_PROGRAMS += vector_pde_unit
 check_PROGRAMS += parallel_unit
 check_PROGRAMS += pde_unit
 
+AM_TESTS_ENVIRONMENT =
 if CXX14_ENABLED
   check_PROGRAMS += dualnamedarray_unit
   check_PROGRAMS += namedindexarray_unit
+  AM_TESTS_ENVIRONMENT += TEST_CXX14=yes; export TEST_CXX14;
 endif
 
 if CXX11_ENABLED
   check_PROGRAMS += physics_unit
+  AM_TESTS_ENVIRONMENT += TEST_CXX11=yes; export TEST_CXX11;
 endif
 
 AM_CPPFLAGS  =
