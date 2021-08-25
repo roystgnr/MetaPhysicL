@@ -16,7 +16,7 @@ AM_SILENT_RULES(yes)  # use silent rules where available - automake 1.11
 
 dnl Turn off AM_MAINTAINER_MODE for bootstrapped release by
 dnl uncommenting this:
-dnl AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
+AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
 
 dnl Release versioning
 AX_SPLIT_VERSION
