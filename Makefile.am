@@ -6,7 +6,7 @@ AUTOMAKE_OPTIONS = gnu
 ACLOCAL_AMFLAGS  = -I m4 -I m4/common -I m4/autoconf-submodule
 
 SUBDIRS          = src test doxygen
-EXTRA_DIST       = CHANGES LICENSE COPYING share docs
+EXTRA_DIST       = LICENSE COPYING share docs
 
 aclocaldir = $(prefix)/share/aclocal
 aclocal_DATA = $(top_srcdir)/share/aclocal/*
