@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(metaphysicl, 1.3.0, roystgnr@ices.utexas.edu)
+AC_INIT(metaphysicl, 1.3.1, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADER(src/utilities/include/metaphysicl/metaphysicl_config.h.tmp)
@@ -16,7 +16,7 @@ AM_SILENT_RULES(yes)  # use silent rules where available - automake 1.11
 
 dnl Turn off AM_MAINTAINER_MODE for bootstrapped release by
 dnl uncommenting this:
-dnl AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
+AM_MAINTAINER_MODE # git trashes timestamps, forcing autoreconf needlessly
 
 dnl Release versioning
 AX_SPLIT_VERSION
