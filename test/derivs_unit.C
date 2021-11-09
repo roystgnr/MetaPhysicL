@@ -360,15 +360,26 @@ int vectester (void)
   return returnval;
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
   int returnval = 0;
-  returnval = returnval || vectester<NumberArray<N, DualNumber<float> > >();
-  returnval = returnval || vectester<NumberArray<N, DualNumber<double> > >();
-  returnval = returnval || vectester<NumberArray<N, DualNumber<long double> > >();
   returnval = returnval || scalartester<NumberArray<N, float> >();
+  returnval = returnval || vectester<NumberArray<N, DualNumber<float> > >();
+
   returnval = returnval || scalartester<NumberArray<N, double> >();
-  returnval = returnval || scalartester<NumberArray<N, long double> >();
+  returnval = returnval || vectester<NumberArray<N, DualNumber<double> > >();
+
+  bool use_long_double = true;
+  std::string disarg = "--disable-long-double";
+  for (int i = 1; i < argc; ++i)
+    if (disarg == argv[i])
+      use_long_double = false;
+
+  if (use_long_double)
+    {
+      returnval = returnval || scalartester<NumberArray<N, long double> >();
+      returnval = returnval || vectester<NumberArray<N, DualNumber<long double> > >();
+    }
 
   // We no longer treat vectors like arrays for built-in functions, so
   // most of the identities above make no sense.

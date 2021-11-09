@@ -14,8 +14,8 @@ struct print_functor {
 
 int main(void)
 {
-  const RawType<const ShadowNumber<double, long double> >::value_type testin = 0;
-  double testout = testin;
+  const RawType<const ShadowNumber<float, double> >::value_type testin = 0;
+  float testout = testin;
 
   if (testout)
     metaphysicl_error();

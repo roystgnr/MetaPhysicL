@@ -207,7 +207,7 @@ int vectester (Vector zerovec)
   return returnval;
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
   int returnval = 0;
   /*
@@ -225,12 +225,6 @@ int main(void)
   returnval = returnval || vectester(SparseNumberArrayOf
     <N, 0, DualNumber<float>, 1, DualNumber<float>,
         2, DualNumber<float>, 3, DualNumber<float> >::type());
-  returnval = returnval || vectester(SparseNumberArrayOf
-    <N, 0, DualNumber<double>, 1, DualNumber<double>,
-        2, DualNumber<double>, 3, DualNumber<double> >::type());
-  returnval = returnval || vectester(SparseNumberArrayOf
-    <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
-        2, DualNumber<long double>, 3, DualNumber<long double> >::type());
 
   DynamicSparseNumberArray<DualNumber<float>, unsigned int> float_dsna;
     float_dsna.resize(4);
@@ -239,26 +233,24 @@ int main(void)
     float_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(float_dsna);
 
-  DynamicSparseNumberArray<DualNumber<double>, unsigned int> double_dsna;
-    double_dsna.resize(4);
-    double_dsna.raw_index(1) = 1;
-    double_dsna.raw_index(2) = 2;
-    double_dsna.raw_index(3) = 3;
-  returnval = returnval || vectester(double_dsna);
-
-  DynamicSparseNumberArray<DualNumber<long double>, unsigned int> long_double_dsna;
-    long_double_dsna.resize(4);
-    long_double_dsna.raw_index(1) = 1;
-    long_double_dsna.raw_index(2) = 2;
-    long_double_dsna.raw_index(3) = 3;
-  returnval = returnval || vectester(long_double_dsna);
-
   SemiDynamicSparseNumberArray<DualNumber<float>, unsigned int, NWrapper<4>> float_sdsna;
     float_dsna.resize(4);
     float_dsna.raw_index(1) = 1;
     float_dsna.raw_index(2) = 2;
     float_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(float_sdsna);
+
+
+  returnval = returnval || vectester(SparseNumberArrayOf
+    <N, 0, DualNumber<double>, 1, DualNumber<double>,
+        2, DualNumber<double>, 3, DualNumber<double> >::type());
+
+  DynamicSparseNumberArray<DualNumber<double>, unsigned int> double_dsna;
+    double_dsna.resize(4);
+    double_dsna.raw_index(1) = 1;
+    double_dsna.raw_index(2) = 2;
+    double_dsna.raw_index(3) = 3;
+  returnval = returnval || vectester(double_dsna);
 
   SemiDynamicSparseNumberArray<DualNumber<double>, unsigned int, NWrapper<4>> double_sdsna;
     double_dsna.resize(4);
@@ -267,12 +259,33 @@ int main(void)
     double_dsna.raw_index(3) = 3;
   returnval = returnval || vectester(double_sdsna);
 
-  SemiDynamicSparseNumberArray<DualNumber<long double>, unsigned int, NWrapper<4>> long_double_sdsna;
-    long_double_dsna.resize(4);
-    long_double_dsna.raw_index(1) = 1;
-    long_double_dsna.raw_index(2) = 2;
-    long_double_dsna.raw_index(3) = 3;
-  returnval = returnval || vectester(long_double_sdsna);
+
+  bool use_long_double = true;
+  std::string disarg = "--disable-long-double";
+  for (int i = 1; i < argc; ++i)
+    if (disarg == argv[i])
+      use_long_double = false;
+
+  if (use_long_double)
+    {
+      returnval = returnval || vectester(SparseNumberArrayOf
+        <N, 0, DualNumber<long double>, 1, DualNumber<long double>,
+            2, DualNumber<long double>, 3, DualNumber<long double> >::type());
+
+      DynamicSparseNumberArray<DualNumber<long double>, unsigned int> long_double_dsna;
+        long_double_dsna.resize(4);
+        long_double_dsna.raw_index(1) = 1;
+        long_double_dsna.raw_index(2) = 2;
+        long_double_dsna.raw_index(3) = 3;
+      returnval = returnval || vectester(long_double_dsna);
+
+      SemiDynamicSparseNumberArray<DualNumber<long double>, unsigned int, NWrapper<4>> long_double_sdsna;
+        long_double_dsna.resize(4);
+        long_double_dsna.raw_index(1) = 1;
+        long_double_dsna.raw_index(2) = 2;
+        long_double_dsna.raw_index(3) = 3;
+      returnval = returnval || vectester(long_double_sdsna);
+    }
 
 // Many of the functions we test don't make sense for mathematical vectors
 /*
