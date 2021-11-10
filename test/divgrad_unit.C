@@ -112,13 +112,21 @@ bool dense_tester()
   return vectester(zero_vec, unit_x, unit_y, unit_z);
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
   int returnval = 0;
 
   returnval = returnval || dense_tester<float>();
   returnval = returnval || dense_tester<double>();
-  returnval = returnval || dense_tester<long double>();
+
+  bool use_long_double = true;
+  std::string disarg = "--disable-long-double";
+  for (int i = 1; i < argc; ++i)
+    if (disarg == argv[i])
+      use_long_double = false;
+
+  if (use_long_double)
+    returnval = returnval || dense_tester<long double>();
 
 
 #if 0

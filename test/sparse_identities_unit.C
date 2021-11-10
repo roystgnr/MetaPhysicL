@@ -146,12 +146,75 @@ int dynamic_tester (Vector zerovec)
   return returnval;
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
   int returnval = 0;
+
   returnval = returnval || vectester(NumberArray<N, float>());
+
+  returnval = returnval ||
+              vectester(SparseNumberArrayOf
+                          <4, 0, float, 1, float,
+                              2, float, 3, float>::type());
+
+  returnval = returnval ||
+              vectester(SparseNumberVectorOf
+                          <4, 0, float, 1, float,
+                              2, float, 3, float>::type());
+
+  DynamicSparseNumberArray<float, unsigned int> float_dsna;
+  returnval = returnval || dynamic_tester(float_dsna);
+
+  DynamicSparseNumberVector<float, unsigned int> float_dsnv;
+  returnval = returnval || dynamic_tester(float_dsna);
+
+
   returnval = returnval || vectester(NumberArray<N, double>());
-  returnval = returnval || vectester(NumberArray<N, long double>());
+
+  returnval = returnval ||
+              vectester(SparseNumberArrayOf
+                          <4, 0, double, 1, double,
+                              2, double, 3, double>::type());
+
+  returnval = returnval ||
+              vectester(SparseNumberVectorOf
+                          <4, 0, double, 1, double,
+                              2, double, 3, double>::type());
+
+  DynamicSparseNumberArray<double, unsigned int> double_dsna;
+  returnval = returnval || dynamic_tester(double_dsna);
+
+  DynamicSparseNumberVector<double, unsigned int> double_dsnv;
+  returnval = returnval || dynamic_tester(double_dsnv);
+
+
+  bool use_long_double = true;
+  std::string disarg = "--disable-long-double";
+  for (int i = 1; i < argc; ++i)
+    if (disarg == argv[i])
+      use_long_double = false;
+
+  if (use_long_double)
+    {
+      returnval = returnval || vectester(NumberArray<N, long double>());
+
+      returnval = returnval ||
+                  vectester(SparseNumberArrayOf
+                              <4, 0, long double, 1, long double,
+                                  2, long double, 3, long double>::type());
+
+      returnval = returnval ||
+                  vectester(SparseNumberVectorOf
+                              <4, 0, long double, 1, long double,
+                                  2, long double, 3, long double>::type());
+
+      DynamicSparseNumberArray<long double, unsigned int> long_double_dsna;
+      returnval = returnval || dynamic_tester(long_double_dsna);
+
+      DynamicSparseNumberVector<long double, unsigned int> long_double_dsnv;
+      returnval = returnval || dynamic_tester(long_double_dsnv);
+    }
+
 
   // We no longer treat vectors like arrays for built-in functions, so
   // most of the identities above make no sense.
@@ -161,49 +224,6 @@ int main(void)
   returnval = returnval || vectester(NumberVector<N, long double>());
   */
 
-  returnval = returnval ||
-              vectester(SparseNumberArrayOf
-                          <4, 0, float, 1, float,
-                              2, float, 3, float>::type());
-  returnval = returnval ||
-              vectester(SparseNumberArrayOf
-                          <4, 0, double, 1, double,
-                              2, double, 3, double>::type());
-  returnval = returnval ||
-              vectester(SparseNumberArrayOf
-                          <4, 0, long double, 1, long double,
-                              2, long double, 3, long double>::type());
-
-  returnval = returnval ||
-              vectester(SparseNumberVectorOf
-                          <4, 0, float, 1, float,
-                              2, float, 3, float>::type());
-  returnval = returnval ||
-              vectester(SparseNumberVectorOf
-                          <4, 0, double, 1, double,
-                              2, double, 3, double>::type());
-  returnval = returnval ||
-              vectester(SparseNumberVectorOf
-                          <4, 0, long double, 1, long double,
-                              2, long double, 3, long double>::type());
-
-  DynamicSparseNumberArray<float, unsigned int> float_dsna;
-  returnval = returnval || dynamic_tester(float_dsna);
-
-  DynamicSparseNumberArray<double, unsigned int> double_dsna;
-  returnval = returnval || dynamic_tester(double_dsna);
-
-  DynamicSparseNumberArray<long double, unsigned int> long_double_dsna;
-  returnval = returnval || dynamic_tester(long_double_dsna);
-
-  DynamicSparseNumberVector<float, unsigned int> float_dsnv;
-  returnval = returnval || dynamic_tester(float_dsna);
-
-  DynamicSparseNumberVector<double, unsigned int> double_dsnv;
-  returnval = returnval || dynamic_tester(double_dsnv);
-
-  DynamicSparseNumberVector<long double, unsigned int> long_double_dsnv;
-  returnval = returnval || dynamic_tester(long_double_dsnv);
 
   return returnval;
 }

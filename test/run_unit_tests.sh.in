@@ -6,8 +6,8 @@ set -e
 # are currently broken
 
 run_program() {
-    echo $METAPHYSICL_RUN ./$1_unit
-    $METAPHYSICL_RUN ./$1_unit
+    echo $METAPHYSICL_RUN ./$1_unit $METAPHYSICL_OPTIONS
+    $METAPHYSICL_RUN ./$1_unit $METAPHYSICL_OPTIONS
     }
 
 

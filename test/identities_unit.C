@@ -106,12 +106,20 @@ int vectester (void)
   return returnval;
 }
 
-int main(void)
+int main(int argc, char * argv[])
 {
   int returnval = 0;
   returnval = returnval || vectester<NumberArray<N, float> >();
   returnval = returnval || vectester<NumberArray<N, double> >();
-  returnval = returnval || vectester<NumberArray<N, long double> >();
+
+  bool use_long_double = true;
+  std::string disarg = "--disable-long-double";
+  for (int i = 1; i < argc; ++i)
+    if (disarg == argv[i])
+      use_long_double = false;
+
+  if (use_long_double)
+    returnval = returnval || vectester<NumberArray<N, long double> >();
 
   // We no longer treat vectors like arrays for built-in functions, so
   // most of the identities above make no sense.
