@@ -17,7 +17,7 @@
   metaphysicl_error()
 
 #define METAPHYSICL_UNIT_FP_ASSERT(test, true_value, tolerance)                                    \
-  if (!(test < true_value + tolerance && test > true_value - tolerance))               \
+  if (!(test < true_value + tolerance && test > true_value - tolerance))                           \
   metaphysicl_error()
 
 #define TOLERANCE 1e-12
@@ -57,6 +57,16 @@ testContainerAllGather()
   }
 }
 
+template <typename NonBuiltin>
+void
+testStandardTypeAssignment()
+{
+  NonBuiltin ex{};
+  StandardType<NonBuiltin> a(&ex);
+  StandardType<NonBuiltin> b(&ex);
+  a = b;
+}
+
 int
 main(int argc, const char * const * argv)
 {
@@ -68,12 +78,17 @@ main(int argc, const char * const * argv)
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
 
+  testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>>();
+  testStandardTypeAssignment<DynamicStdArrayWrapper<double, NWrapper<50>>>();
+  testStandardTypeAssignment<DualNumber<double>>();
+
   return 0;
 }
 
 #else
 
-int main()
+int
+main()
 {
   return 0;
 }
