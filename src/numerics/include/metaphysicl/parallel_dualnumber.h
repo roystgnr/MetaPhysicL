@@ -55,48 +55,58 @@ class StandardType<
 public:
   explicit StandardType(const DualNumber<T, D, asd> * example = nullptr)
   {
-    // We need an example for MPI_Address to use
-    static const DualNumber<T, D, asd> p(0);
-    if (!example)
-      example = &p;
-
 #ifdef TIMPI_HAVE_MPI
+    static data_type static_type = MPI_DATATYPE_NULL;
+    if (static_type == MPI_DATATYPE_NULL)
+      {
+        // We need an example for MPI_Address to use
+        static const DualNumber<T, D, asd> p(0);
+        if (!example)
+          example = &p;
 
-    // Get the sub-data-types, and make sure they live long enough
-    // to construct the derived type
-    StandardType<T> d1(&example->value());
-    StandardType<D> d2(&example->derivatives());
+        // Get the sub-data-types, and make sure they live long enough
+        // to construct the derived type
+        StandardType<T> d1(&example->value());
+        StandardType<D> d2(&example->derivatives());
 
-    MPI_Datatype types[] = {(data_type)d1, (data_type)d2};
-    int blocklengths[] = {1, 1};
-    MPI_Aint displs[2], start;
+        MPI_Datatype types[] = {(data_type)d1, (data_type)d2};
+        int blocklengths[] = {1, 1};
+        MPI_Aint displs[2], start;
 
-    timpi_call_mpi(MPI_Get_address(const_cast<DualNumber<T, D, asd> *>(example), &start));
-    timpi_call_mpi(MPI_Get_address(const_cast<T *>(&example->value()), &displs[0]));
-    timpi_call_mpi(MPI_Get_address(const_cast<D *>(&example->derivatives()), &displs[1]));
-    displs[0] -= start;
-    displs[1] -= start;
+        timpi_call_mpi(MPI_Get_address(const_cast<DualNumber<T, D, asd> *>(example), &start));
+        timpi_call_mpi(MPI_Get_address(const_cast<T *>(&example->value()), &displs[0]));
+        timpi_call_mpi(MPI_Get_address(const_cast<D *>(&example->derivatives()), &displs[1]));
+        displs[0] -= start;
+        displs[1] -= start;
 
-    // create a prototype structure
-    MPI_Datatype tmptype;
-    timpi_call_mpi(MPI_Type_create_struct(2, blocklengths, displs, types, &tmptype));
-    timpi_call_mpi(MPI_Type_commit(&tmptype));
+        // create a prototype structure
+        MPI_Datatype tmptype;
+        timpi_call_mpi(MPI_Type_create_struct(2, blocklengths, displs, types, &tmptype));
+        timpi_call_mpi(MPI_Type_commit(&tmptype));
 
-    // resize the structure type to account for padding, if any
-    timpi_call_mpi(MPI_Type_create_resized(tmptype, 0, sizeof(DualNumber<T, D, asd>), &_datatype));
-    timpi_call_mpi(MPI_Type_free(&tmptype));
+        // resize the structure type to account for padding, if any
+        timpi_call_mpi(MPI_Type_create_resized(tmptype, 0, sizeof(DualNumber<T, D, asd>), &static_type));
+        timpi_call_mpi(MPI_Type_free(&tmptype));
 
-    this->commit();
-
+        SemiPermanent::add
+          (std::make_unique<ManageType>(static_type));
+      }
+    _datatype = static_type;
+#else
+    timpi_ignore(example);
 #endif // TIMPI_HAVE_MPI
   }
 
   StandardType(const StandardType<DualNumber<T, D, asd>> & timpi_mpi_var(t))
   {
-    timpi_call_mpi(MPI_Type_dup(t._datatype, &_datatype));
+    _datatype = t._datatype;
   }
 
-  ~StandardType() { this->free(); }
+  StandardType & operator=(StandardType & t)
+  {
+    _datatype = t._datatype;
+    return *this;
+  }
 
   static const bool is_fixed_type = true;
 };
