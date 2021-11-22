@@ -24,7 +24,7 @@ is_package_required=ifelse([$2], ,no, $2 )
 dnl TIMPI_PREFIX was already set
 if test -d "${TIMPI_PREFIX}" ; then
     TIMPI_CPPFLAGS="-I$TIMPI_PREFIX/include $TIMPI_CPPFLAGS"
-    TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_opt $TIMPI_LIBS"
+    TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_$timpi_method $TIMPI_LIBS"
 fi
 
 ac_TIMPI_save_CPPFLAGS="$CPPFLAGS"
