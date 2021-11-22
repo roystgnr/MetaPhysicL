@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(metaphysicl, 1.3.1, roystgnr@ices.utexas.edu)
+AC_INIT(metaphysicl, 1.3.2, roystgnr@ices.utexas.edu)
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADER(src/utilities/include/metaphysicl/metaphysicl_config.h.tmp)
@@ -130,7 +130,10 @@ AS_IF([test "$enable_installed_timpi" = yes],
         AC_DEFINE(HAVE_TIMPI,1,[Define if TIMPI headers are available])
         AC_DEFINE(HAVE_TIMPI_LIB,1,[Define if a TIMPI library is available])
         TIMPI_CPPFLAGS="-I$TIMPI_PREFIX/include $TIMPI_CPPFLAGS"
-        TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_opt $TIMPI_LIBS"
+
+        dnl We don't know what METHODS a not-yet-installed TIMPI was
+        dnl built with; let's guess opt?
+        TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_$timpi_method $TIMPI_LIBS"
       ],
       [])
 
