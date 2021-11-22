@@ -18,6 +18,7 @@ AC_ARG_WITH(future-timpi-dir,
               fi
             ])
 
+
 dnl After this block enable_installed_timpi should be either yes or no
 enable_installed_timpi=no
 AC_ARG_WITH(timpi,
@@ -45,4 +46,19 @@ AC_ARG_WITH(timpi,
           ],
           [enable_installed_timpi=no])
   ])
+
+
+dnl The most likely method to be installed is opt
+timpi_method=opt
+AC_ARG_WITH(timpi-method,
+            [AS_HELP_STRING([--with-timpi-method=METHOD], [TIMPI library (default=opt) for MetaPhysicL tests to use])],
+            [
+              timpi_method=$withval
+              if test "$timpi_method" = yes; then
+                AC_MSG_ERROR([You must specify a valid $METHOD for TIMPI])
+              fi
+              if test "$timpi_method" = no; then
+                AC_MSG_ERROR([You cannot specify no $METHOD for TIMPI])
+              fi
+            ])
 ])
