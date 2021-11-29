@@ -51,10 +51,10 @@ if test "x$HAVE_TIMPI" = "x1"; then
   echo '  'TIMPI_CPPFLAGS.............. : $TIMPI_CPPFLAGS
   if test "x$HAVE_TIMPI_LIB" = "x1"; then
     echo '  'TIMPI_LIB................... : yes
-    echo '  'TIMPI_LIBS.................. : $TIMPI_LIBS
   else
     echo '  'TIMPI_LIB................... : no
   fi
+  echo '  'TIMPI_LIBS.................. : $TIMPI_LIBS
 else
   echo '  'TIMPI....................... : no
 fi
