@@ -82,7 +82,7 @@ HAVE_METAPHYSICL=0
     LIBS="${METAPHYSICL_LIBS} ${LDFLAGS}"
 
     AC_LANG_PUSH([C++])
-    AC_CHECK_HEADER([metaphysicl/metaphysicl_version.h],[found_header=yes],[found_header=no])
+    AC_CHECK_HEADER([metaphysicl/metaphysicl_version.h],[metaphysicl_found_header=yes],[metaphysicl_found_header=no])
     AC_LANG_POP([C++])
 
     #-----------------------
@@ -110,7 +110,7 @@ HAVE_METAPHYSICL=0
 
     # begin additional test(s) if header if available
 
-    if test "x${found_header}" = "xyes" ; then
+    if test "x${metaphysicl_found_header}" = "xyes" ; then
 
         AC_MSG_CHECKING(for metaphysicl - version >= $min_metaphysicl_version)
         version_succeeded=no
@@ -158,9 +158,9 @@ HAVE_METAPHYSICL=0
                   [AC_LANG_PROGRAM([#include "metaphysicl/metaphysicl_version.h"],
                                    [MetaPhysicL::get_metaphysicl_version()])],
                   [AC_MSG_RESULT(yes)
-                   found_library=yes],
+                   metaphysicl_found_library=yes],
                   [AC_MSG_RESULT(no) 
-                   found_library=no])
+                   metaphysicl_found_library=no])
 
     fi   dnl end test if header if available
 
@@ -171,9 +171,9 @@ HAVE_METAPHYSICL=0
     LIBS="$ac_METAPHYSICL_save_LIBS"
 
     succeeded=no
-    if test "$found_header" = yes; then
+    if test "$metaphysicl_found_header" = yes; then
         if test "$version_succeeded" = yes; then
-           if test "$found_library" = yes; then
+           if test "$metaphysicl_found_library" = yes; then
               succeeded=yes
            fi
         fi

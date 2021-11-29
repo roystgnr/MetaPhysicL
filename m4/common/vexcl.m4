@@ -118,7 +118,7 @@ if test "${with_vexcl}" != no ; then
     AC_LANG_PUSH([C++])
     ac_VEXCL_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CXXFLAGS $CPPFLAGS $VEXCL_CPPFLAGS $BOOST_CPPFLAGS $CL_CFLAGS $CL_CPPFLAGS"
-    AC_CHECK_HEADER([vexcl/vexcl.hpp],[found_header=yes],[found_header=no])
+    AC_CHECK_HEADER([vexcl/vexcl.hpp],[vexcl_found_header=yes],[vexcl_found_header=no])
     CPPFLAGS="$ac_VEXCL_save_CPPFLAGS"
     AC_LANG_POP([C++])
 
@@ -128,7 +128,7 @@ if test "${with_vexcl}" != no ; then
     #----------------------
 
     succeeded=yes
-    if test x$found_header = xyes -a x"$no_cl" != xyes; then
+    if test x$vexcl_found_header = xyes -a x"$no_cl" != xyes; then
       VEXCL_CPPFLAGS="$VEXCL_CPPFLAGS $BOOST_CPPFLAGS $CL_CFLAGS $CL_CPPFLAGS"
       VEXCL_LDFLAGS="$BOOST_CHRONO_LDFLAGS $BOOST_DATE_TIME_LDFLAGS $BOOST_FILESYSTEM_LDFLAGS $BOOST_SYSTEM_LDFLAGS $CL_LDFLAGS"
       VEXCL_LIBS="$BOOST_CHRONO_LIBS $BOOST_DATE_TIME_LIBS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS $CL_LIBS"

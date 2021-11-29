@@ -34,7 +34,7 @@ CPPFLAGS="${TIMPI_CPPFLAGS} ${CPPFLAGS}"
 LIBS="${TIMPI_LIBS} ${LIBS}"
 
 AC_LANG_PUSH([C++])
-AC_CHECK_HEADER([timpi/timpi.h],[found_header=yes],[found_header=no])
+AC_CHECK_HEADER([timpi/timpi.h],[timpi_found_header=yes],[timpi_found_header=no])
 
 #-----------------------
 # Minimum version check
@@ -61,7 +61,7 @@ fi
 
 dnl begin additional test(s) if header if available
 
-if test "x${found_header}" = "xyes" ; then
+if test "x${timpi_found_header}" = "xyes" ; then
 
     AC_MSG_CHECKING(for timpi - version >= $min_timpi_version)
     version_succeeded=no
@@ -107,7 +107,7 @@ if test "x${found_header}" = "xyes" ; then
     TIMPI::TIMPIInit init();
   ])],
   [AC_MSG_RESULT(yes)
-  found_library=yes ],[AC_MSG_RESULT(no)])
+  timpi_found_library=yes ],[AC_MSG_RESULT(no)])
 
 fi   dnl end test if header if available
 
@@ -117,7 +117,7 @@ CPPFLAGS="$ac_TIMPI_save_CPPFLAGS"
 LIBS="$ac_TIMPI_save_LIBS"
 
 succeeded=no
-if test "$found_header" = yes; then
+if test "$timpi_found_header" = yes; then
     if test "$version_succeeded" = yes; then
          succeeded=yes
     fi
@@ -134,7 +134,7 @@ else
     dnl Write these variables into the Makefile
     dnl Define C processor macro; this will show up in metaphysicl_config
     AC_DEFINE(HAVE_TIMPI,1,[Define if TIMPI headers are available])
-    if test "$found_library" = yes; then
+    if test "$timpi_found_library" = yes; then
       dnl This is for building the test suite only
       HAVE_TIMPI_LIB=1
       AC_DEFINE(HAVE_TIMPI_LIB,1,[Define if a TIMPI library is available])
