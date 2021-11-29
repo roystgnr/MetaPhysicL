@@ -79,7 +79,7 @@ if test "${with_masa}" != no ; then
     LDFLAGS="${MASA_LIBS} ${LDFLAGS}"
 
     AC_LANG_PUSH([C++])
-    AC_CHECK_HEADER([masa.h],[found_header=yes],[found_header=no])
+    AC_CHECK_HEADER([masa.h],[masa_found_header=yes],[masa_found_header=no])
 
     #-----------------------
     # Minimum version check
@@ -106,7 +106,7 @@ if test "${with_masa}" != no ; then
 
     dnl begin additional test(s) if header if available
 
-    if test "x${found_header}" = "xyes" ; then
+    if test "x${masa_found_header}" = "xyes" ; then
 
         AC_MSG_CHECKING(for masa - version >= $min_masa_version)
         version_succeeded=no
@@ -150,7 +150,7 @@ if test "${with_masa}" != no ; then
     [AC_LANG_PROGRAM([#include <masa.h>],[MASA::masa_version_stdout])],
     [TEST_LIBS="$TEST_LIBS -lmasa"] [
     AC_MSG_RESULT(yes)
-    found_library=yes ],[AC_MSG_RESULT(no)])
+    masa_found_library=yes ],[AC_MSG_RESULT(no)])
 
     fi   dnl end test if header if available
 
@@ -162,9 +162,9 @@ if test "${with_masa}" != no ; then
     LIBS="$ac_MASA_save_LIBS"
 
     succeeded=no
-    if test "$found_header" = yes; then
+    if test "$masa_found_header" = yes; then
         if test "$version_succeeded" = yes; then
-	    if test "$found_library" = yes; then
+	    if test "$masa_found_library" = yes; then
                succeeded=yes
 	    fi
         fi
