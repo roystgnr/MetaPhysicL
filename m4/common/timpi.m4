@@ -107,7 +107,9 @@ if test "x${timpi_found_header}" = "xyes" ; then
     TIMPI::TIMPIInit init();
   ])],
   [AC_MSG_RESULT(yes)
-  timpi_found_library=yes ],[AC_MSG_RESULT(no)])
+  timpi_found_library=yes ],
+  [AC_MSG_RESULT(no)
+  timpi_found_library=no ])
 
 fi   dnl end test if header if available
 

@@ -150,7 +150,9 @@ if test "${with_masa}" != no ; then
     [AC_LANG_PROGRAM([#include <masa.h>],[MASA::masa_version_stdout])],
     [TEST_LIBS="$TEST_LIBS -lmasa"] [
     AC_MSG_RESULT(yes)
-    masa_found_library=yes ],[AC_MSG_RESULT(no)])
+    masa_found_library=yes ],
+    [AC_MSG_RESULT(no)
+    masa_found_library=no ])
 
     fi   dnl end test if header if available
 
