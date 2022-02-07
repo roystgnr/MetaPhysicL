@@ -136,7 +136,7 @@ public:
 
   const_reverse_iterator rend() const { return _data.rend(); }
 
-private:
+protected:
   std::array<T, N> _data;
   std::size_t _dynamic_n = 0;
 };
