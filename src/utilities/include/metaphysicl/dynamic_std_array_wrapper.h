@@ -54,7 +54,7 @@ public:
   DynamicStdArrayWrapper(const DynamicStdArrayWrapper & src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     std::copy(src.begin(), src.end(), _data.begin());
   }
 
