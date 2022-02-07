@@ -141,7 +141,7 @@ public:
 
   const_reverse_iterator rend() const { return _data.rend(); }
 
-private:
+protected:
 #ifdef METAPHYSICL_HAVE_TIMPI
   friend class TIMPI::StandardType<DynamicStdArrayWrapper<T, NType>>;
 #endif
