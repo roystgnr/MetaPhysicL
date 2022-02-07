@@ -54,7 +54,7 @@ public:
   DynamicStdArrayWrapper(const DynamicStdArrayWrapper & src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     std::copy(src.begin(), src.end(), _data.begin());
   }
 
@@ -141,7 +141,7 @@ public:
 
   const_reverse_iterator rend() const { return _data.rend(); }
 
-private:
+protected:
 #ifdef METAPHYSICL_HAVE_TIMPI
   friend class TIMPI::StandardType<DynamicStdArrayWrapper<T, NType>>;
 #endif
