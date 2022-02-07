@@ -49,7 +49,7 @@ public:
   DynamicStdArrayWrapper(const DynamicStdArrayWrapper & src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     std::copy(src.begin(), src.end(), _data.begin());
   }
 
@@ -57,7 +57,7 @@ public:
   DynamicStdArrayWrapper(DynamicStdArrayWrapper && src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     auto src_it = src.begin(), src_end = src.end(), this_it = _data.begin();
     for (; src_it != src_end; ++src_it, ++this_it)
       *this_it = std::move(*src_it);
@@ -66,7 +66,7 @@ public:
   DynamicStdArrayWrapper & operator=(const DynamicStdArrayWrapper & src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     std::copy(src.begin(), src.end(), _data.begin());
     return *this;
   }
@@ -75,7 +75,7 @@ public:
   DynamicStdArrayWrapper & operator=(DynamicStdArrayWrapper && src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     auto src_it = src.begin(), src_end = src.end(), this_it = _data.begin();
     for (; src_it != src_end; ++src_it, ++this_it)
       *this_it = std::move(*src_it);
