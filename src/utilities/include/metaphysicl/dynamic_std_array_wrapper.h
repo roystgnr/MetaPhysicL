@@ -121,7 +121,8 @@ public:
 
   void resize(size_type new_size)
   {
-    metaphysicl_assert(new_size <= N);
+    if (new_size > N)
+      metaphysicl_error();
     _dynamic_n = new_size;
   }
 
