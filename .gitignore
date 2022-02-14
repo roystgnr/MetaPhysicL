@@ -13,8 +13,8 @@ m4/ltversion.m4
 m4/lt~obsolete.m4
 src/Makefile.in
 test/Makefile.in
+test/run_unit_tests.sh
 *~
 build
 installed
-.clang-format
 TAGS

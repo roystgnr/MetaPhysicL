@@ -96,13 +96,13 @@ public:
   iterator end()
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.end() - (N - _dynamic_n);
+    return _data.begin() + _dynamic_n;
   }
 
   const_iterator end() const
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.end() - (N - _dynamic_n);
+    return _data.begin() + _dynamic_n;
   }
 
   T & operator[](size_type i)
@@ -129,13 +129,13 @@ public:
   reverse_iterator rbegin()
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.rbegin() + (N - _dynamic_n);
+    return _data.rend() - _dynamic_n;
   }
 
   const_reverse_iterator rbegin() const
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.rbegin() + (N - _dynamic_n);
+    return _data.rend() - _dynamic_n;
   }
 
   reverse_iterator rend() { return _data.rend(); }

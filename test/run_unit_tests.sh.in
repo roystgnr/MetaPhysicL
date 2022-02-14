@@ -18,7 +18,7 @@ for prog in compare_types complex_derivs derivs divgrad \
     shadow_sparse_vector_navier shadow_sparse_vector_pde shadow_vector_navier \
     shadow_vector_pde sparse_derivs sparse_identities sparse_struct_navier \
     sparse_struct_pde sparse_vector_navier sparse_vector_pde testheaders testopt \
-    vector_navier vector_pde; do
+    vector_navier vector_pde dynamic_std_array_wrapper; do
     run_program $prog
 done
 
