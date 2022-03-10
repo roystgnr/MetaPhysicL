@@ -489,7 +489,7 @@ sparsity_intersection (const Indices2 & new_indices)
 template <typename Data, typename Indices, template <class...> class SubType, class... SubTypeArgs>
 inline
 void
-DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::sparsity_trim ()
+DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::sparsity_trim (const value_type tolerance)
 {
   metaphysicl_assert
     (std::adjacent_find(_indices.begin(), _indices.end()) ==
@@ -497,6 +497,7 @@ DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::sparsity_trim (
 #ifdef METAPHYSICL_HAVE_CXX11
   metaphysicl_assert(std::is_sorted(_indices.begin(), _indices.end()));
 #endif
+  metaphysicl_assert(tolerance >= 0);
 
 #ifndef NDEBUG
   I used_indices = 0;
@@ -505,7 +506,7 @@ DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::sparsity_trim (
     auto index_it = _indices.begin();
     auto data_it = _data.begin();
     for (; index_it != _indices.end(); ++index_it, ++data_it)
-      if (*data_it)
+      if (std::abs(*data_it) > tolerance)
         ++used_indices;
   }
 #endif
@@ -522,7 +523,7 @@ DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::sparsity_trim (
 
   for (auto i_it = _indices.begin();
        i_it != _indices.end(); ++i_it, ++d_it)
-    if (*d_it)
+    if (std::abs(*d_it) > tolerance)
       {
         *mi_it = *i_it;
         *md_it = *d_it;

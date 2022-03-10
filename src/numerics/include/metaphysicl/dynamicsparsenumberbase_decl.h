@@ -146,8 +146,10 @@ public:
   void sparsity_intersection (const Indices2& new_indices);
 
   // Since this is a dynamically allocated sparsity pattern, we can
-  // decrease it when possible for efficiency
-  void sparsity_trim ();
+  // decrease it when possible for efficiency. This method will remove
+  // any index-data pairs for whom the data entry is less than or equal
+  // to the prescribed tolerance
+  void sparsity_trim (value_type tolerance = 0);
 
   // Not defineable since !0 != 0
   // SubType<SubTypeArgs...> operator! () const;

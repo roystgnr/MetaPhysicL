@@ -30,6 +30,7 @@ check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
 check_PROGRAMS += parallel_unit
 check_PROGRAMS += pde_unit
+check_PROGRAMS += dynamic_sparse_number_base_unit
 
 AM_TESTS_ENVIRONMENT =
 if CXX14_ENABLED
@@ -67,6 +68,7 @@ dynamic_sparse_vector_pde_unit_SOURCES =  dynamic_sparse_vector_pde_unit.C
 dynamic_sparse_vector_pde_unit_SOURCES += pde_unit.h
 dynamic_sparse_vector_pde_unit_SOURCES += testing.h
 dynamic_std_array_wrapper_unit_SOURCES = dynamic_std_array_wrapper_unit.C
+dynamic_sparse_number_base_unit_SOURCES =  dynamic_sparse_number_base_unit.C
 identities_unit_SOURCES = identities_unit.C
 instantiations_unit_SOURCES = instantiations_unit.C
 main_unit_SOURCES = main_unit.C
