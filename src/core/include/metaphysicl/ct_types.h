@@ -120,13 +120,13 @@ METAPHYSICL_BUILTIN_REPLACE_TYPE(long double);
 template <typename T, typename A, typename U>
 struct ReplaceAlgebraicType<std::vector<T, A>, U>
 {
-  typedef std::vector<U, A> type;
+  typedef std::vector<typename ReplaceAlgebraicType<T, U>::type, A> type;
 };
 
 template <typename T, std::size_t N, typename U>
 struct ReplaceAlgebraicType<std::array<T, N>, U>
 {
-  typedef std::array<U, N> type;
+  typedef std::array<typename ReplaceAlgebraicType<T, U>::type, N> type;
 };
 
 } // namespace MetaPhysicL

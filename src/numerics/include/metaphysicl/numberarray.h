@@ -459,7 +459,7 @@ struct ValueType<NumberArray<N, T> >
 template <std::size_t N, typename T, typename U>
 struct ReplaceAlgebraicType<NumberArray<N, T>, U>
 {
-  typedef NumberArray<N, U> type;
+  typedef NumberArray<N, typename ReplaceAlgebraicType<T, U>::type> type;
 };
 
 } // namespace MetaPhysicL

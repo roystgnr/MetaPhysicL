@@ -141,7 +141,7 @@ struct ValueType<SemiDynamicSparseNumberArray<T, I, N>>
 template <typename T, typename I, typename N, typename U>
 struct ReplaceAlgebraicType<SemiDynamicSparseNumberArray<T, I, N>, U>
 {
-  typedef SemiDynamicSparseNumberArray<U, I, N> type;
+  typedef SemiDynamicSparseNumberArray<typename ReplaceAlgebraicType<T,U>::type, I, N> type;
 };
 } // namespace MetaPhysicL
 
