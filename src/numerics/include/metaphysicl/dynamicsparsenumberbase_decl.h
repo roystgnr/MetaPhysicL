@@ -40,6 +40,7 @@
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
+#include "metaphysicl/ct_types.h"
 
 namespace MetaPhysicL {
 

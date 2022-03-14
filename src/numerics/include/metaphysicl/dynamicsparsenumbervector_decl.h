@@ -229,6 +229,11 @@ struct ValueType<DynamicSparseNumberVector<T, I> >
   typedef typename ValueType<T>::type type;
 };
 
+template <typename T, typename I, typename U>
+struct ReplaceAlgebraicType<DynamicSparseNumberVector<T, I>, U>
+{
+  typedef U type;
+};
 } // namespace MetaPhysicL
 
 

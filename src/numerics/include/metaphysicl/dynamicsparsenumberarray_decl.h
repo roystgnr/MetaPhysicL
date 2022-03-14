@@ -234,6 +234,12 @@ struct ValueType<DynamicSparseNumberArray<T, I> >
   typedef typename ValueType<T>::type type;
 };
 
+template <typename T, typename I, typename U>
+struct ReplaceAlgebraicType<DynamicSparseNumberArray<T, I>, U>
+{
+  typedef DynamicSparseNumberArray<U, I> type;
+};
+
 } // namespace MetaPhysicL
 
 

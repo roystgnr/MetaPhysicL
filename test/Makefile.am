@@ -31,6 +31,7 @@ check_PROGRAMS += vector_pde_unit
 check_PROGRAMS += parallel_unit
 check_PROGRAMS += pde_unit
 check_PROGRAMS += dynamic_sparse_number_base_unit
+check_PROGRAMS += ct_types_unit
 
 AM_TESTS_ENVIRONMENT =
 if CXX14_ENABLED
@@ -123,6 +124,7 @@ vector_pde_unit_SOURCES += testing.h
 parallel_unit_SOURCES = parallel_unit.C
 pde_unit_SOURCES = pde_unit.C
 pde_unit_SOURCES += testing.h
+ct_types_unit_SOURCES = ct_types_unit.C
 
 #Define tests to actually be run. TESTS is a special automake variable
 TESTS  = run_unit_tests.sh

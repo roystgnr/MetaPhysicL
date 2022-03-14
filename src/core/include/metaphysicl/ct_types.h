@@ -29,6 +29,9 @@
 #ifndef METAPHYSICL_CT_TYPES_H
 #define METAPHYSICL_CT_TYPES_H
 
+#include <array>
+#include <vector>
+
 // Compile-time type functions
 
 namespace MetaPhysicL {
@@ -80,6 +83,50 @@ struct FalseType
 {
   typedef bool value_type;
   static const bool value = false;
+};
+
+/**
+ * Structure that can be used for conveniently replacing types in containers. Calling this structure
+ * where the first template argument (T) is a container will result in replacement of the inner
+ * container type with the second structure template argument (U) resulting in a container of U's.
+ * If the first template argument is a nuclear/atomic algebraic type, such as a tensor, vector, or
+ * scalar then the resulting type will simply be U
+ */
+template <typename T, typename U>
+struct ReplaceAlgebraicType;
+
+#define METAPHYSICL_BUILTIN_REPLACE_TYPE(Type)  \
+  template <typename U>                         \
+  struct ReplaceAlgebraicType<Type, U>          \
+  {                                             \
+    typedef U type;                             \
+  }
+
+METAPHYSICL_BUILTIN_REPLACE_TYPE(char);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(signed char);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(unsigned char);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(short int);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(unsigned short int);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(int);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(unsigned int);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(long);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(long long);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(unsigned long);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(unsigned long long);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(float);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(double);
+METAPHYSICL_BUILTIN_REPLACE_TYPE(long double);
+
+template <typename T, typename A, typename U>
+struct ReplaceAlgebraicType<std::vector<T, A>, U>
+{
+  typedef std::vector<U, A> type;
+};
+
+template <typename T, std::size_t N, typename U>
+struct ReplaceAlgebraicType<std::array<T, N>, U>
+{
+  typedef std::array<U, N> type;
 };
 
 } // namespace MetaPhysicL
