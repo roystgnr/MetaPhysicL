@@ -18,3 +18,4 @@ test/run_unit_tests.sh
 build
 installed
 TAGS
+.clang-format
