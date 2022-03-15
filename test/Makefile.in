@@ -93,6 +93,7 @@ check_PROGRAMS = compare_types_unit$(EXEEXT) derivs_unit$(EXEEXT) \
 	divgrad_unit$(EXEEXT) \
 	dynamic_sparse_vector_navier_unit$(EXEEXT) \
 	dynamic_sparse_vector_pde_unit$(EXEEXT) \
+	dynamic_std_array_wrapper_unit$(EXEEXT) \
 	identities_unit$(EXEEXT) instantiations_unit$(EXEEXT) \
 	main_unit$(EXEEXT) \
 	shadow_dynamic_sparse_vector_navier_unit$(EXEEXT) \
@@ -110,7 +111,8 @@ check_PROGRAMS = compare_types_unit$(EXEEXT) derivs_unit$(EXEEXT) \
 	sparse_vector_pde_unit$(EXEEXT) testheaders_unit$(EXEEXT) \
 	testopt_unit$(EXEEXT) vector_navier_unit$(EXEEXT) \
 	vector_pde_unit$(EXEEXT) parallel_unit$(EXEEXT) \
-	pde_unit$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
+	pde_unit$(EXEEXT) dynamic_sparse_number_base_unit$(EXEEXT) \
+	ct_types_unit$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
 @CXX14_ENABLED_TRUE@am__append_1 = dualnamedarray_unit \
 @CXX14_ENABLED_TRUE@	namedindexarray_unit
 @CXX14_ENABLED_TRUE@am__append_2 = TEST_CXX14=yes; export TEST_CXX14;
@@ -179,6 +181,9 @@ am__v_lt_1 =
 am_complex_derivs_unit_OBJECTS = complex_derivs_unit.$(OBJEXT)
 complex_derivs_unit_OBJECTS = $(am_complex_derivs_unit_OBJECTS)
 complex_derivs_unit_LDADD = $(LDADD)
+am_ct_types_unit_OBJECTS = ct_types_unit.$(OBJEXT)
+ct_types_unit_OBJECTS = $(am_ct_types_unit_OBJECTS)
+ct_types_unit_LDADD = $(LDADD)
 am_derivs_unit_OBJECTS = derivs_unit.$(OBJEXT)
 derivs_unit_OBJECTS = $(am_derivs_unit_OBJECTS)
 derivs_unit_LDADD = $(LDADD)
@@ -188,6 +193,11 @@ divgrad_unit_LDADD = $(LDADD)
 am_dualnamedarray_unit_OBJECTS = dualnamedarray_unit.$(OBJEXT)
 dualnamedarray_unit_OBJECTS = $(am_dualnamedarray_unit_OBJECTS)
 dualnamedarray_unit_LDADD = $(LDADD)
+am_dynamic_sparse_number_base_unit_OBJECTS =  \
+	dynamic_sparse_number_base_unit.$(OBJEXT)
+dynamic_sparse_number_base_unit_OBJECTS =  \
+	$(am_dynamic_sparse_number_base_unit_OBJECTS)
+dynamic_sparse_number_base_unit_LDADD = $(LDADD)
 am_dynamic_sparse_vector_navier_unit_OBJECTS =  \
 	dynamic_sparse_vector_navier_unit.$(OBJEXT)
 dynamic_sparse_vector_navier_unit_OBJECTS =  \
@@ -198,6 +208,11 @@ am_dynamic_sparse_vector_pde_unit_OBJECTS =  \
 dynamic_sparse_vector_pde_unit_OBJECTS =  \
 	$(am_dynamic_sparse_vector_pde_unit_OBJECTS)
 dynamic_sparse_vector_pde_unit_LDADD = $(LDADD)
+am_dynamic_std_array_wrapper_unit_OBJECTS =  \
+	dynamic_std_array_wrapper_unit.$(OBJEXT)
+dynamic_std_array_wrapper_unit_OBJECTS =  \
+	$(am_dynamic_std_array_wrapper_unit_OBJECTS)
+dynamic_std_array_wrapper_unit_LDADD = $(LDADD)
 am_identities_unit_OBJECTS = identities_unit.$(OBJEXT)
 identities_unit_OBJECTS = $(am_identities_unit_OBJECTS)
 identities_unit_LDADD = $(LDADD)
@@ -310,10 +325,13 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/src/utilities/include/metaphy
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/compare_types_unit.Po \
-	./$(DEPDIR)/complex_derivs_unit.Po ./$(DEPDIR)/derivs_unit.Po \
+	./$(DEPDIR)/complex_derivs_unit.Po \
+	./$(DEPDIR)/ct_types_unit.Po ./$(DEPDIR)/derivs_unit.Po \
 	./$(DEPDIR)/divgrad_unit.Po ./$(DEPDIR)/dualnamedarray_unit.Po \
+	./$(DEPDIR)/dynamic_sparse_number_base_unit.Po \
 	./$(DEPDIR)/dynamic_sparse_vector_navier_unit.Po \
 	./$(DEPDIR)/dynamic_sparse_vector_pde_unit.Po \
+	./$(DEPDIR)/dynamic_std_array_wrapper_unit.Po \
 	./$(DEPDIR)/identities_unit.Po \
 	./$(DEPDIR)/instantiations_unit.Po ./$(DEPDIR)/main_unit.Po \
 	./$(DEPDIR)/namedindexarray_unit.Po \
@@ -374,10 +392,12 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(compare_types_unit_SOURCES) $(complex_derivs_unit_SOURCES) \
-	$(derivs_unit_SOURCES) $(divgrad_unit_SOURCES) \
-	$(dualnamedarray_unit_SOURCES) \
+	$(ct_types_unit_SOURCES) $(derivs_unit_SOURCES) \
+	$(divgrad_unit_SOURCES) $(dualnamedarray_unit_SOURCES) \
+	$(dynamic_sparse_number_base_unit_SOURCES) \
 	$(dynamic_sparse_vector_navier_unit_SOURCES) \
 	$(dynamic_sparse_vector_pde_unit_SOURCES) \
+	$(dynamic_std_array_wrapper_unit_SOURCES) \
 	$(identities_unit_SOURCES) $(instantiations_unit_SOURCES) \
 	$(main_unit_SOURCES) $(namedindexarray_unit_SOURCES) \
 	$(nd_derivs_unit_SOURCES) $(parallel_unit_SOURCES) \
@@ -399,10 +419,13 @@ SOURCES = $(compare_types_unit_SOURCES) $(complex_derivs_unit_SOURCES) \
 	$(testopt_unit_SOURCES) $(vector_navier_unit_SOURCES) \
 	$(vector_pde_unit_SOURCES)
 DIST_SOURCES = $(compare_types_unit_SOURCES) \
-	$(complex_derivs_unit_SOURCES) $(derivs_unit_SOURCES) \
-	$(divgrad_unit_SOURCES) $(dualnamedarray_unit_SOURCES) \
+	$(complex_derivs_unit_SOURCES) $(ct_types_unit_SOURCES) \
+	$(derivs_unit_SOURCES) $(divgrad_unit_SOURCES) \
+	$(dualnamedarray_unit_SOURCES) \
+	$(dynamic_sparse_number_base_unit_SOURCES) \
 	$(dynamic_sparse_vector_navier_unit_SOURCES) \
 	$(dynamic_sparse_vector_pde_unit_SOURCES) \
+	$(dynamic_std_array_wrapper_unit_SOURCES) \
 	$(identities_unit_SOURCES) $(instantiations_unit_SOURCES) \
 	$(main_unit_SOURCES) $(namedindexarray_unit_SOURCES) \
 	$(nd_derivs_unit_SOURCES) $(parallel_unit_SOURCES) \
@@ -899,6 +922,8 @@ dynamic_sparse_vector_navier_unit_SOURCES =  \
 	dynamic_sparse_vector_navier_unit.C navier_unit.h testing.h
 dynamic_sparse_vector_pde_unit_SOURCES =  \
 	dynamic_sparse_vector_pde_unit.C pde_unit.h testing.h
+dynamic_std_array_wrapper_unit_SOURCES = dynamic_std_array_wrapper_unit.C
+dynamic_sparse_number_base_unit_SOURCES = dynamic_sparse_number_base_unit.C
 identities_unit_SOURCES = identities_unit.C
 instantiations_unit_SOURCES = instantiations_unit.C
 main_unit_SOURCES = main_unit.C
@@ -938,6 +963,7 @@ vector_navier_unit_SOURCES = vector_navier_unit.C navier_unit.h \
 vector_pde_unit_SOURCES = vector_pde_unit.C pde_unit.h testing.h
 parallel_unit_SOURCES = parallel_unit.C
 pde_unit_SOURCES = pde_unit.C testing.h
+ct_types_unit_SOURCES = ct_types_unit.C
 
 #Define tests to actually be run. TESTS is a special automake variable
 TESTS = run_unit_tests.sh
@@ -997,6 +1023,10 @@ complex_derivs_unit$(EXEEXT): $(complex_derivs_unit_OBJECTS) $(complex_derivs_un
 	@rm -f complex_derivs_unit$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(complex_derivs_unit_OBJECTS) $(complex_derivs_unit_LDADD) $(LIBS)
 
+ct_types_unit$(EXEEXT): $(ct_types_unit_OBJECTS) $(ct_types_unit_DEPENDENCIES) $(EXTRA_ct_types_unit_DEPENDENCIES) 
+	@rm -f ct_types_unit$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(ct_types_unit_OBJECTS) $(ct_types_unit_LDADD) $(LIBS)
+
 derivs_unit$(EXEEXT): $(derivs_unit_OBJECTS) $(derivs_unit_DEPENDENCIES) $(EXTRA_derivs_unit_DEPENDENCIES) 
 	@rm -f derivs_unit$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(derivs_unit_OBJECTS) $(derivs_unit_LDADD) $(LIBS)
@@ -1009,6 +1039,10 @@ dualnamedarray_unit$(EXEEXT): $(dualnamedarray_unit_OBJECTS) $(dualnamedarray_un
 	@rm -f dualnamedarray_unit$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(dualnamedarray_unit_OBJECTS) $(dualnamedarray_unit_LDADD) $(LIBS)
 
+dynamic_sparse_number_base_unit$(EXEEXT): $(dynamic_sparse_number_base_unit_OBJECTS) $(dynamic_sparse_number_base_unit_DEPENDENCIES) $(EXTRA_dynamic_sparse_number_base_unit_DEPENDENCIES) 
+	@rm -f dynamic_sparse_number_base_unit$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(dynamic_sparse_number_base_unit_OBJECTS) $(dynamic_sparse_number_base_unit_LDADD) $(LIBS)
+
 dynamic_sparse_vector_navier_unit$(EXEEXT): $(dynamic_sparse_vector_navier_unit_OBJECTS) $(dynamic_sparse_vector_navier_unit_DEPENDENCIES) $(EXTRA_dynamic_sparse_vector_navier_unit_DEPENDENCIES) 
 	@rm -f dynamic_sparse_vector_navier_unit$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(dynamic_sparse_vector_navier_unit_OBJECTS) $(dynamic_sparse_vector_navier_unit_LDADD) $(LIBS)
@@ -1016,6 +1050,10 @@ dynamic_sparse_vector_navier_unit$(EXEEXT): $(dynamic_sparse_vector_navier_unit_
 dynamic_sparse_vector_pde_unit$(EXEEXT): $(dynamic_sparse_vector_pde_unit_OBJECTS) $(dynamic_sparse_vector_pde_unit_DEPENDENCIES) $(EXTRA_dynamic_sparse_vector_pde_unit_DEPENDENCIES) 
 	@rm -f dynamic_sparse_vector_pde_unit$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(dynamic_sparse_vector_pde_unit_OBJECTS) $(dynamic_sparse_vector_pde_unit_LDADD) $(LIBS)
+
+dynamic_std_array_wrapper_unit$(EXEEXT): $(dynamic_std_array_wrapper_unit_OBJECTS) $(dynamic_std_array_wrapper_unit_DEPENDENCIES) $(EXTRA_dynamic_std_array_wrapper_unit_DEPENDENCIES) 
+	@rm -f dynamic_std_array_wrapper_unit$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(dynamic_std_array_wrapper_unit_OBJECTS) $(dynamic_std_array_wrapper_unit_LDADD) $(LIBS)
 
 identities_unit$(EXEEXT): $(identities_unit_OBJECTS) $(identities_unit_DEPENDENCIES) $(EXTRA_identities_unit_DEPENDENCIES) 
 	@rm -f identities_unit$(EXEEXT)
@@ -1129,11 +1167,14 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compare_types_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/complex_derivs_unit.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ct_types_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/derivs_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/divgrad_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dualnamedarray_unit.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamic_sparse_number_base_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamic_sparse_vector_navier_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamic_sparse_vector_pde_unit.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamic_std_array_wrapper_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/identities_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/instantiations_unit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main_unit.Po@am__quote@ # am--include-marker
@@ -1496,11 +1537,14 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/compare_types_unit.Po
 	-rm -f ./$(DEPDIR)/complex_derivs_unit.Po
+	-rm -f ./$(DEPDIR)/ct_types_unit.Po
 	-rm -f ./$(DEPDIR)/derivs_unit.Po
 	-rm -f ./$(DEPDIR)/divgrad_unit.Po
 	-rm -f ./$(DEPDIR)/dualnamedarray_unit.Po
+	-rm -f ./$(DEPDIR)/dynamic_sparse_number_base_unit.Po
 	-rm -f ./$(DEPDIR)/dynamic_sparse_vector_navier_unit.Po
 	-rm -f ./$(DEPDIR)/dynamic_sparse_vector_pde_unit.Po
+	-rm -f ./$(DEPDIR)/dynamic_std_array_wrapper_unit.Po
 	-rm -f ./$(DEPDIR)/identities_unit.Po
 	-rm -f ./$(DEPDIR)/instantiations_unit.Po
 	-rm -f ./$(DEPDIR)/main_unit.Po
@@ -1574,11 +1618,14 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/compare_types_unit.Po
 	-rm -f ./$(DEPDIR)/complex_derivs_unit.Po
+	-rm -f ./$(DEPDIR)/ct_types_unit.Po
 	-rm -f ./$(DEPDIR)/derivs_unit.Po
 	-rm -f ./$(DEPDIR)/divgrad_unit.Po
 	-rm -f ./$(DEPDIR)/dualnamedarray_unit.Po
+	-rm -f ./$(DEPDIR)/dynamic_sparse_number_base_unit.Po
 	-rm -f ./$(DEPDIR)/dynamic_sparse_vector_navier_unit.Po
 	-rm -f ./$(DEPDIR)/dynamic_sparse_vector_pde_unit.Po
+	-rm -f ./$(DEPDIR)/dynamic_std_array_wrapper_unit.Po
 	-rm -f ./$(DEPDIR)/identities_unit.Po
 	-rm -f ./$(DEPDIR)/instantiations_unit.Po
 	-rm -f ./$(DEPDIR)/main_unit.Po
