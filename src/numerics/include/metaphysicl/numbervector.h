@@ -455,6 +455,12 @@ struct ValueType<NumberVector<N, T> >
   typedef typename ValueType<T>::type type;
 };
 
+template <std::size_t N, typename T, typename U>
+struct ReplaceAlgebraicType<NumberVector<N, T>, U>
+{
+  typedef U type;
+};
+
 } // namespace MetaPhysicL
 
 

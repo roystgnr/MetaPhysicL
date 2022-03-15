@@ -6,6 +6,7 @@ check_PROGRAMS += complex_derivs_unit
 check_PROGRAMS += divgrad_unit
 check_PROGRAMS += dynamic_sparse_vector_navier_unit
 check_PROGRAMS += dynamic_sparse_vector_pde_unit
+check_PROGRAMS += dynamic_std_array_wrapper_unit
 check_PROGRAMS += identities_unit
 check_PROGRAMS += instantiations_unit
 check_PROGRAMS += main_unit
@@ -29,6 +30,8 @@ check_PROGRAMS += vector_navier_unit
 check_PROGRAMS += vector_pde_unit
 check_PROGRAMS += parallel_unit
 check_PROGRAMS += pde_unit
+check_PROGRAMS += dynamic_sparse_number_base_unit
+check_PROGRAMS += ct_types_unit
 
 AM_TESTS_ENVIRONMENT =
 if CXX14_ENABLED
@@ -65,6 +68,8 @@ dynamic_sparse_vector_navier_unit_SOURCES += testing.h
 dynamic_sparse_vector_pde_unit_SOURCES =  dynamic_sparse_vector_pde_unit.C
 dynamic_sparse_vector_pde_unit_SOURCES += pde_unit.h
 dynamic_sparse_vector_pde_unit_SOURCES += testing.h
+dynamic_std_array_wrapper_unit_SOURCES = dynamic_std_array_wrapper_unit.C
+dynamic_sparse_number_base_unit_SOURCES =  dynamic_sparse_number_base_unit.C
 identities_unit_SOURCES = identities_unit.C
 instantiations_unit_SOURCES = instantiations_unit.C
 main_unit_SOURCES = main_unit.C
@@ -119,6 +124,7 @@ vector_pde_unit_SOURCES += testing.h
 parallel_unit_SOURCES = parallel_unit.C
 pde_unit_SOURCES = pde_unit.C
 pde_unit_SOURCES += testing.h
+ct_types_unit_SOURCES = ct_types_unit.C
 
 #Define tests to actually be run. TESTS is a special automake variable
 TESTS  = run_unit_tests.sh

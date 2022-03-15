@@ -54,7 +54,7 @@ public:
   DynamicStdArrayWrapper(const DynamicStdArrayWrapper & src)
   {
     _dynamic_n = src._dynamic_n;
-    metaphysicl_assert(_dynamic_n < N);
+    metaphysicl_assert(_dynamic_n <= N);
     std::copy(src.begin(), src.end(), _data.begin());
   }
 
@@ -96,13 +96,13 @@ public:
   iterator end()
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.end() - (N - _dynamic_n);
+    return _data.begin() + _dynamic_n;
   }
 
   const_iterator end() const
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.end() - (N - _dynamic_n);
+    return _data.begin() + _dynamic_n;
   }
 
   T & operator[](size_type i)
@@ -121,27 +121,28 @@ public:
 
   void resize(size_type new_size)
   {
-    metaphysicl_assert(new_size <= N);
+    if (new_size > N)
+      metaphysicl_error();
     _dynamic_n = new_size;
   }
 
   reverse_iterator rbegin()
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.rbegin() + (N - _dynamic_n);
+    return _data.rend() - _dynamic_n;
   }
 
   const_reverse_iterator rbegin() const
   {
     metaphysicl_assert(_dynamic_n <= N);
-    return _data.rbegin() + (N - _dynamic_n);
+    return _data.rend() - _dynamic_n;
   }
 
   reverse_iterator rend() { return _data.rend(); }
 
   const_reverse_iterator rend() const { return _data.rend(); }
 
-private:
+protected:
 #ifdef METAPHYSICL_HAVE_TIMPI
   friend class TIMPI::StandardType<DynamicStdArrayWrapper<T, NType>>;
 #endif
