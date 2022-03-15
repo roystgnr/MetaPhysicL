@@ -4,6 +4,7 @@
 #include <metaphysicl/numberarray.h>
 #include <metaphysicl/numbervector.h>
 #include <metaphysicl/dualnumber.h>
+#include <metaphysicl/ct_types.h>
 
 #define METAPHYSICL_UNIT_ASSERT(expr)                                                              \
   if (!(expr))                                                                                     \
@@ -100,4 +101,10 @@ main()
   METAPHYSICL_UNIT_ASSERT(
       std::is_same<typename ReplaceAlgebraicType<double METAPHYSICL_COMMA float>::type
                        METAPHYSICL_COMMA float>::value);
+
+  METAPHYSICL_UNIT_ASSERT(
+      std::is_same<typename ValueType<std::vector<double>>::type METAPHYSICL_COMMA double>::value);
+  METAPHYSICL_UNIT_ASSERT(
+      std::is_same<typename ValueType<std::array<double METAPHYSICL_COMMA 1>>::type
+                       METAPHYSICL_COMMA double>::value);
 }
