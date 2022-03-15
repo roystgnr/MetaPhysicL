@@ -37,6 +37,7 @@
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
 #include "metaphysicl/dualnumber_forward.h"
+#include "metaphysicl/ct_types.h"
 
 namespace MetaPhysicL {
 
@@ -325,6 +326,12 @@ struct RawType<DualNumber<T, D, asd> >
   typedef typename RawType<T>::value_type value_type;
 
   static value_type value(const DualNumber<T, D, asd>& a) { return raw_value(a.value()); }
+};
+
+template <typename T, typename D, bool asd, typename U>
+struct ReplaceAlgebraicType<DualNumber<T, D, asd>, U>
+{
+  typedef U type;
 };
 
 template<typename T, typename T2, typename D, bool asd, bool reverseorder>
