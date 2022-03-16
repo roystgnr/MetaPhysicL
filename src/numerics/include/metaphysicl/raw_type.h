@@ -33,7 +33,7 @@
 #include <limits>
 #include <utility>
 #include <vector>
-
+#include <array>
 
 namespace MetaPhysicL {
 
@@ -49,6 +49,18 @@ template <typename T>
 struct ValueType<const T>
 {
   typedef const typename ValueType<T>::type type;
+};
+
+template <typename T, typename A>
+struct ValueType<std::vector<T, A>>
+{
+  typedef typename ValueType<T>::type type;
+};
+
+template <typename T, std::size_t N>
+struct ValueType<std::array<T, N>>
+{
+  typedef typename ValueType<T>::type type;
 };
 
 // RawType strips the derivatives, shadow magic, etc. off of
