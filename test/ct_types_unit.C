@@ -25,9 +25,9 @@ main()
   std::array<float, 1> f_a;
   std::vector<float> f_v;
 
-  NumberArray<1, float> d_na;
-  DynamicSparseNumberArray<float, unsigned int> d_dsna;
-  SemiDynamicSparseNumberArray<float, unsigned int, NWrapper<1>> d_sdsna;
+  NumberArray<1, double> d_na;
+  DynamicSparseNumberArray<double, unsigned int> d_dsna;
+  SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<1>> d_sdsna;
   std::array<double, 1> d_a;
   std::vector<double> d_v;
 
