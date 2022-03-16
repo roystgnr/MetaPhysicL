@@ -117,10 +117,10 @@ METAPHYSICL_BUILTIN_REPLACE_TYPE(float);
 METAPHYSICL_BUILTIN_REPLACE_TYPE(double);
 METAPHYSICL_BUILTIN_REPLACE_TYPE(long double);
 
-template <typename T, typename A, typename U>
-struct ReplaceAlgebraicType<std::vector<T, A>, U>
+template <typename T, typename U>
+struct ReplaceAlgebraicType<std::vector<T>, U>
 {
-  typedef std::vector<typename ReplaceAlgebraicType<T, U>::type, A> type;
+  typedef std::vector<typename ReplaceAlgebraicType<T, U>::type> type;
 };
 
 template <typename T, std::size_t N, typename U>
