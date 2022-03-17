@@ -57,6 +57,7 @@ testContainerAllGather()
   }
 }
 
+
 template <typename NonBuiltin>
 void
 testStandardTypeAssignment()
@@ -66,6 +67,7 @@ testStandardTypeAssignment()
   StandardType<NonBuiltin> b(&ex);
   a = b;
 }
+
 
 template <typename D, bool asd>
 void
@@ -109,6 +111,33 @@ testDualSum()
 }
 
 
+template <typename D, bool asd>
+void
+testContainerSum()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  dr.derivatives().insert(my_rank) = (my_rank+1);
+  dr.derivatives().insert(my_rank+1) = (my_rank+2);
+
+  TestCommWorld->sum(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*comm_size + comm_size*(comm_size-1)/2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == comm_size+1);
+
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
+  for (unsigned int p = 1; p != comm_size; ++p)
+    METAPHYSICL_UNIT_ASSERT(dr.derivatives()[p] == 2*p+2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[comm_size] == comm_size+1);
+}
+
+
 int
 main(int argc, const char * const * argv)
 {
@@ -127,6 +156,14 @@ main(int argc, const char * const * argv)
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
+
+/*
+  // These rely on reduction support for packed-range types!
+  testContainerSum<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testContainerSum<DynamicSparseNumberArray<double, unsigned int>, false>();
+*/
+  testContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
+  testContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
 
   testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>>();
   testStandardTypeAssignment<DynamicStdArrayWrapper<double, NWrapper<50>>>();
