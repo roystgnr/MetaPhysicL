@@ -67,11 +67,36 @@ testStandardTypeAssignment()
   a = b;
 }
 
+template <typename D, bool asd>
+void
+testBroadcast()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  dr.derivatives().insert(my_rank) = (my_rank+1);
+
+  TestCommWorld->broadcast(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == 1);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
+}
+
 int
 main(int argc, const char * const * argv)
 {
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
+
+  testBroadcast<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testBroadcast<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
 
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
