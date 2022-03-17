@@ -87,11 +87,36 @@ testBroadcast()
   METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
 }
 
+
+template <typename D, bool asd>
+void
+testDualSum()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  dr.derivatives() = my_rank+2;
+
+  TestCommWorld->sum(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*comm_size + comm_size*(comm_size-1)/2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives() == 2.0*comm_size + comm_size*(comm_size-1)/2);
+}
+
+
 int
 main(int argc, const char * const * argv)
 {
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
+
+  testDualSum<double, true>();
+  testDualSum<double, false>();
 
   testBroadcast<DynamicSparseNumberArray<double, unsigned int>, true>();
   testBroadcast<DynamicSparseNumberArray<double, unsigned int>, false>();
