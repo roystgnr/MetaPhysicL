@@ -174,15 +174,17 @@ timpi_mpi_metaphysicl_dualnumber_##funcname(void * a, void * b, int * len, MPI_D
 { \
   const int size = *len; \
  \
-  const MetaPhysicL::DualNumber<T,D,asd> * in = \
-    static_cast<MetaPhysicL::DualNumber<T,D,asd> *>(a); \
-  MetaPhysicL::DualNumber<T,D,asd> * inout = \
-    static_cast<MetaPhysicL::DualNumber<T,D,asd> *>(b); \
+  typedef MetaPhysicL::DualNumber<T,D,asd> dtype; \
+ \
+  const dtype * in = \
+    static_cast<dtype *>(a); \
+  dtype * inout = \
+    static_cast<dtype *>(b); \
   for (int i=0; i != size; ++i) \
     { \
       inout[i].value()  = std::funcname<T>()(in[i].value(), inout[i].value()); \
       inout[i].derivatives() = \
-        std::funcname<T>()(in[i].derivatives(),inout[i].derivatives()); \
+        std::funcname<D>()(in[i].derivatives(),inout[i].derivatives()); \
     } \
 }
 
