@@ -35,6 +35,7 @@
 #include "metaphysicl/dualnumber.h"
 #include "metaphysicl/metaphysicl_cast.h"
 
+#include "timpi/op_function.h"
 #include "timpi/standard_type.h"
 #include "timpi/packing.h"
 
@@ -121,6 +122,100 @@ class StandardType<DualNumber<T, D, asd>,
 public:
   StandardType(const DualNumber<T, D, asd> *) {}
 };
+
+
+#ifdef TIMPI_HAVE_MPI
+
+# define METAPHYSICL_DUALNUMBER_MPI_BINARY(funcname) \
+static inline void \
+timpi_mpi_metaphysicl_dualnumber_##funcname(void * a, void * b, int * len, MPI_Datatype *) \
+{ \
+  const int size = *len; \
+ \
+  const MetaPhysicL::DualNumber<T,D,asd> * in = \
+    static_cast<MetaPhysicL::DualNumber<T,D,asd> *>(a); \
+  MetaPhysicL::DualNumber<T,D,asd> * inout = \
+    static_cast<MetaPhysicL::DualNumber<T,D,asd> *>(b); \
+  for (int i=0; i != size; ++i) \
+    { \
+      inout[i].value() = std::funcname(in[i].value(),inout[i].value()); \
+      inout[i].derivatives() = \
+        std::funcname(in[i].derivatives(),inout[i].derivatives()); \
+    } \
+}
+
+# define METAPHYSICL_DUALNUMBER_MPI_PAIR_LOCATOR(funcname) \
+static inline void \
+timpi_mpi_metaphysicl_dualnumber_##funcname##_location(void * a, void * b, int * len, MPI_Datatype *) \
+{ \
+  const int size = *len; \
+ \
+  typedef std::pair<MetaPhysicL::DualNumber<T,D,asd>, int> dtype; \
+ \
+  dtype *in = static_cast<dtype*>(a); \
+  dtype *inout = static_cast<dtype*>(b); \
+  for (int i=0; i != size; ++i) \
+    { \
+      MetaPhysicL::DualNumber<T,D,asd> old_inout = inout[i].first; \
+      inout[i].first.value() = \
+        std::funcname(in[i].first.value(), inout[i].first.value()); \
+      inout[i].first.derivatives() = \
+        std::funcname(in[i].first.derivatives(),inout[i].first.derivatives()); \
+      if (old_inout != inout[i].first) \
+        inout[i].second = in[i].second; \
+    } \
+}
+
+
+
+# define METAPHYSICL_DUALNUMBER_MPI_PAIR_BINARY_FUNCTOR(funcname) \
+static inline void \
+timpi_mpi_metaphysicl_dualnumber_##funcname(void * a, void * b, int * len, MPI_Datatype *) \
+{ \
+  const int size = *len; \
+ \
+  typedef MetaPhysicL::DualNumber<T,D,asd> dtype; \
+ \
+  const dtype * in = \
+    static_cast<dtype *>(a); \
+  dtype * inout = \
+    static_cast<dtype *>(b); \
+  for (int i=0; i != size; ++i) \
+    { \
+      inout[i].value()  = std::funcname<T>()(in[i].value(), inout[i].value()); \
+      inout[i].derivatives() = \
+        std::funcname<D>()(in[i].derivatives(),inout[i].derivatives()); \
+    } \
+}
+
+
+  template<typename T, typename D, bool asd>
+  class OpFunction<MetaPhysicL::DualNumber<T,D,asd>>
+  {
+    METAPHYSICL_DUALNUMBER_MPI_BINARY(max)
+    METAPHYSICL_DUALNUMBER_MPI_BINARY(min)
+    METAPHYSICL_DUALNUMBER_MPI_PAIR_LOCATOR(max)
+    METAPHYSICL_DUALNUMBER_MPI_PAIR_LOCATOR(min)
+    METAPHYSICL_DUALNUMBER_MPI_PAIR_BINARY_FUNCTOR(plus)
+    METAPHYSICL_DUALNUMBER_MPI_PAIR_BINARY_FUNCTOR(multiplies)
+
+  public:
+    TIMPI_MPI_OPFUNCTION(max, metaphysicl_dualnumber_max)
+    TIMPI_MPI_OPFUNCTION(min, metaphysicl_dualnumber_min)
+    TIMPI_MPI_OPFUNCTION(sum, metaphysicl_dualnumber_plus)
+    TIMPI_MPI_OPFUNCTION(product, metaphysicl_dualnumber_multiplies)
+
+    TIMPI_MPI_OPFUNCTION(max_location, metaphysicl_dualnumber_max_location)
+    TIMPI_MPI_OPFUNCTION(min_location, metaphysicl_dualnumber_min_location)
+  };
+# else // TIMPI_HAVE_MPI
+  template<typename T, typename U>
+  class OpFunction<MetaPhysicL::DualNumber<T,D,asd>> {};
+#endif
+
+
+
+
 } // namespace TIMPI
 
 namespace libMesh
