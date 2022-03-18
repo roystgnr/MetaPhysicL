@@ -27,6 +27,8 @@ using namespace MetaPhysicL;
 
 Communicator * TestCommWorld;
 
+constexpr unsigned int maxarraysize = 50;
+
 template <typename D, bool asd>
 void
 testContainerAllGather()
@@ -57,6 +59,7 @@ testContainerAllGather()
   }
 }
 
+
 template <typename NonBuiltin>
 void
 testStandardTypeAssignment()
@@ -67,19 +70,138 @@ testStandardTypeAssignment()
   a = b;
 }
 
+
+template <typename D, bool asd>
+void
+testBroadcast()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  dr.derivatives().insert(my_rank) = (my_rank+1);
+
+  TestCommWorld->broadcast(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == 1);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
+}
+
+
+template <typename D, bool asd>
+void
+testDualSum()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  dr.derivatives() = my_rank+2;
+
+  TestCommWorld->sum(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*comm_size + comm_size*(comm_size-1)/2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives() == 2.0*comm_size + comm_size*(comm_size-1)/2);
+}
+
+
+template <typename C>
+void
+testContainerSum()
+{
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+  const unsigned int full_size = std::min(maxarraysize-1, comm_size);
+
+  // Initialize values
+  C c;
+  if (my_rank < full_size)
+    {
+      c.insert(my_rank) = (my_rank+1);
+      c.insert(my_rank+1) = (my_rank+2);
+    }
+
+  TestCommWorld->sum(c);
+
+  METAPHYSICL_UNIT_ASSERT(c.size() == full_size+1);
+
+  METAPHYSICL_UNIT_ASSERT(c[0] == 1.0);
+  for (unsigned int p = 1; p != full_size; ++p)
+    METAPHYSICL_UNIT_ASSERT(c[p] == 2*p+2);
+  METAPHYSICL_UNIT_ASSERT(c[full_size] == full_size+1);
+}
+
+
+template <typename D, bool asd>
+void
+testDualContainerSum()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+  const unsigned int full_size = std::min(maxarraysize-1, comm_size);
+
+  // Initialize value
+  DualReal dr = my_rank+4;
+  // Initialize derivative
+  if (my_rank < full_size)
+    {
+      dr.derivatives().insert(my_rank) = (my_rank+1);
+      dr.derivatives().insert(my_rank+1) = (my_rank+2);
+    }
+
+  TestCommWorld->sum(dr);
+
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*full_size + full_size*(full_size-1)/2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == full_size+1);
+
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
+  for (unsigned int p = 1; p != full_size; ++p)
+    METAPHYSICL_UNIT_ASSERT(dr.derivatives()[p] == 2*p+2);
+  METAPHYSICL_UNIT_ASSERT(dr.derivatives()[full_size] == full_size+1);
+}
+
+
 int
 main(int argc, const char * const * argv)
 {
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
 
+  testDualSum<double, true>();
+  testDualSum<double, false>();
+
+  testBroadcast<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testBroadcast<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
-  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, true>();
-  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>, false>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
 
-  testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<50>>>();
-  testStandardTypeAssignment<DynamicStdArrayWrapper<double, NWrapper<50>>>();
+  testContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();
+
+/*
+  // These rely on reduction support for packed-range types!
+  testDualContainerSum<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testDualContainerSum<DynamicSparseNumberArray<double, unsigned int>, false>();
+*/
+  testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+
+  testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();
+  testStandardTypeAssignment<DynamicStdArrayWrapper<double, NWrapper<maxarraysize>>>();
   testStandardTypeAssignment<DualNumber<double>>();
 
   return 0;

@@ -103,6 +103,75 @@ public:
 
   static const bool is_fixed_type = true;
 };
+
+
+#ifdef TIMPI_HAVE_MPI
+
+# define METAPHYSICL_SDSNA_MPI_BINARY(funcname) \
+static inline void \
+timpi_mpi_metaphysicl_sdsna_##funcname(void * a, void * b, int * len, MPI_Datatype *) \
+{ \
+  const int size = *len; \
+ \
+  const MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N> * in = \
+    static_cast<MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N> *>(a); \
+  MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N> * inout = \
+    static_cast<MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N> *>(b); \
+  for (int i=0; i != size; ++i) \
+    inout[i] = std::funcname(in[i],inout[i]); \
+}
+
+
+// MPI maxloc and minloc don't work in the array context - operator<
+// returns an array of bools, but MPI doesn't let us return an array
+// of locations
+// # define METAPHYSICL_SDSNA_MPI_PAIR_LOCATOR(funcname)
+
+
+# define METAPHYSICL_SDSNA_MPI_PAIR_BINARY_FUNCTOR(funcname) \
+static inline void \
+timpi_mpi_metaphysicl_sdsna_##funcname(void * a, void * b, int * len, MPI_Datatype *) \
+{ \
+  const int size = *len; \
+ \
+  typedef MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N> dtype; \
+ \
+  const dtype * in = \
+    static_cast<dtype *>(a); \
+  dtype * inout = \
+    static_cast<dtype *>(b); \
+  for (int i=0; i != size; ++i) \
+    inout[i] = std::funcname<dtype>()(in[i], inout[i]); \
+}
+
+
+  template<typename T, typename I, typename N>
+  class OpFunction<MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N>>
+  {
+    METAPHYSICL_SDSNA_MPI_BINARY(max)
+    METAPHYSICL_SDSNA_MPI_BINARY(min)
+    // METAPHYSICL_SDSNA_MPI_PAIR_LOCATOR(max)
+    // METAPHYSICL_SDSNA_MPI_PAIR_LOCATOR(min)
+    METAPHYSICL_SDSNA_MPI_PAIR_BINARY_FUNCTOR(plus)
+    METAPHYSICL_SDSNA_MPI_PAIR_BINARY_FUNCTOR(multiplies)
+
+  public:
+    TIMPI_MPI_OPFUNCTION(max, metaphysicl_sdsna_max)
+    TIMPI_MPI_OPFUNCTION(min, metaphysicl_sdsna_min)
+    TIMPI_MPI_OPFUNCTION(sum, metaphysicl_sdsna_plus)
+    TIMPI_MPI_OPFUNCTION(product, metaphysicl_sdsna_multiplies)
+
+    // TIMPI_MPI_OPFUNCTION(max_location, metaphysicl_sdsna_max_location)
+    // TIMPI_MPI_OPFUNCTION(min_location, metaphysicl_sdsna_min_location)
+  };
+# else // TIMPI_HAVE_MPI
+  template<typename T, typename U>
+  class OpFunction<MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N>> {};
+#endif
+
+
+
+
 }
 
 #endif // METAPHYSICL_HAVE_TIMPI
