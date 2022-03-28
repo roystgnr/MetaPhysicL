@@ -133,7 +133,7 @@ testContainerSum(bool fixed_size = false)
   const unsigned int full_size = std::min(maxarraysize-1, comm_size);
 
   // Initialize values
-  C c;
+  C c {0};
   if (my_rank < full_size)
     {
       c.insert(my_rank) = (my_rank+1);
