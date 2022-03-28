@@ -130,6 +130,9 @@ public:
   typename entry_type<i>::type& insert()
     { return _data[i]; }
 
+  T & insert(std::size_t i)
+    { return _data[i]; }
+
   std::size_t size() const
     { return N; }
 
