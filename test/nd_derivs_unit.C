@@ -7,13 +7,27 @@
 
 using namespace MetaPhysicL;
 
-#define nd_derivs_expect_near(double1, double2, tolerance)                                         \
-  {                                                                                                \
-    int new_returnval = std::abs(double1 - double2) > tolerance;                                   \
-    if (new_returnval)                                                                             \
-      std::cerr << "Failed test at line " << __LINE__ << std::endl;                                \
-    returnval = returnval || new_returnval;                                                        \
+int nd_derivs_expect_near_impl(double double1, double double2, double tolerance,
+                               const char * d1str, const char * d2str, int line)
+  {
+    int new_returnval = std::abs(double1 - double2) > tolerance;
+    if (new_returnval)
+      {
+        std::cerr << "Failed test at line " << line << std::endl;
+        std::cerr << std::setprecision(16);
+        std::cerr << d1str << " = " << double1 << std::endl;
+        std::cerr << d2str << " = " << double2 << std::endl;
+        std::cerr << "tolerance  = " << tolerance << std::endl;
+      }
+    return new_returnval;
   }
+
+#define nd_derivs_expect_near(double1, double2, tolerance)                                         \
+  do {                                                                                             \
+    int new_returnval = nd_derivs_expect_near_impl(double1, double2, tolerance,                    \
+                                                   #double1, #double2, __LINE__);                  \
+    returnval = returnval || new_returnval;                                                        \
+  } while (0)
 
 int
 main()
