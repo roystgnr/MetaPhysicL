@@ -34,6 +34,7 @@
 
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_types.h"
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/raw_type.h"
 
 namespace MetaPhysicL {
@@ -107,31 +108,39 @@ public:
     }
 
   T& operator[](std::size_t i)
-    { return _data[i]; }
+    { metaphysicl_assert_less(i, N);
+      return _data[i]; }
 
   const T& operator[](std::size_t i) const
-    { return _data[i]; }
+    { metaphysicl_assert_less(i, N);
+      return _data[i]; }
 
   T& raw_at (std::size_t i)
-    { return _data[i]; }
+    { metaphysicl_assert_less(i, N);
+      return _data[i]; }
 
   const T& raw_at (std::size_t i) const
-    { return _data[i]; }
+    { metaphysicl_assert_less(i, N);
+      return _data[i]; }
 
   template <std::size_t i>
   typename entry_type<i>::type& get()
-    { return _data[i]; }
+    { static_assert(i < N);
+      return _data[i]; }
 
   template <std::size_t i>
   const typename entry_type<i>::type& get() const
-    { return _data[i]; }
+    { static_assert(i < N);
+      return _data[i]; }
 
   template <std::size_t i>
   typename entry_type<i>::type& insert()
-    { return _data[i]; }
+    { static_assert(i < N);
+      return _data[i]; }
 
   T & insert(std::size_t i)
-    { return _data[i]; }
+    { metaphysicl_assert_less(i, N);
+      return _data[i]; }
 
   std::size_t size() const
     { return N; }
