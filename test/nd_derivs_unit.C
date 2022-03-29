@@ -316,6 +316,8 @@ main()
   DualNumberSurrogate<double, NumberArray<2, double*>> dns2(dns);
   DualNumberSurrogate<double, NumberArray<2, double*>> dns3(scalar_ad_prop);
 
+  nd_derivs_expect_near(dns.value(), 0, tol);
+
   DualNumber<double, NumberArray<2, double>> new_scalar_ad_prop(dns);
   nd_derivs_expect_near(new_scalar_ad_prop.value(), 0, tol);
   nd_derivs_expect_near(new_scalar_ad_prop.derivatives()[0], 0, tol);
