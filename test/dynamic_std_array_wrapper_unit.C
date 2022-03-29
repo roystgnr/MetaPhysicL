@@ -15,7 +15,7 @@ using namespace MetaPhysicL;
     }                                                                                              \
   }
 
-int main(int argc, char * argv[])
+int main(int, char * [])
 {
   int returnval = 0;
 
