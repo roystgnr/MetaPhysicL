@@ -309,8 +309,8 @@ main()
   nd_derivs_expect_near(outer_norm.derivatives()[0], inner_norm.derivatives()[0], tol);
   nd_derivs_expect_near(outer_norm.derivatives()[1], inner_norm.derivatives()[1], tol);
 
-  DualNumberSurrogate<double, NumberArray<2, double*>> dns(0);
   double zero(0);
+  DualNumberSurrogate<double, NumberArray<2, double*>> dns(zero);
   dns.derivatives()[0] = &zero;
   dns.derivatives()[1] = &zero;
   DualNumberSurrogate<double, NumberArray<2, double*>> dns2(dns);
