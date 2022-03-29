@@ -68,6 +68,58 @@ testContainerAllGather(bool fixed_size = false)
 }
 
 
+template <typename D, bool asd>
+void
+testPackedAllGather()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+
+  typedef std::map<int, std::vector<DualReal>> Container;
+  Container vals;
+  const unsigned int my_rank = TestCommWorld->rank();
+
+  // Initialize values
+  if (my_rank == 0)
+    {
+      vals[0] = { DualReal(1), DualReal(2), DualReal(3) };
+      vals[1] = { DualReal(4), DualReal(5) };
+    }
+  else if (my_rank == 1)
+    {
+      vals[2] = { DualReal(6) };
+      vals[3] = { DualReal(7), DualReal(8) };
+    }
+
+  std::vector<Container> all_vals;
+
+  TestCommWorld->allgather(vals, all_vals);
+
+  const std::size_t comm_size = TestCommWorld->size();
+  const std::size_t vec_size = all_vals.size();
+
+  METAPHYSICL_UNIT_ASSERT(comm_size == vec_size);
+
+  METAPHYSICL_UNIT_ASSERT(all_vals[0][0].size() == 3);
+  METAPHYSICL_UNIT_ASSERT(all_vals[0][1].size() == 2);
+
+  METAPHYSICL_UNIT_FP_ASSERT(all_vals[0][0][0], double(1), TOLERANCE);
+  METAPHYSICL_UNIT_FP_ASSERT(all_vals[0][0][1], double(2), TOLERANCE);
+  METAPHYSICL_UNIT_FP_ASSERT(all_vals[0][0][2], double(3), TOLERANCE);
+  METAPHYSICL_UNIT_FP_ASSERT(all_vals[0][1][0], double(4), TOLERANCE);
+  METAPHYSICL_UNIT_FP_ASSERT(all_vals[0][1][1], double(5), TOLERANCE);
+
+  if (vec_size > 1)
+    {
+      METAPHYSICL_UNIT_ASSERT(all_vals[1][2].size() == 1);
+      METAPHYSICL_UNIT_ASSERT(all_vals[1][3].size() == 2);
+
+      METAPHYSICL_UNIT_FP_ASSERT(all_vals[1][2][0], double(6), TOLERANCE);
+      METAPHYSICL_UNIT_FP_ASSERT(all_vals[1][3][0], double(7), TOLERANCE);
+      METAPHYSICL_UNIT_FP_ASSERT(all_vals[1][3][1], double(8), TOLERANCE);
+    }
+}
+
+
 template <typename NonBuiltin>
 void
 testStandardTypeAssignment()
@@ -210,6 +262,13 @@ main(int argc, const char * const * argv)
   testContainerAllGather<NumberArray<maxarraysize, double>, false>(true);
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+
+  testPackedAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testPackedAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testPackedAllGather<NumberArray<maxarraysize, double>, true>();
+  testPackedAllGather<NumberArray<maxarraysize, double>, false>();
+  testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
 
   testContainerSum<NumberArray<maxarraysize, double>>(true);
   testContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();
