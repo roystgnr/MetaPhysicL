@@ -104,7 +104,7 @@ if test "x${timpi_found_header}" = "xyes" ; then
   AC_LINK_IFELSE(
   [AC_LANG_PROGRAM([#include <timpi/timpi.h>],
   [
-    TIMPI::TIMPIInit init();
+    TIMPI::TIMPIInit init(0,nullptr); (void)init;
   ])],
   [AC_MSG_RESULT(yes)
   timpi_found_library=yes ],

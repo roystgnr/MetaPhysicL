@@ -32,11 +32,6 @@ inline DualNumberSurrogate<T, D>::DualNumberSurrogate(T & n) : _value(n)
 }
 
 template <typename T, typename D>
-inline DualNumberSurrogate<T, D>::DualNumberSurrogate(T && n) : _value(n)
-{
-}
-
-template <typename T, typename D>
 template <typename T2, typename D2, class... Args>
 inline DualNumberSurrogate<T, D>::DualNumberSurrogate(DualNumber<T2, D2> & dn, Args &&... args)
   : _value(dn.value()(std::forward<Args>(args)...))

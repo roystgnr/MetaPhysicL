@@ -19,8 +19,6 @@ public:
 
   DualNumberSurrogate(T & n);
 
-  DualNumberSurrogate(T && n);
-
   template <typename T2, typename D2, class... Args>
   DualNumberSurrogate(DualNumber<T2, D2> & dn, Args &&... args);
 
