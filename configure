@@ -33326,7 +33326,7 @@ else
 int
 main ()
 {
-boost::chrono::thread_clock d;
+boost::chrono::thread_clock d; (void)d;
   ;
   return 0;
 }
@@ -36513,7 +36513,7 @@ int
 main ()
 {
 
-    TIMPI::TIMPIInit init();
+    TIMPI::TIMPIInit init(0,nullptr); (void)init;
 
   ;
   return 0;
