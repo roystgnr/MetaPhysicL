@@ -46,16 +46,19 @@ testContainerAllGather(bool fixed_size = false)
   // Initialize value
   DualReal in = my_rank;
   // Initialize derivative
-  in.derivatives().insert(my_rank) = 1.;
+  if (fixed_size)
+    in.derivatives().insert(std::min(my_rank,maxarraysize-1)) = 1.;
+  else
+    in.derivatives().insert(my_rank) = 1.;
 
   TestCommWorld->allgather(in, vals);
 
-  const std::size_t comm_size = TestCommWorld->size();
-  const std::size_t vec_size = vals.size();
+  const unsigned int comm_size = TestCommWorld->size();
+  const unsigned int vec_size = vals.size();
 
   METAPHYSICL_UNIT_ASSERT(comm_size == vec_size);
 
-  for (std::size_t i = 0; i < vec_size; ++i)
+  for (unsigned int i = 0; i < vec_size; ++i)
   {
     const auto & dn = vals[i];
     if (fixed_size)
@@ -63,7 +66,17 @@ testContainerAllGather(bool fixed_size = false)
     else
       METAPHYSICL_UNIT_ASSERT(dn.derivatives().size() == 1);
     METAPHYSICL_UNIT_FP_ASSERT(dn.value(), double(i), TOLERANCE);
-    METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(1), TOLERANCE);
+
+    if (fixed_size)
+      {
+        const unsigned int one_i = std::min(i,maxarraysize-1);
+        METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[one_i], double(1), TOLERANCE);
+        for (unsigned int i = 0; i < maxarraysize; ++i)
+          if (i != one_i)
+            METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(0), TOLERANCE);
+      }
+    else
+      METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(1), TOLERANCE);
   }
 }
 
@@ -142,15 +155,22 @@ testBroadcast(bool fixed_size = false)
   // Initialize value
   DualReal dr = my_rank+4;
   // Initialize derivative
-  dr.derivatives().insert(my_rank) = (my_rank+1);
+  if (!fixed_size || my_rank < maxarraysize)
+    dr.derivatives().insert(my_rank) = (my_rank+1);
 
   TestCommWorld->broadcast(dr);
 
   METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0);
   if (fixed_size)
-    METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == maxarraysize);
+    {
+      METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == maxarraysize);
+      for (std::size_t i = 1; i < maxarraysize; ++i)
+        METAPHYSICL_UNIT_ASSERT(dr.derivatives()[i] == 0.0);
+    }
   else
-    METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == 1);
+    {
+      METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == 1);
+    }
   METAPHYSICL_UNIT_ASSERT(dr.derivatives()[0] == 1.0);
 }
 
@@ -227,7 +247,7 @@ testDualContainerSum(bool fixed_size = false)
 
   TestCommWorld->sum(dr);
 
-  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*full_size + full_size*(full_size-1)/2);
+  METAPHYSICL_UNIT_ASSERT(dr.value() == 4.0*comm_size + comm_size*(comm_size-1)/2);
   if (fixed_size)
     METAPHYSICL_UNIT_ASSERT(dr.derivatives().size() == maxarraysize);
   else
