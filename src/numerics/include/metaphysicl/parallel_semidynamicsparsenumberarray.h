@@ -30,6 +30,8 @@
 
 #include "metaphysicl/semidynamicsparsenumberarray.h"
 #include "metaphysicl/parallel_dynamic_std_array_wrapper.h"
+
+#include "timpi/op_function.h"
 #include "timpi/standard_type.h"
 
 namespace TIMPI

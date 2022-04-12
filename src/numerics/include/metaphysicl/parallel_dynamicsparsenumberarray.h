@@ -93,7 +93,7 @@ public:
 
 template <typename T, typename I>
 template <typename Context>
-unsigned int
+inline unsigned int
 Packing<DynamicSparseNumberArray<T, I>>::
 packable_size(const DynamicSparseNumberArray<T, I> & dsna,
               const Context *)
@@ -106,7 +106,7 @@ packable_size(const DynamicSparseNumberArray<T, I> & dsna,
 
 template <typename T, typename I>
 template <typename BufferIter>
-unsigned int
+inline unsigned int
 Packing<DynamicSparseNumberArray<T, I>>::
 packed_size(BufferIter iter)
 {
@@ -116,7 +116,7 @@ packed_size(BufferIter iter)
 
 template <typename T, typename I>
 template <typename OutputIter, typename Context>
-void
+inline void
 Packing<DynamicSparseNumberArray<T, I>>::
 pack(const DynamicSparseNumberArray<T, I> & dsna,
      OutputIter data_out,
@@ -146,7 +146,7 @@ pack(const DynamicSparseNumberArray<T, I> & dsna,
 
 template <typename T, typename I>
 template <typename BufferIter, typename Context>
-DynamicSparseNumberArray<T, I>
+inline DynamicSparseNumberArray<T, I>
 Packing<DynamicSparseNumberArray<T, I>>::
 unpack(BufferIter in, Context *)
 {
