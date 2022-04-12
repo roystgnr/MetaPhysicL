@@ -1148,6 +1148,7 @@ using MetaPhysicL::SparseNumberStruct;
 using MetaPhysicL::BinaryFunctor;
 using MetaPhysicL::UnaryFunctor;
 using MetaPhysicL::ConstantDataSet;
+using MetaPhysicL::CompareTypes;
 
 #define SparseNumberStruct_std_unary(funcname) \
 \
