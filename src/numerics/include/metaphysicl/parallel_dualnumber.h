@@ -314,7 +314,7 @@ private:
 
 template <typename T, typename D, bool asd>
 template <typename Context>
-unsigned int
+inline unsigned int
 Packing<DualNumber<T, D, asd>,
         typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     packable_size(const DualNumber<T, D, asd> & dn, const Context * ctx)
@@ -324,7 +324,7 @@ Packing<DualNumber<T, D, asd>,
 
 template <typename T, typename D, bool asd>
 template <typename BufferIter>
-unsigned int
+inline unsigned int
 Packing<DualNumber<T, D, asd>,
         typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     packed_size(BufferIter iter)
@@ -335,7 +335,7 @@ Packing<DualNumber<T, D, asd>,
 
 template <typename T, typename D, bool asd>
 template <typename OutputIter, typename Context>
-void
+inline void
 Packing<DualNumber<T, D, asd>,
         typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     pack(const DualNumber<T, D, asd> & dn, OutputIter data_out, const Context * ctx)
@@ -358,7 +358,7 @@ Packing<DualNumber<T, D, asd>,
 
 template <typename T, typename D, bool asd>
 template <typename BufferIter, typename Context>
-DualNumber<T, D, asd>
+inline DualNumber<T, D, asd>
 Packing<DualNumber<T, D, asd>,
         typename std::enable_if<!TIMPI::StandardType<DualNumber<T, D, asd>>::is_fixed_type>::type>::
     unpack(BufferIter in, Context * ctx)
