@@ -29,15 +29,16 @@
 #ifndef METAPHYSICL_SPARSENUMBERSTRUCT_H
 #define METAPHYSICL_SPARSENUMBERSTRUCT_H
 
-#include <algorithm>
-#include <functional>
-#include <stdexcept>
-#include <ostream>
-
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
+
+#include <algorithm>
+#include <cmath>
+#include <functional>
+#include <ostream>
+#include <stdexcept>
 
 // We now depend on std::function and kin
 #if __cplusplus >= 201103L

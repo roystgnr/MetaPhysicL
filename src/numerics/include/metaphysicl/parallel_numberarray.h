@@ -29,6 +29,8 @@
 #ifdef METAPHYSICL_HAVE_TIMPI
 
 #include "metaphysicl/numberarray.h"
+
+#include "timpi/op_function.h"
 #include "timpi/standard_type.h"
 
 namespace TIMPI

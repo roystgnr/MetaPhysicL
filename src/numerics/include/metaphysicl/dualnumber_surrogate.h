@@ -3,6 +3,8 @@
 
 #include "metaphysicl/dualnumber_surrogate_decl.h"
 
+#include <utility> // forward
+
 namespace MetaPhysicL
 {
 
