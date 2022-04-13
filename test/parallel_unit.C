@@ -271,27 +271,40 @@ main(int argc, const char * const * argv)
 
   testBroadcast<DynamicSparseNumberArray<double, unsigned int>, true>();
   testBroadcast<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testBroadcast<DynamicSparseNumberArray<double, unsigned long long>, true>();
+  testBroadcast<DynamicSparseNumberArray<double, unsigned long long>, false>();
   testBroadcast<NumberArray<maxarraysize, double>, true>(true);
   testBroadcast<NumberArray<maxarraysize, double>, false>(true);
   testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
   testBroadcast<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testBroadcast<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
 
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
   testContainerAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testContainerAllGather<DynamicSparseNumberArray<double, unsigned long long>, true>();
+  testContainerAllGather<DynamicSparseNumberArray<double, unsigned long long>, false>();
   testContainerAllGather<NumberArray<maxarraysize, double>, true>(true);
   testContainerAllGather<NumberArray<maxarraysize, double>, false>(true);
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
   testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testContainerAllGather<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
 
   testPackedAllGather<DynamicSparseNumberArray<double, unsigned int>, true>();
   testPackedAllGather<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testPackedAllGather<DynamicSparseNumberArray<double, unsigned long long>, true>();
+  testPackedAllGather<DynamicSparseNumberArray<double, unsigned long long>, false>();
   testPackedAllGather<NumberArray<maxarraysize, double>, true>();
   testPackedAllGather<NumberArray<maxarraysize, double>, false>();
   testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
   testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testPackedAllGather<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
 
   testContainerSum<NumberArray<maxarraysize, double>>(true);
   testContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();
+  testContainerSum<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>>();
 
 /*
   // These rely on reduction support for packed-range types!
@@ -302,9 +315,12 @@ main(int argc, const char * const * argv)
   testDualContainerSum<NumberArray<maxarraysize, double>, false>(true);
   testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
   testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
 
   testStandardTypeAssignment<NumberArray<maxarraysize, double>>();
   testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();
+  testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>>();
   testStandardTypeAssignment<DynamicStdArrayWrapper<double, NWrapper<maxarraysize>>>();
   testStandardTypeAssignment<DualNumber<double>>();
 
