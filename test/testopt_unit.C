@@ -66,4 +66,10 @@ int main(void)
     ValueLessThan> > max_test_2 = 0;
 
   std::max(max_test_1, max_test_2);
+
+  DualNumber<float, float> big = 800.0;
+  if (!std::isinf(std::exp(big)))
+    return 1;
+
+  return 0;
 }
