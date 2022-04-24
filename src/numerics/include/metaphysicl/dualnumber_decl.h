@@ -536,6 +536,8 @@ using MetaPhysicL::CompareTypes;
 
 template <typename T, typename D, bool asd>
 inline bool isnan (const DualNumber<T,D,asd> & a);
+template <typename T, typename D, bool asd>
+inline bool isinf (const DualNumber<T,D,asd> & a);
 
 // Some forward declarations necessary for recursive DualNumbers
 
