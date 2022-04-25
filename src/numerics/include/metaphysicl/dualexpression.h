@@ -75,7 +75,7 @@ public:
   bool boolean_test() const { return _val; }
 
   auto
-  operator- () 
+  operator- ()
   -> DualExpression<decltype(-this->_val), decltype(-this->_deriv)>
   const {
     return DualExpression<decltype(-_val),decltype(-_deriv)>
@@ -83,7 +83,7 @@ public:
   }
 
   auto
-  operator! () 
+  operator! ()
   -> DualExpression<decltype(!this->_val), decltype(!this->_deriv)>
   const {
     return DualExpression<decltype(!_val),decltype(!_deriv)>
@@ -372,7 +372,7 @@ DualExpression_compare(||)
 
 template <typename T, typename D>
 inline
-std::ostream&      
+std::ostream&
 operator<< (std::ostream& output, const DualExpression<T,D>& a)
 {
   return output << '(' << a.value() << ',' << a.derivatives() << ')';
@@ -623,6 +623,7 @@ using MetaPhysicL::CompareTypes;
 using MetaPhysicL::enable_if_c;
 using MetaPhysicL::DefinesSupertype;
 using std::isnan;
+using std::isinf;
 
 template <typename T, typename D>
 inline
@@ -630,6 +631,14 @@ auto isnan (const DualExpression<T,D> & a)
 -> decltype(isnan(a.value()))
 {
   return isnan(a.value());
+}
+
+template <typename T, typename D>
+inline
+auto isinf (const DualExpression<T,D> & a)
+-> decltype(isinf(a.value()))
+{
+  return isinf(a.value());
 }
 
 // Some forward declarations necessary for recursive DualExpressions
@@ -889,7 +898,7 @@ DualExpression_equivfl_binary(atan2)
 #endif // __cplusplus >= 201103L
 
 template <typename T, typename D>
-class numeric_limits<DualExpression<T, D> > : 
+class numeric_limits<DualExpression<T, D> > :
   public MetaPhysicL::raw_numeric_limits<DualExpression<T, D>, T> {};
 
 } // namespace std

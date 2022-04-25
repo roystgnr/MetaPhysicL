@@ -545,6 +545,13 @@ inline bool isnan (const DualNumber<T,D,asd> & a)
   return isnan(a.value());
 }
 
+template <typename T, typename D, bool asd>
+inline bool isinf (const DualNumber<T,D,asd> & a)
+{
+  using std::isinf;
+  return isinf(a.value());
+}
+
 
 #if __cplusplus >= 201103L
 #define DualNumber_std_unary(funcname, derivative, precalc) \
