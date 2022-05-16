@@ -6,6 +6,8 @@
 
 #include "metaphysicl/dualnumberarray.h"
 #include "metaphysicl/dualnumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
+
 
 static const unsigned int N = 10; // test pts.
 
@@ -368,6 +370,8 @@ int vectester (void)
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
   returnval = returnval || scalartester<NumberArray<N, float> >();
   returnval = returnval || vectester<NumberArray<N, DualNumber<float> > >();

@@ -1,4 +1,5 @@
 #include "metaphysicl/dualnumber.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/numberarray.h"
 
 #include "math_structs.h"
@@ -32,6 +33,8 @@ int nd_derivs_expect_near_impl(double double1, double double2, double tolerance,
 int
 main()
 {
+  MetaPhysicL::enableFPE(true);
+
   NDDualNumber<double, NumberArray<2, double>> scalar_ad_prop;
   NDDualNumber<VectorValue<double>, NumberArray<2, VectorValue<double>>> vector_ad_prop;
   NDDualNumber<TensorValue<double>, NumberArray<2, TensorValue<double>>> tensor_ad_prop;

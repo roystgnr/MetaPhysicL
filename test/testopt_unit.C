@@ -9,9 +9,10 @@ std::pair<int,float> testfunc (std::pair<int,float> in)
 }
 
 #include "metaphysicl/dualnumber.h"
-#include "metaphysicl/shadownumber.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/numberarray.h"
 #include "metaphysicl/numbervector.h"
+#include "metaphysicl/shadownumber.h"
 #include "metaphysicl/sparsenumbervector.h"
 #include "metaphysicl/sparsenumberstruct.h"
 
@@ -19,6 +20,8 @@ using namespace MetaPhysicL;
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   std::cout << "4+4=" << testfunc(std::make_pair(4,2.0)).first << std::endl;
 
   DualNumber<float, float> DFF = 0;

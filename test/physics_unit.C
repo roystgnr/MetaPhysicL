@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/physics.h"
 #include "metaphysicl/numbervector.h"
 #include "metaphysicl/numberarray.h"
@@ -104,6 +105,8 @@ struct TestPhysics
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   typedef TestPhysics<Real>::state single_state;
   typedef TestPhysics<Real>::primitive_to_conserved single_transformation;
 

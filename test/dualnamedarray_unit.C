@@ -45,10 +45,10 @@ namespace MetaPhysicL {
 } // namespace MetaPhysicL
 #endif
 
-#include "metaphysicl/sparsenumbervector.h"
 #include "metaphysicl/dualnamedarray.h"
-
 #include "metaphysicl/metaphysicl_asserts.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
+#include "metaphysicl/sparsenumbervector.h"
 
 // C++
 #include <iostream>
@@ -61,6 +61,8 @@ using namespace MetaPhysicL;
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   typedef
     NamedIndexArray
       <double,

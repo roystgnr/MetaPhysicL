@@ -10,6 +10,7 @@
 #include "metaphysicl/dualsparsenumberstruct.h"
 #include "metaphysicl/dualsparsenumberarray.h"
 #include "metaphysicl/dualsparsenumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 // Change the instantiations below iff changing this
 static const unsigned int N = 4; // test pts.
@@ -209,6 +210,8 @@ int vectester (Vector zerovec)
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
   /*
   returnval = returnval || vectester<SparseNumberStructOf

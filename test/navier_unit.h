@@ -3,6 +3,9 @@
 
 #include "metaphysicl_config.h"
 
+#include "metaphysicl/metaphysicl_exceptions.h"
+#include "metaphysicl/shadownumber.h"
+
 // If we have MASA we test ourselves against an MMS solution; if not
 // we just test that this compiles.
 #ifdef METAPHYSICL_HAVE_MASA
@@ -19,6 +22,8 @@ static double evaluate_q (const Vector& xyz, const int);
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   int N   = 2; // mesh pts. in x and y
   double s2u,s2v,s2e,s2p;
 

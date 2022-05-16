@@ -6,6 +6,7 @@
 
 #include "metaphysicl/dynamicsparsenumberarray.h"
 #include "metaphysicl/dynamicsparsenumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/numberarray.h"
 #include "metaphysicl/numbervector.h"
 #include "metaphysicl/sparsenumberarray.h"
@@ -148,6 +149,8 @@ int dynamic_tester (Vector zerovec)
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
 
   returnval = returnval || vectester(NumberArray<N, float>());
