@@ -67,7 +67,9 @@ int main(void)
 
   std::max(max_test_1, max_test_2);
 
-  DualNumber<float, float> big = 800.0;
+  // We need non-zero derivative here, or exp() gives us a derivative
+  // of infinity*0 and throws an FP exception
+  DualNumber<float, float> big = {800.0, 1};
   if (!std::isinf(std::exp(big)))
     return 1;
 
