@@ -195,11 +195,7 @@ double evaluate_q (const Vector& xyz, const int ret)
   const Scalar v_x = masa_get_param("v_x");
   const Scalar v_y = masa_get_param("v_y");
   const Scalar rho_0 = masa_get_param("rho_0");
-  const Scalar rho_x = masa_get_param("rho_x");
-  const Scalar rho_y = masa_get_param("rho_y");
   const Scalar p_0 = masa_get_param("p_0");
-  const Scalar p_x = masa_get_param("p_x");
-  const Scalar p_y = masa_get_param("p_y");
   const Scalar a_px = masa_get_param("a_px");
   const Scalar a_py = masa_get_param("a_py");
   const Scalar a_rhox = masa_get_param("a_rhox");
@@ -208,10 +204,25 @@ double evaluate_q (const Vector& xyz, const int ret)
   const Scalar a_uy = masa_get_param("a_uy");
   const Scalar a_vx = masa_get_param("a_vx");
   const Scalar a_vy = masa_get_param("a_vy");
-  const Scalar Gamma = masa_get_param("Gamma");
   const Scalar L = masa_get_param("L");
   const Scalar mu = masa_get_param("mu");
   const Scalar k = masa_get_param("k");
+
+// If we don't have MASA we need to take care not to keep Gamma-1,
+// rho, and p positive
+#ifdef METAPHYSICL_HAVE_MASA
+  const Scalar Gamma = masa_get_param("Gamma");
+  const Scalar rho_x = masa_get_param("rho_x");
+  const Scalar rho_y = masa_get_param("rho_y");
+  const Scalar p_x = masa_get_param("p_x");
+  const Scalar p_y = masa_get_param("p_y");
+#else
+  const Scalar Gamma = 1.4;
+  const Scalar rho_x = 0.25;
+  const Scalar rho_y = 0.25;
+  const Scalar p_x = 0.25;
+  const Scalar p_y = 0.25;
+#endif
 
   const typename Vector::template entry_type<0>::type& x =
     xyz.template get<0>();
