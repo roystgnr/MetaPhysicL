@@ -387,6 +387,14 @@ int main(int argc, char * argv[])
       returnval = returnval || vectester<NumberArray<N, DualNumber<long double> > >();
     }
 
+  // Seriously?  This broke for somebody?
+  DualNumber<double, double> x {-2, 1};
+  auto y = std::pow(x, 2);
+  if (y.value() != 4)
+    returnval = 1;
+  if (y.derivatives() != -4)
+    returnval = 1;
+
   // We no longer treat vectors like arrays for built-in functions, so
   // most of the identities above make no sense.
   /*
