@@ -298,6 +298,12 @@ int test_func_derivatives(const T & random_quant,
   // Some non-random tests, too:
   one_test(derivatives(pow(zero_quant,2)), error_quant);
   one_test(derivatives(pow(zero_quant,1)) - 1, error_quant);
+  one_test(pow(zero_quant-2,1) + 2, error_quant);
+  one_test(derivatives(pow(zero_quant-2,1)) - 1, error_quant);
+  one_test(pow(zero_quant-2,2) - 4, error_quant);
+  one_test(derivatives(pow(zero_quant-2,2)) + 4, error_quant);
+  one_test(pow(zero_quant-2,3) + 8, error_quant);
+  one_test(derivatives(pow(zero_quant-2,3)) - 12, error_quant);
 
   return returnval;
 }
