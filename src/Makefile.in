@@ -128,7 +128,8 @@ am__aclocal_m4_deps =  \
 	$(top_srcdir)/m4/common/timpi_control_args.m4 \
 	$(top_srcdir)/m4/common/vexcl.m4 \
 	$(top_srcdir)/m4/acsm_cxx_tests.m4 \
-	$(top_srcdir)/m4/config_summary.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/config_summary.m4 \
+	$(top_srcdir)/m4/feexcept.m4 $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac
@@ -173,7 +174,8 @@ am__uninstall_files_from_dir = { \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmetaphysicl_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libmetaphysicl_la_OBJECTS = utilities/src/metaphysicl_version.lo
+am_libmetaphysicl_la_OBJECTS = utilities/src/metaphysicl_version.lo \
+	utilities/src/metaphysicl_exceptions.lo
 libmetaphysicl_la_OBJECTS = $(am_libmetaphysicl_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -202,6 +204,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/src/utilities/include/metaphy
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = apps/$(DEPDIR)/version.Po \
+	utilities/src/$(DEPDIR)/metaphysicl_exceptions.Plo \
 	utilities/src/$(DEPDIR)/metaphysicl_version.Plo
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -488,7 +491,8 @@ libmetaphysicl_la_LDFLAGS = -version-info 9:0:0
 #----------------------------------------------
 
 # utilities
-libmetaphysicl_la_SOURCES = utilities/src/metaphysicl_version.C
+libmetaphysicl_la_SOURCES = utilities/src/metaphysicl_version.C \
+	utilities/src/metaphysicl_exceptions.C
 
 # core
 
@@ -706,6 +710,9 @@ utilities/src/$(DEPDIR)/$(am__dirstamp):
 	@: > utilities/src/$(DEPDIR)/$(am__dirstamp)
 utilities/src/metaphysicl_version.lo: utilities/src/$(am__dirstamp) \
 	utilities/src/$(DEPDIR)/$(am__dirstamp)
+utilities/src/metaphysicl_exceptions.lo:  \
+	utilities/src/$(am__dirstamp) \
+	utilities/src/$(DEPDIR)/$(am__dirstamp)
 
 libmetaphysicl.la: $(libmetaphysicl_la_OBJECTS) $(libmetaphysicl_la_DEPENDENCIES) $(EXTRA_libmetaphysicl_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libmetaphysicl_la_LINK) -rpath $(libdir) $(libmetaphysicl_la_OBJECTS) $(libmetaphysicl_la_LIBADD) $(LIBS)
@@ -732,6 +739,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@apps/$(DEPDIR)/version.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@utilities/src/$(DEPDIR)/metaphysicl_exceptions.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utilities/src/$(DEPDIR)/metaphysicl_version.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -931,6 +939,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 
 distclean: distclean-am
 		-rm -f apps/$(DEPDIR)/version.Po
+	-rm -f utilities/src/$(DEPDIR)/metaphysicl_exceptions.Plo
 	-rm -f utilities/src/$(DEPDIR)/metaphysicl_version.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -978,6 +987,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f apps/$(DEPDIR)/version.Po
+	-rm -f utilities/src/$(DEPDIR)/metaphysicl_exceptions.Plo
 	-rm -f utilities/src/$(DEPDIR)/metaphysicl_version.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

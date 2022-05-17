@@ -114,7 +114,8 @@ am__aclocal_m4_deps =  \
 	$(top_srcdir)/m4/common/timpi_control_args.m4 \
 	$(top_srcdir)/m4/common/vexcl.m4 \
 	$(top_srcdir)/m4/acsm_cxx_tests.m4 \
-	$(top_srcdir)/m4/config_summary.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/config_summary.m4 \
+	$(top_srcdir)/m4/feexcept.m4 $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac

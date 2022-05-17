@@ -66,6 +66,12 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* define if the compiler supports fedisableexcept */
+#undef HAVE_FEDISABLEEXCEPT
+
+/* define if the compiler supports feenableexcept */
+#undef HAVE_FEENABLEEXCEPT
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

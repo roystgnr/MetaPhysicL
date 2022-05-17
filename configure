@@ -15821,6 +15821,57 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <fenv.h>
+int
+main ()
+{
+feenableexcept(FE_DIVBYZERO | FE_INVALID);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_have_feenableexcept=yes
+else
+  ac_cv_have_feenableexcept=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+if test "x$ac_cv_have_feenableexcept" = "xyes"; then :
+
+$as_echo "#define HAVE_FEENABLEEXCEPT 1" >>confdefs.h
+
+fi
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <fenv.h>
+int
+main ()
+{
+fedisableexcept(FE_DIVBYZERO | FE_INVALID);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_have_fedisableexcept=yes
+else
+  ac_cv_have_fedisableexcept=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+if test "x$ac_cv_have_fedisableexcept" = "xyes"; then :
+
+$as_echo "#define HAVE_FEDISABLEEXCEPT 1" >>confdefs.h
+
+fi
+
+
 case `pwd` in
   *\ * | *\	*)
     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Libtool does not cope well with whitespace in \`pwd\`" >&5
@@ -17313,7 +17364,6 @@ fi
 $as_echo "$lt_cv_sharedlib_from_linklib_cmd" >&6; }
 sharedlib_from_linklib_cmd=$lt_cv_sharedlib_from_linklib_cmd
 test -z "$sharedlib_from_linklib_cmd" && sharedlib_from_linklib_cmd=$ECHO
-
 
 
 
