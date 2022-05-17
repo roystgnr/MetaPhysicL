@@ -2,8 +2,9 @@
 #include <iostream>
 
 #include "metaphysicl/dualnumber.h"
-#include "metaphysicl/numberarray.h"
 #include "metaphysicl/dynamicsparsenumberarray.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
+#include "metaphysicl/numberarray.h"
 
 using namespace MetaPhysicL;
 
@@ -36,6 +37,8 @@ using namespace MetaPhysicL;
 int
 main()
 {
+  MetaPhysicL::enableFPE(true);
+
   auto sqrt2 = std::sqrt(2.0);
   double tol = 1e-8;
   int returnval = 0;

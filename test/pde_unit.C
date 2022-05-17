@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include "metaphysicl_config.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 // If we have MASA we test ourselves against an MMS solution; if not
 // we just test that this compiles.
@@ -23,6 +24,8 @@ using namespace MetaPhysicL;
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   int N   = 10; // mesh pts. in x and y
 #ifdef METAPHYSICL_HAVE_MASA
   int err = 0;

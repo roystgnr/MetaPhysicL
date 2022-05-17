@@ -4,6 +4,7 @@
 
 #include "metaphysicl_config.h"
 
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/numberarray.h"
 #include "metaphysicl/numbervector.h"
 #include "metaphysicl/sparsenumberarray.h"
@@ -108,6 +109,8 @@ int vectester (void)
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
   returnval = returnval || vectester<NumberArray<N, float> >();
   returnval = returnval || vectester<NumberArray<N, double> >();

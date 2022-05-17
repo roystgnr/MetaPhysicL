@@ -1,10 +1,11 @@
+#include <metaphysicl/ct_types.h>
+#include <metaphysicl/dualnumber.h>
 #include <metaphysicl/dynamicsparsenumberarray.h>
 #include <metaphysicl/dynamicsparsenumbervector.h>
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include <metaphysicl/semidynamicsparsenumberarray.h>
 #include <metaphysicl/numberarray.h>
 #include <metaphysicl/numbervector.h>
-#include <metaphysicl/dualnumber.h>
-#include <metaphysicl/ct_types.h>
 
 #define METAPHYSICL_UNIT_ASSERT(expr)                                                              \
   if (!(expr))                                                                                     \
@@ -19,6 +20,8 @@ using namespace MetaPhysicL;
 int
 main()
 {
+  MetaPhysicL::enableFPE(true);
+
   NumberArray<1, float> f_na;
   DynamicSparseNumberArray<float, unsigned int> f_dsna;
   SemiDynamicSparseNumberArray<float, unsigned int, NWrapper<1>> f_sdsna;

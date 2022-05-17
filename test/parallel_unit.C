@@ -2,6 +2,7 @@
 
 #if defined(METAPHYSICL_HAVE_TIMPI) && defined(METAPHYSICL_HAVE_TIMPI_LIB)
 
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include <metaphysicl/parallel_dynamicsparsenumberarray.h>
 #include <metaphysicl/parallel_dualnumber.h>
 #include <metaphysicl/parallel_numberarray.h>
@@ -263,6 +264,8 @@ testDualContainerSum(bool fixed_size = false)
 int
 main(int argc, const char * const * argv)
 {
+  MetaPhysicL::enableFPE(true);
+
   TIMPI::TIMPIInit init(argc, argv);
   TestCommWorld = &init.comm();
 

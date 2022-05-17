@@ -6,6 +6,8 @@
 
 #include "metaphysicl/dualnumberarray.h"
 #include "metaphysicl/dualnumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
+
 
 static const unsigned int N = 10; // test pts.
 
@@ -298,6 +300,12 @@ int test_func_derivatives(const T & random_quant,
   // Some non-random tests, too:
   one_test(derivatives(pow(zero_quant,2)), error_quant);
   one_test(derivatives(pow(zero_quant,1)) - 1, error_quant);
+  one_test(pow(zero_quant-2,1) + 2, error_quant);
+  one_test(derivatives(pow(zero_quant-2,1)) - 1, error_quant);
+  one_test(pow(zero_quant-2,2) - 4, error_quant);
+  one_test(derivatives(pow(zero_quant-2,2)) + 4, error_quant);
+  one_test(pow(zero_quant-2,3) + 8, error_quant);
+  one_test(derivatives(pow(zero_quant-2,3)) - 12, error_quant);
 
   return returnval;
 }
@@ -362,6 +370,8 @@ int vectester (void)
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
   returnval = returnval || scalartester<NumberArray<N, float> >();
   returnval = returnval || vectester<NumberArray<N, DualNumber<float> > >();
@@ -380,6 +390,14 @@ int main(int argc, char * argv[])
       returnval = returnval || scalartester<NumberArray<N, long double> >();
       returnval = returnval || vectester<NumberArray<N, DualNumber<long double> > >();
     }
+
+  // Seriously?  This broke for somebody?
+  DualNumber<double, double> x {-2, 1};
+  auto y = std::pow(x, 2);
+  if (y.value() != 4)
+    returnval = 1;
+  if (y.derivatives() != -4)
+    returnval = 1;
 
   // We no longer treat vectors like arrays for built-in functions, so
   // most of the identities above make no sense.

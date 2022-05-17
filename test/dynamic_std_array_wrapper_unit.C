@@ -4,6 +4,7 @@
 #include "metaphysicl_config.h"
 
 #include "metaphysicl/dynamic_std_array_wrapper.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 using namespace MetaPhysicL;
 
@@ -17,6 +18,8 @@ using namespace MetaPhysicL;
 
 int main(int, char * [])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
 
   DynamicStdArrayWrapper<int, NWrapper<7>> test;

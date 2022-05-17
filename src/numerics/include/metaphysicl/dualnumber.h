@@ -764,7 +764,7 @@ DualNumber_complex_std_unary_complex_pre(funcname)
 
 DualNumber_complex_std_unary_complex(conj)
 
-#define DualNumber_std_binary(funcname, derivative) \
+#define DualNumber_std_binary(funcname, derivative, rightderiv, leftderiv) \
 template <typename T, typename D, typename T2, typename D2, bool asd> \
 inline \
 typename CompareTypes<DualNumber<T,D,asd>,DualNumber<T2,D2,asd> >::supertype \
@@ -797,9 +797,13 @@ inline \
 typename CompareTypes<DualNumber<T2,D,asd>,T,true>::supertype \
 funcname (const T& a, const DualNumber<T2,D,asd>& b) \
 { \
+  typedef typename CompareTypes<T,T2>::supertype TS; \
+  TS funcval = std::funcname(a, b.value()); \
   typedef typename CompareTypes<DualNumber<T2,D,asd>,T,true>::supertype type; \
-  type newa(a); \
-  return std::funcname(newa, b); \
+  if (asd && !b.do_derivatives) \
+    return type(funcval, 0); \
+  else \
+    return type(funcval, rightderiv); \
 } \
  \
 template <typename T, typename T2, typename D, bool asd> \
@@ -807,9 +811,13 @@ inline \
 typename CompareTypes<DualNumber<T,D,asd>,T2>::supertype \
 funcname (const DualNumber<T,D,asd>& a, const T2& b) \
 { \
+  typedef typename CompareTypes<T,T2>::supertype TS; \
+  TS funcval = std::funcname(a.value(), b); \
   typedef typename CompareTypes<DualNumber<T,D,asd>,T2>::supertype type; \
-  type newb(b); \
-  return std::funcname(a, newb); \
+  if (asd && !a.do_derivatives) \
+    return type(funcval, 0); \
+  else \
+    return type(funcval, leftderiv); \
 }
 
 #define DualNumber_equiv_binary(funcname, equivalent) \
@@ -854,31 +862,49 @@ DualNumber_equiv_binary(funcname##l, funcname)
 // is 0; we should have a contribution of 0 from those, not NaN.
 DualNumber_std_binary(pow,
   std::pow(a.value(), b.value() - 1) * (b.value() * a.derivatives() +
-  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())))
+  MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())),
+  std::pow(a, b.value()) *
+  MetaPhysicL::if_else(b.derivatives(), (b.derivatives() * std::log(TS(a))), b.derivatives()),
+  std::pow(a.value(), b - 1) * (b * a.derivatives())
+  )
 DualNumber_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
-  (b.value() * b.value() + a.value() * a.value()))
+  (b.value() * b.value() + a.value() * a.value()),
+  (-a * b.derivatives()) /
+  (b.value() * b.value() + a * a),
+  (b * a.derivatives()) /
+  (b * b + a.value() * a.value()))
 DualNumber_std_binary(max,
-  (a.value() > b.value()) ? a.derivatives() : b.derivatives())
+  (a.value() > b.value()) ? a.derivatives() : b.derivatives(),
+  (a > b.value()) ? 0 : b.derivatives(),
+  (a.value() > b) ? a.derivatives() : 0)
 DualNumber_std_binary(min,
-  (a.value() > b.value()) ? b.derivatives() : a.derivatives())
-DualNumber_std_binary(fmod, a.derivatives())
+  (a.value() > b.value()) ? b.derivatives() : a.derivatives(),
+  (a > b.value()) ? b.derivatives() : 0,
+  (a.value() > b) ? 0 : a.derivatives())
+DualNumber_std_binary(fmod, a.derivatives(), 0, a.derivatives())
 
 #if __cplusplus >= 201103L
 DualNumber_equivfl_binary(pow)
 DualNumber_equivfl_binary(fmod)
-DualNumber_std_binary(remainder, a.derivatives())
+DualNumber_std_binary(remainder, a.derivatives(), 0, a.derivatives())
 DualNumber_equivfl_binary(remainder)
 DualNumber_equiv_binary(fmax, max)
 DualNumber_equivfl_binary(fmax)
 DualNumber_equiv_binary(fmin, min)
 DualNumber_equivfl_binary(fmin)
 DualNumber_std_binary(fdim, if_else(a.value() > b.value(),
-                                    a.derivatives() - b.derivatives(), 0))
+                                    a.derivatives() - b.derivatives(), 0),
+                            if_else(a.value() > b, a.derivatives(), 0),
+                            if_else(a > b.value(), -b.derivatives(), 0))
 DualNumber_equivfl_binary(fdim)
 DualNumber_std_binary(hypot, (a.value()*a.derivatives() +
                               b.value()*b.derivatives()) /
-                              hypot(a.value(), b.value()))
+                              hypot(a.value(), b.value()),
+                             (a.value()*a.derivatives()) /
+                              hypot(a.value(), b),
+                             (b.value()*b.derivatives()) /
+                              hypot(a, b.value()))
 DualNumber_equivfl_binary(hypot)
 DualNumber_equivfl_binary(atan2)
 #endif // __cplusplus >= 201103L

@@ -4,6 +4,7 @@
 #include "metaphysicl/dualshadowsparsevector.h"
 #include "metaphysicl/dualshadowsparsestruct.h"
 #include "metaphysicl/metaphysicl_asserts.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 using namespace MetaPhysicL;
 
@@ -14,6 +15,8 @@ struct print_functor {
 
 int main(void)
 {
+  MetaPhysicL::enableFPE(true);
+
   const RawType<const ShadowNumber<float, double> >::value_type testin = 0;
   float testout = testin;
 

@@ -69,6 +69,11 @@ namespace MetaPhysicL
     FileError(const std::string& filename) : std::runtime_error( "Error accessing file: " + filename ) {}
   };
 
+  /**
+   * Toggle hardware trap floating point exceptions
+   */
+  void enableFPE(bool on);
+
 } // end namespace MetaPhysicL
 
 #define METAPHYSICL_THROW(e) do { throw e; } while (0)

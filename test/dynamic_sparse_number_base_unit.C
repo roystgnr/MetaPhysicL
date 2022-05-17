@@ -1,4 +1,5 @@
-#include <metaphysicl/dynamicsparsenumberarray.h>
+#include "metaphysicl/dynamicsparsenumberarray.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 #define METAPHYSICL_UNIT_ASSERT(expr)                                                              \
   if (!(expr))                                                                                     \
@@ -8,6 +9,8 @@ using namespace MetaPhysicL;
 
 int main()
 {
+  MetaPhysicL::enableFPE(true);
+
   DynamicSparseNumberArray<double, unsigned int> test;
   test.insert(0) = 1e-14;
   test.sparsity_trim();
