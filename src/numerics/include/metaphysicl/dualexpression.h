@@ -851,7 +851,7 @@ DualExpression_std_binary(pow,
   std::pow(a.value(), b.value() - 1) * (b.value() * a.derivatives() +
   MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())),
   std::pow(a, b.value()) *
-  MetaPhysicL::if_else(b.derivatives(), (b.derivatives() * std::log(a)), b.derivatives()),
+  MetaPhysicL::if_else(b.derivatives(), (b.derivatives() * std::log(TS(a))), b.derivatives()),
   std::pow(a.value(), b - 1) * (b * a.derivatives())
   )
 DualExpression_std_binary(atan2,

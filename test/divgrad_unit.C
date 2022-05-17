@@ -7,6 +7,7 @@
 #include "metaphysicl/dualdynamicsparsenumbervector.h"
 #include "metaphysicl/dualnumbervector.h"
 #include "metaphysicl/dualsparsenumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 
 using namespace MetaPhysicL;
 
@@ -114,6 +115,8 @@ bool dense_tester()
 
 int main(int argc, char * argv[])
 {
+  MetaPhysicL::enableFPE(true);
+
   int returnval = 0;
 
   returnval = returnval || dense_tester<float>();

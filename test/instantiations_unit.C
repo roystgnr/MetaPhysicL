@@ -9,6 +9,7 @@
 #include "metaphysicl/dualshadowvector.h"
 #include "metaphysicl/dynamicsparsenumberarray.h"
 #include "metaphysicl/dynamicsparsenumbervector.h"
+#include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/semidynamicsparsenumberarray.h"
 #include "metaphysicl/sparsenumberarray.h"
 
@@ -70,6 +71,8 @@ void test_out(std::ostream & output, const Instantiator<T1,T2> & i)
 
 int main (void)
 {
+  MetaPhysicL::enableFPE(true);
+
   Instantiator<float, float> i1;
   Instantiator<float, double> i2;
   Instantiator<double, double> i3;

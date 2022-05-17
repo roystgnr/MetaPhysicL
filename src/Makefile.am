@@ -15,6 +15,7 @@ libmetaphysicl_la_SOURCES =
 
 # utilities
 libmetaphysicl_la_SOURCES += utilities/src/metaphysicl_version.C
+libmetaphysicl_la_SOURCES += utilities/src/metaphysicl_exceptions.C
 
 #----------------------------
 # INCLUDES we want distributed

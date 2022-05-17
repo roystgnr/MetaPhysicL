@@ -88,6 +88,9 @@ AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 dnl -Wall warnings, -Wall the time.
 AX_CXXFLAGS_WARN_ALL
 
+dnl See if we can turn on FP exceptions
+AC_HAVE_FEEXCEPT
+
 LT_INIT
 
 dnl---------------------------------------------------------
