@@ -15823,9 +15823,15 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
+ac_FEEXCEPT_save_LIBS="$LIBS"
+
+LIBS="$LIBS -lm"
+
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <fenv.h>
+#define _GNU_SOURCE
+                              #include <fenv.h>
 int
 main ()
 {
@@ -15834,12 +15840,13 @@ feenableexcept(FE_DIVBYZERO | FE_INVALID);
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_link "$LINENO"; then :
   ac_cv_have_feenableexcept=yes
 else
   ac_cv_have_feenableexcept=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
 
 if test "x$ac_cv_have_feenableexcept" = "xyes"; then :
 
@@ -15849,7 +15856,8 @@ fi
 
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <fenv.h>
+#define _GNU_SOURCE
+                              #include <fenv.h>
 int
 main ()
 {
@@ -15858,18 +15866,21 @@ fedisableexcept(FE_DIVBYZERO | FE_INVALID);
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
+if ac_fn_c_try_link "$LINENO"; then :
   ac_cv_have_fedisableexcept=yes
 else
   ac_cv_have_fedisableexcept=no
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
 
 if test "x$ac_cv_have_fedisableexcept" = "xyes"; then :
 
 $as_echo "#define HAVE_FEDISABLEEXCEPT 1" >>confdefs.h
 
 fi
+
+LIBS="$ac_FEEXCEPT_save_LIBS"
 
 
 case `pwd` in
