@@ -31,6 +31,7 @@
 #include "metaphysicl/metaphysicl_config.h"
 
 #ifdef METAPHYSICL_HAVE_FEENABLEEXCEPT
+#define _GNU_SOURCE
 #include <fenv.h>
 #endif
 
