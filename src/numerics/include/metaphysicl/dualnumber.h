@@ -857,15 +857,32 @@ funcname (const DualNumber<T,D,asd>& a, const T2& b) \
 DualNumber_equiv_binary(funcname##f, funcname) \
 DualNumber_equiv_binary(funcname##l, funcname)
 
+// C++ turns 0u - 1 into max of signed int, not -1.  We do not want to
+// do that when we're evaluating pow() derivatives.  But we also don't
+// want to wastefully promote to FP.
+//
+// This fixes the case where we evaluate pow(DualNumber, unsigned
+// int).  If anyone is using something like NumberArray of unsigned
+// int it won't work; hopefully anybody with that level of
+// sophistication can be trusted to diagnose the problem and switch to
+// signed int.
 
-// if_else is necessary here to handle cases where a is negative but b
-// is 0; we should have a contribution of 0 from those, not NaN.
+inline int dn_val_minus_one(unsigned int e) { return int(e)-1; }
+inline int dn_val_minus_one(std::size_t e) { return int(e)-1; }
+
+template <typename T>
+inline T dn_val_minus_one(const T & e) { return e-1; }
+
+// if_else is necessary here to handle cases where a is non-positive
+// but b is 0; we should have a contribution of 0 from those, not NaN.
+// That doesn't avoid FP exceptions, though, not when b is a
+// DualNumber ... not sure how to fix that.
 DualNumber_std_binary(pow,
-  std::pow(a.value(), b.value() - 1) * (b.value() * a.derivatives() +
+  std::pow(a.value(), dn_val_minus_one(b.value())) * (b.value() * a.derivatives() +
   MetaPhysicL::if_else(b.derivatives(), b.derivatives() * std::log(a.value()) * a.value(), b.derivatives())),
   std::pow(a, b.value()) *
   MetaPhysicL::if_else(b.derivatives(), (b.derivatives() * std::log(TS(a))), b.derivatives()),
-  std::pow(a.value(), b - 1) * (b * a.derivatives())
+  std::pow(a.value(), dn_val_minus_one(b)) * (b * a.derivatives())
   )
 DualNumber_std_binary(atan2,
   (b.value() * a.derivatives() - a.value() * b.derivatives()) /
