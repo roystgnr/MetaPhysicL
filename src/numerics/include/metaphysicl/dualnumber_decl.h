@@ -29,15 +29,17 @@
 #ifndef METAPHYSICL_DUALNUMBER_DECL_H
 #define METAPHYSICL_DUALNUMBER_DECL_H
 
-#include <ostream>
-#include <limits>
+#include "metaphysicl/dualnumber_forward.h"
 
 #include "metaphysicl/compare_types.h"
+#include "metaphysicl/ct_types.h"
 #include "metaphysicl/dualderivatives.h"
+#include "metaphysicl/metaphysicl_common.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/testable.h"
-#include "metaphysicl/dualnumber_forward.h"
-#include "metaphysicl/ct_types.h"
+
+#include <limits>
+#include <ostream>
 
 namespace MetaPhysicL {
 
@@ -75,19 +77,21 @@ public:
   template <typename T2, typename D2>
   DualNumber(const T2& val, const D2& deriv);
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
   // Move constructors are useful when all your data is on the heap
   DualNumber(DualNumber<T, D, asd> && /*src*/);
 
   // Move assignment avoids heap operations too
   DualNumber& operator= (DualNumber<T, D, asd> && /*src*/);
+#endif
 
   // Standard copy operations get implicitly deleted upon move
-  // constructor definition, so we redefine them.
+  // constructor definition, so we'd need to redefine them.  We'll
+  // redefine them in non-move builds too, so we can skip derivative
+  // assignment in the !asd case.
   DualNumber(const DualNumber<T, D, asd> & /*src*/);
 
   DualNumber& operator= (const DualNumber<T, D, asd> & /*src*/);
-#endif
 
   template <typename T2, typename D2>
   DualNumber & operator=(const DualNumber<T2,D2,asd> & dn);
@@ -248,7 +252,7 @@ operator opname (const DualNumber<T,D,asd>& a, const T2& b);
 // more complete and define the move-from-b alternatives as well, but
 // those would require additional support to correctly handle
 // division, subtraction, or non-commutative addition/multiplication
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 #define DualNumber_decl_op(opname, functorname) \
         DualNumber_decl_preop(opname, functorname) \
  \
@@ -541,7 +545,7 @@ inline bool isinf (const DualNumber<T,D,asd> & a);
 
 // Some forward declarations necessary for recursive DualNumbers
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 
 template <typename T, typename D, bool asd>
 inline DualNumber<T,D,asd> cos  (const DualNumber<T,D,asd> & a);
@@ -567,7 +571,7 @@ inline DualNumber<T,D,asd> cosh (DualNumber<T,D,asd> a);
 
 // Now just combined declaration/definitions
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 #define DualNumber_decl_std_unary(funcname) \
 template <typename T, typename D, bool asd> \
 inline \
@@ -671,7 +675,7 @@ template <typename T, bool asd> \
 inline DualNumber<std::complex<T>,std::complex<T>,asd> \
 funcname(const DualNumber<std::complex<T>,std::complex<T>,asd> & in)
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 #define DualNumber_decl_complex_std_unary_complex(funcname) \
 DualNumber_decl_complex_std_unary_complex_pre(funcname);  \
 template <typename T, typename D, bool asd> \
@@ -684,7 +688,7 @@ funcname(DualNumber<std::complex<T>,std::complex<T>,asd> && in)
 
 #else
 #define DualNumber_decl_complex_std_unary_complex(funcname) \
-DualNumber_complex_std_unary_complex_pre(funcname);
+DualNumber_decl_complex_std_unary_complex_pre(funcname);
 #endif
 
 DualNumber_decl_complex_std_unary_complex(conj);
