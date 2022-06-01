@@ -29,18 +29,19 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERBASE_DECL_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERBASE_DECL_H
 
-#include <algorithm>
-#include <functional>
-#include <stdexcept>
-#include <ostream>
-
 #include "metaphysicl/compare_types.h"
 #include "metaphysicl/ct_set.h"
+#include "metaphysicl/ct_types.h"
 #include "metaphysicl/metaphysicl_asserts.h"
+#include "metaphysicl/metaphysicl_common.h"
 #include "metaphysicl/raw_type.h"
 #include "metaphysicl/sparsenumberutils.h"
 #include "metaphysicl/testable.h"
-#include "metaphysicl/ct_types.h"
+
+#include <algorithm>
+#include <functional>
+#include <ostream>
+#include <stdexcept>
 
 namespace MetaPhysicL {
 
@@ -66,7 +67,7 @@ public:
 
   DynamicSparseNumberBase();
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
   // Move constructors are useful when all your data is on the heap
   DynamicSparseNumberBase(DynamicSparseNumberBase && src) = default;
 
@@ -78,15 +79,15 @@ public:
   DynamicSparseNumberBase(const DynamicSparseNumberBase & src) = default;
 
   DynamicSparseNumberBase& operator= (const DynamicSparseNumberBase & src) = default;
+
+  template <typename Data2, typename Indices2, class... SubTypeArgs2>
+  DynamicSparseNumberBase(
+      DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> && src);
 #endif
 
   template <typename Data2, typename Indices2, class... SubTypeArgs2>
   DynamicSparseNumberBase(
       const DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> & src);
-
-  template <typename Data2, typename Indices2, class... SubTypeArgs2>
-  DynamicSparseNumberBase(
-      DynamicSparseNumberBase<Data2, Indices2, SubType, SubTypeArgs2...> && src);
 
   T* raw_data();
 
@@ -212,7 +213,7 @@ inline typename Symmetric##functorname##Type<subtypename<AArgs...>, \
 operator opname(const subtypename<AArgs...> & a, const subtypename<BArgs...> & b);
 
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 
 #define DynamicSparseNumberBase_decl_op(subtypename, opname, functorname) \
 DynamicSparseNumberBase_decl_op_ab(opname, subtypename, functorname) \
@@ -259,7 +260,7 @@ inline typename DividesType<SubType<SubTypeArgs...>, T>::supertype
 operator/(const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...> & a,
           const T & b);
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 
 template <template <class...> class SubType,
           typename Data,

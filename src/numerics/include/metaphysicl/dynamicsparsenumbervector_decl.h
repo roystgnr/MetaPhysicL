@@ -29,9 +29,11 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERVECTOR_DECL_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERVECTOR_DECL_H
 
-#include <vector>
-
 #include "metaphysicl/dynamicsparsenumberbase_decl.h"
+
+#include "metaphysicl/metaphysicl_common.h"
+
+#include <vector>
 
 namespace MetaPhysicL {
 
@@ -82,7 +84,7 @@ public:
   template <typename T2>
   DynamicSparseNumberVector(const T2& val);
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
   // Move constructors are useful when all your data is on the heap
   DynamicSparseNumberVector(DynamicSparseNumberVector<T, I> && src) = default;
 
@@ -94,13 +96,13 @@ public:
   DynamicSparseNumberVector(const DynamicSparseNumberVector<T, I> & src) = default;
 
   DynamicSparseNumberVector& operator= (const DynamicSparseNumberVector<T, I> & src) = default;
+
+  template <typename T2, typename I2>
+  DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> && src);
 #endif
 
   template <typename T2, typename I2>
   DynamicSparseNumberVector(const DynamicSparseNumberVector<T2, I2> & src);
-
-  template <typename T2, typename I2>
-  DynamicSparseNumberVector(DynamicSparseNumberVector<T2, I2> && src);
 
   template <typename T2, typename I2>
   typename MultipliesType<T,T2>::supertype

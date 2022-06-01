@@ -30,7 +30,9 @@
 #define METAPHYSICL_DUALNUMBER_H
 
 #include "metaphysicl/dualnumber_decl.h"
+
 #include "metaphysicl/dualnumber_surrogate.h"
+#include "metaphysicl/metaphysicl_common.h"
 
 namespace MetaPhysicL {
 
@@ -104,6 +106,7 @@ DualNumber<T,D,asd>::operator=(const DualNumber<T,D,asd> & dn)
   return *this;
 }
 
+#ifdef METAPHYSICL_USE_STD_MOVE
 template <typename T, typename D, bool asd>
 inline
 DualNumber<T,D,asd> &
@@ -116,6 +119,7 @@ DualNumber<T,D,asd>::operator=(DualNumber<T,D,asd> && dn)
 
   return *this;
 }
+#endif // METAPHYSICL_USE_STD_MOVE
 
 template <typename T, typename D, bool asd>
 template <typename T2, typename D2>
@@ -140,6 +144,7 @@ DualNumber<T,D,asd>::DualNumber(const DualNumber<T,D,asd> & dn) :
     _deriv = dn.derivatives();
 }
 
+#ifdef METAPHYSICL_USE_STD_MOVE
 template <typename T, typename D, bool asd>
 inline
 DualNumber<T,D,asd>::DualNumber(DualNumber<T,D,asd> && dn) :
@@ -148,6 +153,7 @@ DualNumber<T,D,asd>::DualNumber(DualNumber<T,D,asd> && dn) :
   if (!allow_skipping_derivatives || do_derivatives)
     _deriv = std::move(dn.derivatives());
 }
+#endif // METAPHYSICL_USE_STD_MOVE
 
 template <typename T, typename D, bool asd>
 template <typename T2, typename D2>
@@ -427,7 +433,7 @@ operator opname (const DualNumber<T,D,asd>& a, const T2& b) \
 // more complete and define the move-from-b alternatives as well, but
 // those would require additional support to correctly handle
 // division, subtraction, or non-commutative addition/multiplication
-#if __cplusplus >= 201103L
+#ifdef METAPHYSICL_USE_STD_MOVE
 #define DualNumber_op(opname, functorname, simplecalc, dualcalc) \
         DualNumber_preop(opname, functorname, simplecalc, dualcalc) \
  \
@@ -553,7 +559,7 @@ inline bool isinf (const DualNumber<T,D,asd> & a)
 }
 
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 #define DualNumber_std_unary(funcname, derivative, precalc) \
 template <typename T, typename D, bool asd> \
 inline \
@@ -736,7 +742,7 @@ funcname(const DualNumber<std::complex<T>,std::complex<T>,asd> & in) \
                                                      std::numeric_limits<double>::quiet_NaN()}}; \
 }
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
 #define DualNumber_complex_std_unary_complex(funcname) \
 DualNumber_complex_std_unary_complex_pre(funcname) \
 template <typename T, typename D, bool asd> \
