@@ -31,6 +31,8 @@
 
 #include "metaphysicl/dynamicsparsenumberbase_decl.h"
 
+#include "metaphysicl/metaphysicl_common.h"
+
 namespace MetaPhysicL {
 
 template <typename Data, typename Indices, template <class...> class SubType, class... SubTypeArgs>
@@ -61,6 +63,7 @@ DynamicSparseNumberBase(const DynamicSparseNumberBase<Data2, Indices2, SubType, 
   std::copy(src.nude_data().begin(), src.nude_data().end(), _data.begin());
   std::copy(src.nude_indices().begin(), src.nude_indices().end(), _indices.begin()); }
 
+#ifdef METAPHYSICL_USE_STD_MOVE
 template <typename Data, typename Indices, template <class...> class SubType, class... SubTypeArgs>
 template <typename Data2, typename Indices2, class... SubTypeArgs2>
 inline DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::DynamicSparseNumberBase(
@@ -69,6 +72,7 @@ inline DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::DynamicS
   _data = std::move(src.nude_data());
   _indices = std::move(src.nude_indices());
 }
+#endif // METAPHYSICL_USE_STD_MOVE
 
 template <typename Data, typename Indices, template <class...> class SubType, class... SubTypeArgs>
 inline
@@ -912,7 +916,7 @@ operator opname (const subtypename<AArgs...> & a, const subtypename<BArgs...> & 
 }
 
 
-#if __cplusplus >= 201103L
+#ifdef METAPHYSICL_USE_STD_MOVE
 
 #define DynamicSparseNumberBase_op(subtypename, opname, functorname) \
 DynamicSparseNumberBase_op_ab(opname, subtypename, functorname) \

@@ -29,9 +29,11 @@
 #ifndef METAPHYSICL_DYNAMICSPARSENUMBERARRAY_DECL_H
 #define METAPHYSICL_DYNAMICSPARSENUMBERARRAY_DECL_H
 
-#include <vector>
-
 #include "metaphysicl/dynamicsparsenumberbase_decl.h"
+
+#include "metaphysicl/metaphysicl_common.h"
+
+#include <vector>
 
 namespace MetaPhysicL {
 
@@ -88,7 +90,7 @@ public:
   template <typename T2>
   DynamicSparseNumberArray(const T2& val);
 
-#if __cplusplus >= 201103L
+#if METAPHYSICL_USE_STD_MOVE
   // Move constructors are useful when all your data is on the heap
   DynamicSparseNumberArray(DynamicSparseNumberArray<T, I> && src) = default;
 
@@ -100,13 +102,13 @@ public:
   DynamicSparseNumberArray(const DynamicSparseNumberArray<T, I> & src) = default;
 
   DynamicSparseNumberArray& operator= (const DynamicSparseNumberArray<T, I> & src) = default;
+
+  template <typename T2, typename I2>
+  DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> && src);
 #endif
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray(const DynamicSparseNumberArray<T2, I2> & src);
-
-  template <typename T2, typename I2>
-  DynamicSparseNumberArray(DynamicSparseNumberArray<T2, I2> && src);
 
   template <typename T2, typename I2>
   DynamicSparseNumberArray
