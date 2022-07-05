@@ -24,29 +24,29 @@ struct Instantiator {
   DualExpression<T1, T2> test_de;
 #endif
 
-  DualNumber<T1, T2> test_dn;
-  ShadowNumber<T1, T2> test_shadow;
-  NumberArray<5, T1> test_na;
-  NumberVector<5, T1> test_nv;
+  DualNumber<T1, T2> test_dn {1};
+  ShadowNumber<T1, T2> test_shadow {2};
+  NumberArray<5, T1> test_na {3};
+  NumberVector<5, T1> test_nv {4};
   typename SemiDynamicSparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_sdsna;
+          test_sdsna {0};
   typename DynamicSparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_dsna;
+          test_dsna {0};
   typename DynamicSparseNumberVectorOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_dsnv;
+          test_dsnv {0};
   typename SparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_sna;
+          test_sna {0};
   typename SparseNumberVectorOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_snv;
+          test_snv {0};
   typename SparseNumberStructOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_sns;
+          test_sns {0};
 
 #if __cplusplus >= 201402L
   NamedIndexArray
     <double,
      SparseNumberVector
        <long unsigned int,
-        ULongSetConstructor<2>::type> > indexed_by_two;
+        ULongSetConstructor<2>::type> > indexed_by_two {5, 0};
 #endif
 };
 

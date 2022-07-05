@@ -1,3 +1,15 @@
+1.3.3 -> 1.4.0
+  * Throw exception in opt mode if DynamicStdArrayWrapper size exceeded
+  * Add tolerance argument to DynamicSparseNumberBase::sparsity_trim()
+  * ReplaceAlgebraicType metafunction
+  * ValueType overloads for std::array, std::vector
+  * MPI reduce support for DualNumber, SemiDynamicNumberArray, NumberArray
+  * More flexible assertion macros
+  * std::isinf overloads for DualNumber, DualExpression
+  * Unit testing with FP exceptions enabled
+  * Improved binary DualNumber operation speed + FPE safety
+  * Assorted bug fixes, compiler workarounds, unit tests, unit test fixes
+
 1.3.2 -> 1.3.3
   * TIMPI configuration bugfix
 
