@@ -30866,7 +30866,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-echo "$as_me: this is boost.m4 serial 26" >&5
+echo "$as_me: this is boost.m4 serial 39" >&5
 boost_save_IFS=$IFS
 boost_version_req=1.47
 IFS=.
@@ -31026,7 +31026,7 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
   grep -v '^[[:space:]]*$' |
   tr -d '\r' |
   tr -s '\n' ' ' |
-  $SED -n -e "/^boost-lib-version = /{s///;s/[\" ]//g;p;q;}" >conftest.i 2>&1; then :
+  $SED -n -e "/^.*boost-lib-version = /{s///;s/[\" ]//g;p;q;}" >conftest.i 2>&1; then :
   boost_cv_lib_version=`cat conftest.i`
 fi
 rm -rf conftest*
@@ -31075,6 +31075,133 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
+    "defined __clang__ && __clang_major__ == 14 && __clang_minor__ == 0 @ clang140" \
+    "defined __clang__ && __clang_major__ == 13 && __clang_minor__ == 0 @ clang130" \
+    "defined __clang__ && __clang_major__ == 12 && __clang_minor__ == 0 @ clang120" \
+    "defined __clang__ && __clang_major__ == 11 && __clang_minor__ == 1 @ clang111" \
+    "defined __clang__ && __clang_major__ == 11 && __clang_minor__ == 0 @ clang110" \
+    "defined __clang__ && __clang_major__ == 10 && __clang_minor__ == 0 @ clang100" \
+    "defined __clang__ && __clang_major__ == 9 && __clang_minor__ == 0 @ clang90" \
+    "defined __clang__ && __clang_major__ == 8 && __clang_minor__ == 0 @ clang80" \
+    "defined __clang__ && __clang_major__ == 7 && __clang_minor__ == 0 @ clang70" \
+    "defined __clang__ && __clang_major__ == 6 && __clang_minor__ == 0 @ clang60" \
+    "defined __clang__ && __clang_major__ == 5 && __clang_minor__ == 0 @ clang50" \
+    "defined __clang__ && __clang_major__ == 4 && __clang_minor__ == 0 @ clang40" \
+    "defined __clang__ && __clang_major__ == 3 && __clang_minor__ == 9 @ clang39" \
+    "defined __clang__ && __clang_major__ == 3 && __clang_minor__ == 8 @ clang38" \
+    "defined __clang__ && __clang_major__ == 3 && __clang_minor__ == 7 @ clang37" \
+    "defined __GNUC__ && __GNUC__ == 11 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw112" \
+    "defined __GNUC__ && __GNUC__ == 11 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc112" \
+    "defined __GNUC__ && __GNUC__ == 11 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw111" \
+    "defined __GNUC__ && __GNUC__ == 11 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc111" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 3 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw103" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 3 && !defined __ICC @ gcc103" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw102" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc102" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw101" \
+    "defined __GNUC__ && __GNUC__ == 10 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc101" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 3 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw93" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 3 && !defined __ICC @ gcc93" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw92" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc92" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw91" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc91" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 0 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw90" \
+    "defined __GNUC__ && __GNUC__ == 9 && __GNUC_MINOR__ == 0 && !defined __ICC @ gcc90" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 5 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw85" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 5 && !defined __ICC @ gcc85" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 4 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw84" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 4 && !defined __ICC @ gcc84" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 3 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw83" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 3 && !defined __ICC @ gcc83" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw82" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc82" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw81" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc81" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 0 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw80" \
+    "defined __GNUC__ && __GNUC__ == 8 && __GNUC_MINOR__ == 0 && !defined __ICC @ gcc80" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 4 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw74" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 4 && !defined __ICC @ gcc74" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 3 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw73" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 3 && !defined __ICC @ gcc73" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw72" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc72" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw71" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc71" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 0 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw70" \
+    "defined __GNUC__ && __GNUC__ == 7 && __GNUC_MINOR__ == 0 && !defined __ICC @ gcc70" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 5 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw65" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 5 && !defined __ICC @ gcc65" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 4 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw64" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 4 && !defined __ICC @ gcc64" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 3 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw63" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 3 && !defined __ICC @ gcc63" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw62" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 2 && !defined __ICC @ gcc62" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 1 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw61" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 1 && !defined __ICC @ gcc61" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 0 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw60" \
+    "defined __GNUC__ && __GNUC__ == 6 && __GNUC_MINOR__ == 0 && !defined __ICC @ gcc60" \
+    "defined __GNUC__ && __GNUC__ == 5 && __GNUC_MINOR__ == 5 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw55" \
+    "defined __GNUC__ && __GNUC__ == 5 && __GNUC_MINOR__ == 5 && !defined __ICC @ gcc55" \
+    "defined __GNUC__ && __GNUC__ == 5 && __GNUC_MINOR__ == 4 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw54" \
+    "defined __GNUC__ && __GNUC__ == 5 && __GNUC_MINOR__ == 4 && !defined __ICC @ gcc54" \
     "defined __GNUC__ && __GNUC__ == 5 && __GNUC_MINOR__ == 3 && !defined __ICC && \
   (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
          || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw53" \
@@ -31300,12 +31427,13 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <pthread.h>
+    void *f(void*){ return 0; }
 int
 main ()
 {
-pthread_t th; pthread_join(th, 0);
-    pthread_attr_init(0); pthread_cleanup_push(0, 0);
-    pthread_create(0,0,0,0); pthread_cleanup_pop(0);
+pthread_t th; pthread_create(&th,0,f,0); pthread_join(th,0);
+    pthread_attr_t attr; pthread_attr_init(&attr); pthread_cleanup_push(0, 0);
+    pthread_cleanup_pop(0);
   ;
   return 0;
 }
@@ -33015,7 +33143,6 @@ fi
     # Do we have to check for Boost.System?  This link-time dependency was
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
-if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 135; then
   if test x"$boost_cv_inc_path" = xno; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for the Boost system library" >&5
@@ -33026,9 +33153,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/system/error_code.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/system/error_code.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -33043,7 +33172,7 @@ if test "x$ac_cv_header_boost_system_error_code_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_SYSTEM_ERROR_CODE_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/system/error_code.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -33089,6 +33218,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/system/error_code.hpp>
 
 int
@@ -33102,7 +33232,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -33114,12 +33249,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -33208,7 +33346,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_system_LIBS"
+              LIBS="$boost_cv_lib_system_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -33266,6 +33404,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_system_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_system_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -33293,6 +33432,15 @@ $as_echo "#define HAVE_BOOST_SYSTEM 1" >>confdefs.h
     BOOST_LDPATH=$boost_cv_lib_system_LDPATH
     BOOST_SYSTEM_LIBS=$boost_cv_lib_system_LIBS
     ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost system library (libboost-system)" "$LINENO" 5
+
+fi
+    ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
 ac_ext=c
@@ -33305,7 +33453,6 @@ fi
 
 
 fi # end of the Boost.System check.
-fi
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
 LIBS="$LIBS $BOOST_SYSTEM_LIBS"
@@ -33319,9 +33466,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/chrono.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/chrono.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -33336,7 +33485,7 @@ if test "x$ac_cv_header_boost_chrono_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_CHRONO_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/chrono.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -33382,12 +33531,13 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/chrono.hpp>
 
 int
 main ()
 {
-boost::chrono::thread_clock d; (void)d;
+boost::chrono::thread_clock d;
   ;
   return 0;
 }
@@ -33395,7 +33545,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost chrono" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost chrono" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -33407,12 +33562,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -33501,7 +33659,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_chrono_LIBS"
+              LIBS="$boost_cv_lib_chrono_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -33559,6 +33717,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_chrono_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_chrono_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -33585,6 +33744,15 @@ $as_echo "#define HAVE_BOOST_CHRONO 1" >>confdefs.h
     BOOST_CHRONO_LDPATH=$boost_cv_lib_chrono_LDPATH
     BOOST_LDPATH=$boost_cv_lib_chrono_LDPATH
     BOOST_CHRONO_LIBS=$boost_cv_lib_chrono_LIBS
+    ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost chrono library (libboost-chrono)" "$LINENO" 5
+
+fi
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -33615,9 +33783,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/date_time/posix_time/posix_time.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/date_time/posix_time/posix_time.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -33632,7 +33802,7 @@ if test "x$ac_cv_header_boost_date_time_posix_time_posix_time_hpp" = xyes; then 
 $as_echo "#define HAVE_BOOST_DATE_TIME_POSIX_TIME_POSIX_TIME_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/date_time/posix_time/posix_time.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -33678,6 +33848,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 int
@@ -33691,7 +33862,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost date_time" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost date_time" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -33703,12 +33879,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -33797,7 +33976,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_date_time_LIBS"
+              LIBS="$boost_cv_lib_date_time_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -33855,6 +34034,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_date_time_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_date_time_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -33882,6 +34062,15 @@ $as_echo "#define HAVE_BOOST_DATE_TIME 1" >>confdefs.h
     BOOST_LDPATH=$boost_cv_lib_date_time_LDPATH
     BOOST_DATE_TIME_LIBS=$boost_cv_lib_date_time_LIBS
     ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost date_time library (libboost-date_time)" "$LINENO" 5
+
+fi
+    ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
 ac_ext=c
@@ -33900,7 +34089,6 @@ fi
     # Do we have to check for Boost.System?  This link-time dependency was
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
-if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 135; then
   if test x"$boost_cv_inc_path" = xno; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for the Boost system library" >&5
@@ -33911,9 +34099,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/system/error_code.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/system/error_code.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -33928,7 +34118,7 @@ if test "x$ac_cv_header_boost_system_error_code_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_SYSTEM_ERROR_CODE_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/system/error_code.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -33974,6 +34164,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/system/error_code.hpp>
 
 int
@@ -33987,7 +34178,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -33999,12 +34195,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -34093,7 +34292,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_system_LIBS"
+              LIBS="$boost_cv_lib_system_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -34151,6 +34350,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_system_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_system_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -34178,6 +34378,15 @@ $as_echo "#define HAVE_BOOST_SYSTEM 1" >>confdefs.h
     BOOST_LDPATH=$boost_cv_lib_system_LDPATH
     BOOST_SYSTEM_LIBS=$boost_cv_lib_system_LIBS
     ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost system library (libboost-system)" "$LINENO" 5
+
+fi
+    ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
 ac_ext=c
@@ -34190,7 +34399,6 @@ fi
 
 
 fi # end of the Boost.System check.
-fi
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
 LIBS="$LIBS $BOOST_SYSTEM_LIBS"
@@ -34204,9 +34412,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/filesystem/path.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/filesystem/path.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -34221,7 +34431,7 @@ if test "x$ac_cv_header_boost_filesystem_path_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_FILESYSTEM_PATH_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/filesystem/path.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -34267,6 +34477,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/filesystem/path.hpp>
 
 int
@@ -34280,7 +34491,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost filesystem" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost filesystem" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -34292,12 +34508,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -34386,7 +34605,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_filesystem_LIBS"
+              LIBS="$boost_cv_lib_filesystem_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -34444,6 +34663,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_filesystem_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_filesystem_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -34470,6 +34690,15 @@ $as_echo "#define HAVE_BOOST_FILESYSTEM 1" >>confdefs.h
     BOOST_FILESYSTEM_LDPATH=$boost_cv_lib_filesystem_LDPATH
     BOOST_LDPATH=$boost_cv_lib_filesystem_LDPATH
     BOOST_FILESYSTEM_LIBS=$boost_cv_lib_filesystem_LIBS
+    ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost filesystem library (libboost-filesystem)" "$LINENO" 5
+
+fi
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -34500,9 +34729,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/system/error_code.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/system/error_code.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -34517,7 +34748,7 @@ if test "x$ac_cv_header_boost_system_error_code_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_SYSTEM_ERROR_CODE_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/system/error_code.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -34563,6 +34794,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/system/error_code.hpp>
 
 int
@@ -34576,7 +34808,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -34588,12 +34825,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -34682,7 +34922,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_system_LIBS"
+              LIBS="$boost_cv_lib_system_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -34740,6 +34980,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_system_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_system_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -34766,6 +35007,15 @@ $as_echo "#define HAVE_BOOST_SYSTEM 1" >>confdefs.h
     BOOST_SYSTEM_LDPATH=$boost_cv_lib_system_LDPATH
     BOOST_LDPATH=$boost_cv_lib_system_LDPATH
     BOOST_SYSTEM_LIBS=$boost_cv_lib_system_LIBS
+    ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost system library (libboost-system)" "$LINENO" 5
+
+fi
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -34786,7 +35036,6 @@ fi
 boost_thread_save_LDFLAGS=$LDFLAGS
 boost_thread_save_CPPFLAGS=$CPPFLAGS
 # Link-time dependency from thread to system was added as of 1.49.0.
-if test "x$boost_major_version" != x; then
 if test $boost_major_version -ge 149; then
 if test x"$boost_cv_inc_path" = xno; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for the Boost system library" >&5
@@ -34797,9 +35046,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/system/error_code.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/system/error_code.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -34814,7 +35065,7 @@ if test "x$ac_cv_header_boost_system_error_code_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_SYSTEM_ERROR_CODE_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/system/error_code.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -34860,6 +35111,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/system/error_code.hpp>
 
 int
@@ -34873,7 +35125,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost system" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -34885,12 +35142,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -34979,7 +35239,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_system_LIBS"
+              LIBS="$boost_cv_lib_system_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -35037,6 +35297,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_system_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_system_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -35064,6 +35325,15 @@ $as_echo "#define HAVE_BOOST_SYSTEM 1" >>confdefs.h
     BOOST_LDPATH=$boost_cv_lib_system_LDPATH
     BOOST_SYSTEM_LIBS=$boost_cv_lib_system_LIBS
     ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost system library (libboost-system)" "$LINENO" 5
+
+fi
+    ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
 ac_ext=c
@@ -35076,7 +35346,6 @@ fi
 
 
 fi # end of the Boost.System check.
-fi
 LIBS="$LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
@@ -35086,12 +35355,10 @@ CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 # possibly new versions of GCC on mingw I am assuming it's Boost's change for
 # now and I am setting version to 1.48, for lack of knowledge as to when this
 # change occurred.
-if test "x$boost_major_version" != x; then
 if test $boost_major_version -lt 148; then
   case $host_os in
     (*mingw*) boost_thread_lib_ext=_win32;;
   esac
-fi
 fi
 if test x"$boost_cv_inc_path" = xno; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for the Boost thread library" >&5
@@ -35102,9 +35369,11 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test x"" = "xno"; then :
+  not_found_header='true'
+fi
 if test x"$boost_cv_inc_path" = xno; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Boost not available, not searching for boost/thread.hpp" >&5
-$as_echo "$as_me: Boost not available, not searching for boost/thread.hpp" >&6;}
+  $not_found_header
 else
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
@@ -35119,7 +35388,7 @@ if test "x$ac_cv_header_boost_thread_hpp" = xyes; then :
 $as_echo "#define HAVE_BOOST_THREAD_HPP 1" >>confdefs.h
 
 else
-  as_fn_error $? "cannot find boost/thread.hpp" "$LINENO" 5
+  $not_found_header
 fi
 
 
@@ -35165,6 +35434,7 @@ else
   # Generate the test file.
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
+
 #include <boost/thread.hpp>
 
 int
@@ -35178,7 +35448,12 @@ _ACEOF
   if ac_fn_cxx_try_compile "$LINENO"; then :
   ac_objext=do_not_rm_me_plz
 else
-  as_fn_error $? "cannot compile a test that uses Boost thread" "$LINENO" 5
+  if test x"" != x"no"; then :
+
+       as_fn_error $? "cannot compile a test that uses Boost thread" "$LINENO" 5
+
+fi
+
 fi
 rm -f core conftest.err conftest.$ac_objext
   ac_objext=$boost_save_ac_objext
@@ -35190,12 +35465,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -35284,7 +35562,7 @@ else
            *)
             for boost_cv_rpath_link_ldflag in -Wl,-R, -Wl,-rpath,; do
               LDFLAGS="$boost_save_LDFLAGS -L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
-              LIBS="$boost_save_LIBS $boost_cv_lib_thread_LIBS"
+              LIBS="$boost_cv_lib_thread_LIBS $boost_save_LIBS"
               rm -f conftest$ac_exeext
 boost_save_ac_ext=$ac_ext
 boost_use_source=:
@@ -35342,6 +35620,7 @@ fi
         test x"$boost_ldpath" != x &&
           boost_cv_lib_thread_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         boost_cv_lib_thread_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -35368,6 +35647,15 @@ $as_echo "#define HAVE_BOOST_THREAD 1" >>confdefs.h
     BOOST_THREAD_LDPATH=$boost_cv_lib_thread_LDPATH
     BOOST_LDPATH=$boost_cv_lib_thread_LDPATH
     BOOST_THREAD_LIBS=$boost_cv_lib_thread_LIBS
+    ;;
+  (no) $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+    if test x"" != "xno"; then :
+
+      as_fn_error $? "cannot find flags to link with the Boost thread library (libboost-thread)" "$LINENO" 5
+
+fi
     ;;
 esac
 CPPFLAGS=$boost_save_CPPFLAGS
