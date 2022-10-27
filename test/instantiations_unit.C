@@ -57,19 +57,19 @@ template <typename T1, typename T2>
 void test_out(std::ostream & output, const Instantiator<T1,T2> & i)
 {
 #if __cplusplus >= 201402L
-  output << i.test_de;
-  output << i.indexed_by_two;
+  output << "DualExpression: " << i.test_de << '\n';
+  output << "NamedIndexArray: " << i.indexed_by_two << '\n';
 #endif
-  output << i.test_dn;
-  output << i.test_shadow;
-  output << i.test_na;
-  output << i.test_nv;
-  output << i.test_sdsna;
-  output << i.test_dsna;
-  output << i.test_dsnv;
-  output << i.test_sna;
-  output << i.test_snv;
-  output << i.test_sns;
+  output << "DualNumber: " << i.test_dn << '\n';
+  output << "ShadowNumber: " << i.test_shadow << '\n';
+  output << "NumberArray: " << i.test_na << '\n';
+  output << "NumberVector: " << i.test_nv << '\n';
+  output << "SemiDynamicSparseNumberArray: " << i.test_sdsna << '\n';
+  output << "DynamicSparseNumberArray: " << i.test_dsna << '\n';
+  output << "DynamicSparseNumberVector: " << i.test_dsnv << '\n';
+  output << "SparseNumberArray: " << i.test_sna << '\n';
+  output << "SparseNumberVector: " << i.test_snv << '\n';
+  output << "SparseNumberStruct: " << i.test_sns << '\n';
 }
 
 int main (void)
