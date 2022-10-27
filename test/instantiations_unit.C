@@ -20,6 +20,12 @@ using namespace MetaPhysicL;
 template <typename T1, typename T2>
 struct Instantiator {
 
+  Instantiator() {
+    test_sdsna.insert(13)=6;
+    test_dsna.insert(14)=7;
+    test_dsnv.insert(15)=8;
+  }
+
 #if __cplusplus >= 201402L
   DualExpression<T1, T2> test_de;
 #endif
@@ -28,12 +34,9 @@ struct Instantiator {
   ShadowNumber<T1, T2> test_shadow {2};
   NumberArray<5, T1> test_na {3};
   NumberVector<5, T1> test_nv {4};
-  typename SemiDynamicSparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_sdsna {0};
-  typename DynamicSparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_dsna {0};
-  typename DynamicSparseNumberVectorOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
-          test_dsnv {0};
+  SemiDynamicSparseNumberArray<T1,int,NWrapper<5>> test_sdsna;
+  DynamicSparseNumberArray<T1,int> test_dsna;
+  DynamicSparseNumberVector<T1,int> test_dsnv;
   typename SparseNumberArrayOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
           test_sna {0};
   typename SparseNumberVectorOf<4, 2, T1, 3, T2, 5, T1, 7, T2>::type
