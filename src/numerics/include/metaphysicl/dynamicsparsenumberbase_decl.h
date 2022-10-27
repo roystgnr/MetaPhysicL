@@ -328,11 +328,11 @@ DynamicSparseNumberBase_decl_operator_binary(&&, logical_and)
 DynamicSparseNumberBase_decl_operator_binary(||, logical_or)
 
 
-template <template <typename, typename> class SubType,
-          typename T, typename I>
+template <template <typename...> class SubType,
+          typename Data, typename Indices, typename... SubTypeArgs>
 inline
 std::ostream&
-operator<< (std::ostream& output, const DynamicSparseNumberBase<T,I,SubType>& a);
+operator<< (std::ostream& output, const DynamicSparseNumberBase<Data,Indices,SubType,SubTypeArgs...>& a);
 
 
 // CompareTypes, RawType, ValueType specializations

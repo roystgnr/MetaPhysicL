@@ -1165,7 +1165,7 @@ DynamicSparseNumberBase_operator_binary(&&, logical_and)
 DynamicSparseNumberBase_operator_binary(||, logical_or)
 
 
-template <template <class...> class SubType, typename Data, typename Indices, class... SubTypeArgs>
+template <template <typename...> class SubType, typename Data, typename Indices, typename... SubTypeArgs>
 inline
 std::ostream&
 operator<< (std::ostream& output, const DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>& a)
