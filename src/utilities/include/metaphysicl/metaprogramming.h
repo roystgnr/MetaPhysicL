@@ -50,7 +50,7 @@ namespace MetaPhysicL
     template <class C> static yes& test(char (*)[sizeof(&C::size)]);
     template <class C> static no& test(...);
   public:
-    const static bool value = (sizeof(test<T>(0)) == sizeof(yes&));
+    static const bool value = (sizeof(test<T>(0)) == sizeof(yes&));
   };
 
   template <typename T, typename Enable=void>

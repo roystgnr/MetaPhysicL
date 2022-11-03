@@ -107,15 +107,15 @@ int main(void)
   const unsigned int NDIM = 2;
   typedef double RawScalar;
 
+/*
   typedef SparseNumberStructUnitVector<NDIM,0,RawScalar>::type XVector;
   XVector xvec = SparseNumberStructUnitVector<NDIM,0,RawScalar>::value();
   typedef SparseNumberStructFullVector<NDIM,RawScalar>::type FullVector;
+*/
 
-/*
   typedef SparseNumberVectorUnitVector<NDIM,0,RawScalar>::type XVector;
   XVector xvec = SparseNumberVectorUnitVector<NDIM,0,RawScalar>::value();
   typedef SparseNumberVectorFullVector<NDIM,RawScalar>::type FullVector;
-*/
 
 /*
   typedef NumberVectorUnitVector<NDIM,0,RawScalar>::type XVector;

@@ -49,13 +49,13 @@ struct NullContainer;
 template <typename T>
 struct is_null_container
 {
-  const static bool value = false;
+  static const bool value = false;
 };
 
 template <typename HeadType>
 struct is_null_container<NullContainer<HeadType> >
 {
-  const static bool value = true;
+  static const bool value = true;
 };
 
 // IntType is used as the equivalent of int i in a set<int> or
