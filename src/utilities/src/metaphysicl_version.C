@@ -27,6 +27,7 @@
 //--------------------------------------------------------------------------
 
 #include "metaphysicl/metaphysicl_version.h"
+#include "metaphysicl/metaphysicl_config.h"
 
 namespace MetaPhysicL
 {
@@ -36,29 +37,29 @@ namespace MetaPhysicL
     std::cout << "--------------------------------------------------------" << std::endl;
     std::cout << "metaphysicl Package: Version = " << METAPHYSICL_LIB_VERSION;
     std::cout << " (" << get_metaphysicl_version() << ")" << std::endl << std::endl;
-  
+
     std::cout << METAPHYSICL_LIB_RELEASE << std::endl << std::endl;
-  
+
     std::cout << "Build Date   = " << METAPHYSICL_BUILD_DATE     << std::endl;
     std::cout << "Build Host   = " << METAPHYSICL_BUILD_HOST     << std::endl;
     std::cout << "Build User   = " << METAPHYSICL_BUILD_USER     << std::endl;
     std::cout << "Build Arch   = " << METAPHYSICL_BUILD_ARCH     << std::endl;
     std::cout << "Build Rev    = " << METAPHYSICL_BUILD_VERSION  << std::endl << std::endl;
-  
+
     std::cout << "C++ Config   = " << METAPHYSICL_CXX << " " << METAPHYSICL_CXXFLAGS << std::endl;
     std::cout << "--------------------------------------------------------" << std::endl;
-  
+
     return;
   }
 
   int get_metaphysicl_version()
   {
     /* Note: return format follows the versioning convention xx.yy.zz where
-   
+
        xx = major version number
        yy = minor version number
        zz = micro version number
-     
+
        For example:
        v.   0.23  -> 002300 = 2300
        v   0.23.1 -> 002301 = 2301
@@ -79,7 +80,7 @@ namespace MetaPhysicL
 #ifdef METAPHYSICL_MICRO_VERSION
     micro_version = METAPHYSICL_MICRO_VERSION;
 #endif
-      
+
     return major_version*10000 + minor_version*100 + micro_version;
   }
 
