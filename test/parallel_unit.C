@@ -10,6 +10,7 @@
 
 #include <timpi/communicator.h>
 #include <timpi/parallel_implementation.h>
+#include <timpi/parallel_sync.h>
 #include <timpi/timpi_init.h>
 
 #include <vector>
@@ -261,6 +262,107 @@ testDualContainerSum(bool fixed_size = false)
 }
 
 
+template <typename D, bool asd>
+void
+testDualContainerSync()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+  typedef DualReal Datum;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+  const unsigned int full_size = std::min(maxarraysize-1, comm_size);
+
+  std::unordered_map<processor_id_type, std::vector<Datum>> push_data;
+
+  for (unsigned int i=0; i!=5; ++i)
+    {
+      const processor_id_type p = (my_rank+(i*i))%comm_size;
+      DualReal dr = my_rank;
+      if (my_rank < full_size)
+        {
+          dr.derivatives().insert(my_rank) = (my_rank+1);
+          dr.derivatives().insert(my_rank+1) = (p+1);
+        }
+      push_data[p].push_back(dr);
+    }
+
+  auto action_functor = [my_rank, full_size]
+    (const processor_id_type src_p,
+     const std::vector<Datum> & received)
+    {
+      for (const auto & r : received)
+        {
+          METAPHYSICL_UNIT_ASSERT(r.value() == src_p);
+          for (unsigned int p = 0; p != full_size; ++p)
+            {
+              const auto & d = r.derivatives()[p];
+              if (p == src_p)
+                METAPHYSICL_UNIT_ASSERT(d == src_p+1);
+              else if (p == src_p+1)
+                METAPHYSICL_UNIT_ASSERT(d == my_rank+1);
+              else
+                METAPHYSICL_UNIT_ASSERT(d == 0);
+            }
+        }
+    };
+
+  TIMPI::push_parallel_vector_data(*TestCommWorld, push_data, action_functor);
+}
+
+
+template <typename D, bool asd>
+void
+testDualContainerTupleSync()
+{
+  typedef DualNumber<double, D, asd> DualReal;
+  typedef std::tuple<unsigned int, DualReal, double> Datum;
+
+  const unsigned int my_rank = TestCommWorld->rank();
+  const unsigned int comm_size = TestCommWorld->size();
+  const unsigned int full_size = std::min(maxarraysize-1, comm_size);
+
+  std::unordered_map<processor_id_type, std::vector<Datum>> push_data;
+
+  for (unsigned int i=0; i!=5; ++i)
+    {
+      const processor_id_type p = (my_rank+(i*i))%comm_size;
+      DualReal dr = my_rank;
+      if (my_rank < full_size)
+        {
+          dr.derivatives().insert(my_rank) = (my_rank+1);
+          dr.derivatives().insert(my_rank+1) = (p+1);
+        }
+      push_data[p].emplace_back(my_rank+2, dr, p);
+    }
+
+  auto action_functor = [my_rank, full_size]
+    (const processor_id_type src_p,
+     const std::vector<Datum> & received)
+    {
+      for (const auto & t : received)
+        {
+          METAPHYSICL_UNIT_ASSERT(std::get<0>(t) == src_p+2);
+          const DualReal & r = std::get<1>(t);
+          METAPHYSICL_UNIT_ASSERT(r.value() == src_p);
+          for (unsigned int p = 0; p != full_size; ++p)
+            {
+              const auto & d = r.derivatives()[p];
+              if (p == src_p)
+                METAPHYSICL_UNIT_ASSERT(d == src_p+1);
+              else if (p == src_p+1)
+                METAPHYSICL_UNIT_ASSERT(d == my_rank+1);
+              else
+                METAPHYSICL_UNIT_ASSERT(d == 0);
+            }
+          METAPHYSICL_UNIT_ASSERT(std::get<2>(t) == my_rank);
+        }
+    };
+
+  TIMPI::push_parallel_vector_data(*TestCommWorld, push_data, action_functor);
+}
+
+
 int
 main(int argc, const char * const * argv)
 {
@@ -320,6 +422,28 @@ main(int argc, const char * const * argv)
   testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
   testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
   testDualContainerSum<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
+
+  testDualContainerSync<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testDualContainerSync<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testDualContainerSync<DynamicSparseNumberArray<double, unsigned long long>, true>();
+  testDualContainerSync<DynamicSparseNumberArray<double, unsigned long long>, false>();
+  testDualContainerSync<NumberArray<maxarraysize, double>, true>();
+  testDualContainerSync<NumberArray<maxarraysize, double>, false>();
+  testDualContainerSync<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testDualContainerSync<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testDualContainerSync<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testDualContainerSync<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
+
+  testDualContainerTupleSync<DynamicSparseNumberArray<double, unsigned int>, true>();
+  testDualContainerTupleSync<DynamicSparseNumberArray<double, unsigned int>, false>();
+  testDualContainerTupleSync<DynamicSparseNumberArray<double, unsigned long long>, true>();
+  testDualContainerTupleSync<DynamicSparseNumberArray<double, unsigned long long>, false>();
+  testDualContainerTupleSync<NumberArray<maxarraysize, double>, true>();
+  testDualContainerTupleSync<NumberArray<maxarraysize, double>, false>();
+  testDualContainerTupleSync<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, true>();
+  testDualContainerTupleSync<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>, false>();
+  testDualContainerTupleSync<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, true>();
+  testDualContainerTupleSync<SemiDynamicSparseNumberArray<double, unsigned long long, NWrapper<maxarraysize>>, false>();
 
   testStandardTypeAssignment<NumberArray<maxarraysize, double>>();
   testStandardTypeAssignment<SemiDynamicSparseNumberArray<double, unsigned int, NWrapper<maxarraysize>>>();

@@ -37,7 +37,7 @@
 
 #include "timpi/op_function.h"
 #include "timpi/standard_type.h"
-#include "timpi/packing.h"
+#include "timpi/packing_decl.h"
 
 #include <cstring> // for std::memcpy
 

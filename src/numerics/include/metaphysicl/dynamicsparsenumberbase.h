@@ -219,7 +219,7 @@ DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::insert(unsigned
 
   // If we don't have entry i, insert it.  Yes this is O(N).
   if ((upper_it == _indices.end()) ||
-      *upper_it != i)
+      *upper_it != I(i))
     {
       std::size_t old_size = this->size();
       this->resize(old_size+1);
