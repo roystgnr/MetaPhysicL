@@ -36,7 +36,7 @@
 #include "metaphysicl/metaphysicl_cast.h"
 
 #include "timpi/standard_type.h"
-#include "timpi/packing.h"
+#include "timpi/packing_decl.h"
 
 #include <cstring> // for std::memcpy
 
