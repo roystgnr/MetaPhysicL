@@ -108,6 +108,8 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h
 
+AM_CXXFLAGS = $(ACSM_ANY_WERROR_FLAG) $(ACSM_ANY_PARANOID_FLAGS)
+
 CLEANFILES =
 
 #--------------
