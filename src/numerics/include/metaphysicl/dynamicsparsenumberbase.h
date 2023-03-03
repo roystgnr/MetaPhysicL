@@ -166,7 +166,6 @@ inline
 typename Data::value_type &
 DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::operator[](index_value_type i)
 {
-  typedef typename Data::value_type T;
   static T zero = 0;
 
   // Bad user code could make this fail.  We'd prefer to catch OOB
@@ -184,7 +183,6 @@ inline
 const typename Data::value_type&
 DynamicSparseNumberBase<Data, Indices, SubType, SubTypeArgs...>::operator[](index_value_type i) const
 {
-  typedef typename Data::value_type T;
   static const T zero = 0;
   std::size_t rq = runtime_index_query(i);
   if (rq == std::numeric_limits<std::size_t>::max())
