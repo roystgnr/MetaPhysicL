@@ -142,7 +142,7 @@ double evaluate_q (const Vector& xyz, const int ret)
 
   typedef typename RawType<ADScalar>::value_type Scalar;
 
-  typedef typename Vector::template rebind<Scalar>::other RawVector;
+  typedef typename Vector::template rebind<Scalar>::other OurRawVector;
 
   typedef typename Vector::template rebind<ADScalar>::other FullVector;
 
@@ -191,7 +191,7 @@ double evaluate_q (const Vector& xyz, const int ret)
 
   // Euler equation residuals
   Scalar Q_rho = raw_value(divergence(RHO*U));
-  RawVector Q_rho_u = raw_value(divergence(RHO*U.outerproduct(U)) + P.derivatives());
+  OurRawVector Q_rho_u = raw_value(divergence(RHO*U.outerproduct(U)) + P.derivatives());
 
   // energy equation
   Scalar Q_rho_e = raw_value(divergence((RHO*ET+P)*U));

@@ -3,6 +3,7 @@
 
 #include "metaphysicl_config.h"
 
+#include "metaphysicl/metaphysicl_asserts.h"
 #include "metaphysicl/metaphysicl_exceptions.h"
 #include "metaphysicl/shadownumber.h"
 
@@ -186,7 +187,7 @@ double evaluate_q (const Vector& xyz, const int ret)
 
   typedef typename RawType<ADScalar>::value_type Scalar;
 
-  typedef typename Vector::template rebind<Scalar>::other RawVector;
+  typedef typename Vector::template rebind<Scalar>::other OurRawVector;
 
   typedef typename Vector::template rebind<ADScalar>::other FullVector;
 
@@ -255,20 +256,20 @@ double evaluate_q (const Vector& xyz, const int ret)
   Tensor GradU = gradient(U);
 
   // The identity tensor I
-  // typedef typename Vector::template rebind<RawVector>::other RawTensor;
+  // typedef typename Vector::template rebind<OurRawVector>::other RawTensor;
 
-  // RawTensor Identity = RawVector::identity();
+  // RawTensor Identity = OurRawVector::identity();
 
   // The shear stress tensor
   // Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*Identity);
-  Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*RawVector::identity(2));
+  Tensor Tau = mu * (GradU + transpose(GradU) - 2./3.*divergence(U)*OurRawVector::identity(2));
 
   // Temperature flux
   FullVector q = -k * T.derivatives();
 
   // Euler equation residuals
   Scalar Q_rho = raw_value(divergence(RHO*U));
-  RawVector Q_rho_u = raw_value(divergence(RHO*U.outerproduct(U) - Tau) + P.derivatives());
+  OurRawVector Q_rho_u = raw_value(divergence(RHO*U.outerproduct(U) - Tau) + P.derivatives());
 
   // energy equation
   Scalar Q_rho_e = raw_value(divergence((RHO*ET+P)*U + q - Tau.dot(U)));
@@ -295,6 +296,9 @@ double evaluate_q (const Vector& xyz, const int ret)
     case 4:
       return Q_rho_e;
       break;
+
+    default:
+      metaphysicl_error();
     }
 
   std::cout << "something is wrong!\n";
