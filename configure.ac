@@ -85,8 +85,19 @@ AM_CONDITIONAL(CXX14_ENABLED,test x$HAVE_CXX14 = x1)
 
 AM_CONDITIONAL(CXX11_ENABLED,test x$HAVE_CXX11 = x1)
 
+ACSM_SET_CXX_FLAGS
+
+dnl Workaround for ACSM bug
+WERROR_FLAGS="$ACSM_WERROR_FLAGS"
+
 dnl -Wall warnings, -Wall the time.
 AX_CXXFLAGS_WARN_ALL
+
+dnl More warnings, for our own testing
+ACSM_ENABLE_PARANOID
+
+dnl And those tests should fail, not just whine
+ACSM_ENABLE_WERROR
 
 dnl See if we can turn on FP exceptions
 AC_HAVE_FEEXCEPT

@@ -52,6 +52,8 @@ AM_CPPFLAGS += -I$(top_srcdir)/src/numerics/include
 AM_CPPFLAGS += -I$(top_srcdir)/src/utilities/include
 AM_CPPFLAGS += -I$(top_builddir)/src/utilities/include #metaphysicl_version.h, metaphysicl_config.h
 
+AM_CXXFLAGS = $(ACSM_ANY_WERROR_FLAG) $(ACSM_ANY_PARANOID_FLAGS)
+
 AM_LDFLAGS = $(top_builddir)/src/libmetaphysicl.la
 
 # Sources for these tests
