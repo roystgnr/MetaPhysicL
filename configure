@@ -776,6 +776,8 @@ FGREP
 EGREP
 GREP
 LIBTOOL
+ACSM_ANY_WERROR_FLAG
+ACSM_ANY_PARANOID_FLAGS
 CXX11_ENABLED_FALSE
 CXX11_ENABLED_TRUE
 CXX14_ENABLED_FALSE
@@ -919,6 +921,9 @@ with_cxx
 with_cxx_std_max
 with_cxx_std_min
 with_cxx_std
+enable_sanitize
+enable_paranoid_warnings
+enable_werror
 enable_shared
 enable_static
 with_pic
@@ -1599,6 +1604,11 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --enable-sanitize="opt dbg devel prof oprof"
+                          turn on sanitizer flags for the given methods
+  --enable-paranoid-warnings
+                          Turn on paranoid compiler warnings
+  --enable-werror         Turn compilation warnings into errors
   --enable-shared[=PKGS]  build shared libraries [default=yes]
   --enable-static[=PKGS]  build static libraries [default=yes]
   --enable-fast-install[=PKGS]
@@ -1878,6 +1888,48 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_fc_try_compile
+
+# ac_fn_cxx_try_run LINENO
+# ------------------------
+# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
+# that executables *can* be run.
+ac_fn_cxx_try_run ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; } && { ac_try='./conftest$ac_exeext'
+  { { case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  ac_retval=0
+else
+  $as_echo "$as_me: program exited with status $ac_status" >&5
+       $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+       ac_retval=$ac_status
+fi
+  rm -rf conftest.dSYM conftest_ipa8_conftest.oo
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+} # ac_fn_cxx_try_run
 
 # ac_fn_c_try_link LINENO
 # -----------------------
@@ -15727,6 +15779,597 @@ else
 fi
 
 
+
+    compiler_brand_detected=no
+
+      ACSM_REAL_GXX=`($CXX -v 2>&1) | grep "gcc version"`
+
+    is_intel_icc="`($CXX -V 2>&1) | grep 'Intel(R)' | grep 'Compiler'`"
+  if test "x$is_intel_icc" != "x"; then :
+  ACSM_REAL_GXX=""
+fi
+
+  if test "$GXX" = "yes" && test "x$ACSM_REAL_GXX" != "x"; then :
+
+                    ACSM_GXX_VERSION_STRING=`($CXX -v 2>&1) | grep "gcc version"`
+
+          case "$ACSM_GXX_VERSION_STRING" in #(
+  *gcc\ version\ 11.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-11.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-11.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc11 ;; #(
+  *gcc\ version\ 10.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-10.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-10.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc10 ;; #(
+  *gcc\ version\ 9.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-9.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-9.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc9 ;; #(
+  *gcc\ version\ 8.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-8.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-8.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc8 ;; #(
+  *gcc\ version\ 7.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-7.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-7.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc7 ;; #(
+  *gcc\ version\ 6.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-6.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-6.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc6 ;; #(
+  *gcc\ version\ 5.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-5.x >>>" >&5
+$as_echo "<<< C++ compiler is gcc-5.x >>>" >&6; }
+                                         ACSM_GXX_VERSION=gcc5 ;; #(
+  *4.9.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-4.9 >>>" >&5
+$as_echo "<<< C++ compiler is gcc-4.9 >>>" >&6; }
+                             ACSM_GXX_VERSION=gcc4.9 ;; #(
+  *4.8.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-4.8 >>>" >&5
+$as_echo "<<< C++ compiler is gcc-4.8 >>>" >&6; }
+                             ACSM_GXX_VERSION=gcc4.8 ;; #(
+  *4.7.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-4.7 >>>" >&5
+$as_echo "<<< C++ compiler is gcc-4.7 >>>" >&6; }
+                             ACSM_GXX_VERSION=gcc4.7 ;; #(
+  *4.6.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is gcc-4.6 >>>" >&5
+$as_echo "<<< C++ compiler is gcc-4.6 >>>" >&6; }
+                             ACSM_GXX_VERSION=gcc4.6 ;; #(
+  *) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is unknown but accepted gcc version >>>" >&5
+$as_echo "<<< C++ compiler is unknown but accepted gcc version >>>" >&6; }
+                   ACSM_GXX_VERSION=gcc-other ;;
+esac
+
+                    compiler_brand_detected=yes
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          clang_version="`($CXX --version 2>&1)`"
+          is_clang="`echo $clang_version | grep 'clang'`"
+
+          if test "x$is_clang" != "x"; then :
+
+                                                                        is_apple_clang="`echo $clang_version | grep 'Apple'`"
+                  clang_vendor="clang"
+                  if test "x$is_apple_clang" != "x"; then :
+  clang_vendor="Apple clang"
+fi
+
+                                                      clang_major_minor=unknown
+
+                  if test "x$PERL" != "x"; then :
+
+                          clang_major_minor=`echo $clang_version | $PERL -ne 'print $1 if /version\s(\d+\.\d+)/'`
+                          if test "x$clang_major_minor" = "x"; then :
+  clang_major_minor=unknown
+fi
+
+fi
+
+                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is ${clang_vendor}, version ${clang_major_minor} >>>" >&5
+$as_echo "<<< C++ compiler is ${clang_vendor}, version ${clang_major_minor} >>>" >&6; }
+                  ACSM_GXX_VERSION=clang
+                  compiler_brand_detected=yes
+
+fi
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          is_intel_icc="`($CXX -V 2>&1) | grep 'Intel(R)' | grep 'Compiler'`"
+          if test "x$is_intel_icc" != "x"; then :
+
+                  ACSM_GXX_VERSION_STRING="`($CXX -V 2>&1) | grep 'Version '`"
+                  case "$ACSM_GXX_VERSION_STRING" in #(
+  *21.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 21 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 21 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v21.x ;; #(
+  *20.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 20 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 20 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v20.x ;; #(
+  *19.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 19 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 19 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v19.x ;; #(
+  *18.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 18 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 18 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v18.x ;; #(
+  *17.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 17 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 17 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v17.x ;; #(
+  *16.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 16 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 16 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v16.x ;; #(
+  *15.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 15 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 15 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v15.x ;; #(
+  *14.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 14 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 14 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v14.x ;; #(
+  *13.*) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Intel(R) icc 13 >>>" >&5
+$as_echo "<<< C++ compiler is Intel(R) icc 13 >>>" >&6; }
+                            ACSM_GXX_VERSION=intel_icc_v13.x ;; #(
+  *) :
+    as_fn_error $? "Unsupported Intel compiler detected" "$LINENO" 5 ;;
+esac
+                  compiler_brand_detected=yes
+
+fi
+
+fi
+
+              if test "x$compiler_brand_detected" = "xno"; then :
+
+          is_ibm_xlc="`($CXX 2>&1) | egrep -i 'xlc'`"
+          if test "x$is_ibm_xlc" != "x"; then :
+
+                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is IBM xlC >>>" >&5
+$as_echo "<<< C++ compiler is IBM xlC >>>" >&6; }
+                  ACSM_GXX_VERSION=ibm_xlc
+                  compiler_brand_detected=yes
+
+fi
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          is_cray_cc="`($CXX -V 2>&1) | grep 'Cray '`"
+          if test "x$is_cray_cc" != "x"; then :
+
+                  { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Cray C++ >>>" >&5
+$as_echo "<<< C++ compiler is Cray C++ >>>" >&6; }
+                  ACSM_GXX_VERSION=cray_cc
+                  compiler_brand_detected=yes
+
+fi
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          is_nvcc="`($CXX -V 2>&1) | grep 'NVIDIA'`"
+          if test "x$is_nvcc" != "x"; then :
+
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is NVIDIA C++ >>>" >&5
+$as_echo "<<< C++ compiler is NVIDIA C++ >>>" >&6; }
+            ACSM_GXX_VERSION=nvidia
+            compiler_brand_detected=yes
+
+fi
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          is_pgcc="`($CXX -V 2>&1) | grep 'Portland Group\|PGI'`"
+          if test "x$is_pgcc" != "x"; then :
+
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< C++ compiler is Portland Group C++ >>>" >&5
+$as_echo "<<< C++ compiler is Portland Group C++ >>>" >&6; }
+            ACSM_GXX_VERSION=portland_group
+            compiler_brand_detected=yes
+
+fi
+
+fi
+
+    if test "x$compiler_brand_detected" = "xno"; then :
+
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: WARNING:" >&5
+$as_echo "WARNING:" >&6; }
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: >>> Unrecognized compiler: \"$CXX\" <<<" >&5
+$as_echo ">>> Unrecognized compiler: \"$CXX\" <<<" >&6; }
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: You will likely need to modify" >&5
+$as_echo "You will likely need to modify" >&6; }
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: Make.common directly to specify" >&5
+$as_echo "Make.common directly to specify" >&6; }
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: proper compiler flags" >&5
+$as_echo "proper compiler flags" >&6; }
+          ACSM_GXX_VERSION=unknown
+
+fi
+
+
+
+
+  # method-specific preprocessor flags, independent of compiler.
+  ACSM_CPPFLAGS_OPT="-DNDEBUG"
+  ACSM_CPPFLAGS_DBG="-DDEBUG"
+  ACSM_CPPFLAGS_DEVEL=""
+
+  # Flag to add directories to the dynamic library search path; can
+  # be changed at a later stage
+  ACSM_RPATHFLAG="-Wl,-rpath,"
+  ACSM_XDR_LIBS=""
+
+  # Flag for profiling mode; can be modified at a later stage
+  ACSM_PROFILING_FLAGS="-pg"
+
+  # Flag for assembly-output mode; can be modified at a later stage
+  ACSM_ASSEMBLY_FLAGS="-S"
+
+  # Flag to turn warnings into errors; can be modified at a later stage
+  ACSM_WERROR_FLAGS="-Werror"
+
+  # Flags to add every additional warning we expect the library itself
+  # to not trigger
+  #
+  # These can be fairly compiler-specific so the default is blank: we
+  # only add warnings within specific compiler version tests.
+  ACSM_PARANOID_FLAGS=""
+
+  # The -g flag is necessary for OProfile to produce annotations
+  # -fno-omit-frame-pointer flag turns off an optimization that
+  # interferes with OProfile callgraphs
+  ACSM_OPROFILE_FLAGS="-g -fno-omit-frame-pointer"
+
+  # For compilers that support it (clang >= 3.5.0 and GCC >= 4.8) the
+  # user can selectively enable "sanitize" flags for different METHODs
+  # with e.g.
+  #
+  # --enable-sanitize="dbg opt"
+  #
+  # These flags generally slow down code execution, so you don't
+  # necessarily want to turn them on all the time or in all METHODs.
+
+  # Declaring something AC_ARG_VAR does several things, see
+  # http://www.gnu.org/software/autoconf/manual/autoconf-2.60/html_node/Setting-Output-Variables.html
+  # for more information... not sure we need it in this case.
+  # AC_ARG_VAR([SANITIZE_METHODS], [methods we apply sanitizer flags to, e.g. "opt dbg devel"])
+
+  # Check whether --enable-sanitize was given.
+if test "${enable_sanitize+set}" = set; then :
+  enableval=$enable_sanitize; for method in ${enableval} ; do
+                                  case "${method}" in #(
+  optimized|opt|debug|dbg|devel|profiling|pro|prof|oprofile|oprof) :
+     ;; #(
+  *) :
+    as_fn_error $? "bad value ${method} for --enable-sanitize" "$LINENO" 5 ;;
+esac
+               done
+                              SANITIZE_METHODS=${enableval}
+fi
+
+
+  if test "x$SANITIZE_METHODS" != x; then :
+
+          { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Testing sanitizer flags for method(s) \"$SANITIZE_METHODS\" >>>" >&5
+$as_echo "<<< Testing sanitizer flags for method(s) \"$SANITIZE_METHODS\" >>>" >&6; }
+
+                                        COMMON_SANITIZE_OPTIONS="-fsanitize=address -fno-omit-frame-pointer -O1 -g -fno-optimize-sibling-calls"
+
+
+    # Save current lang and CXXFLAGS values
+    ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+    saveCXXFLAGS="$CXXFLAGS"
+
+    # Set CXXFLAGS to be used for the test compilation.  Note:
+    # we don't test these flags in conjunction with any
+    # others...  that doesn't seem to be necessary yet.
+    CXXFLAGS="$COMMON_SANITIZE_OPTIONS"
+
+    # Tell the user what we are doing
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking if compiler has support for address sanitizer" >&5
+$as_echo_n "checking if compiler has support for address sanitizer... " >&6; }
+
+    # Try compiling and running a simple main program with
+    # sanitizer flags.  Since address sanitizer requires
+    # library-level support, we want to be sure that a compiled
+    # executable can run, not just that the compiler accepts the
+    # sanitizer flags.  This program does not actually have a
+    # memory error, otherwise configure would consider the test
+    # to have failed...
+    if test "$cross_compiling" = yes; then :
+
+        # Result if cross-compiling
+        have_address_sanitizer=no
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+        int *array = new int[100];
+        delete [] array;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_run "$LINENO"; then :
+
+        # Result if program succeeds
+        have_address_sanitizer=yes
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+else
+
+        # Result if program fails
+        have_address_sanitizer=no
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+
+    # Restore the original lang and flags
+    CXXFLAGS="$saveCXXFLAGS"
+    ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+
+                    if test "x$have_address_sanitizer" = xyes; then :
+
+                                                                        ACSM_SANITIZE_LDFLAGS="-Wc,-fsanitize=address"
+
+                  for method in ${SANITIZE_METHODS}; do
+                      case "${method}" in #(
+  optimized|opt) :
+    ACSM_SANITIZE_OPT_FLAGS=$COMMON_SANITIZE_OPTIONS ;; #(
+  debug|dbg) :
+    ACSM_SANITIZE_DBG_FLAGS=$COMMON_SANITIZE_OPTIONS ;; #(
+  devel) :
+    ACSM_SANITIZE_DEVEL_FLAGS=$COMMON_SANITIZE_OPTIONS ;; #(
+  profiling|pro|prof) :
+    ACSM_SANITIZE_PROF_FLAGS=$COMMON_SANITIZE_OPTIONS ;; #(
+  oprofile|oprof) :
+    ACSM_SANITIZE_OPROF_FLAGS=$COMMON_SANITIZE_OPTIONS ;; #(
+  *) :
+    as_fn_error $? "bad value ${method} for --enable-sanitize" "$LINENO" 5 ;;
+esac
+                  done
+
+fi
+
+fi
+
+  # First the flags for gcc compilers
+  if test "$GXX" = "yes" && test "x$ACSM_REAL_GXX" != "x"; then :
+
+          ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -O2 -felide-constructors -fstrict-aliasing -Wdisabled-optimization"
+                    ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -O2 -felide-constructors -g -pedantic -W -Wall -Wextra -Wno-long-long -Wunused"
+          ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -Wpointer-arith -Wformat -Wparentheses -Wuninitialized -fstrict-aliasing -Woverloaded-virtual -Wdisabled-optimization"
+          ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -O0 -felide-constructors -g -pedantic -W -Wall -Wextra -Wno-long-long -Wunused -Wpointer-arith -Wformat -Wparentheses -Woverloaded-virtual"
+          ACSM_NODEPRECATEDFLAG="-Wno-deprecated"
+
+          ACSM_CFLAGS_OPT="-O2 -fstrict-aliasing"
+          ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_OPT -g -Wimplicit -fstrict-aliasing"
+          ACSM_CFLAGS_DBG="-g -Wimplicit"
+          ACSM_ASSEMBLY_FLAGS="$ACSM_ASSEMBLY_FLAGS -fverbose-asm"
+
+                    if test "x$ACSM_GXX_VERSION" != "xgcc11"; then :
+
+                  ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -funroll-loops"
+                  ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -funroll-loops"
+                  ACSM_CFLAGS_OPT="$ACSM_CFLAGS_OPT -funroll-loops"
+                  ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_DEVEL -funroll-loops"
+
+fi
+
+                              ACSM_PARANOID_FLAGS="-Wall -Wextra -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wformat-nonliteral -Wformat-security -Wformat-y2k"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Winvalid-pch -Wlogical-op -Wmissing-field-initializers"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wmissing-include-dirs -Wpacked -Wredundant-decls"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wshadow -Wstack-protector -Wstrict-aliasing -Wswitch-default"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wtrigraphs -Wunreachable-code -Wunused-label"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wunused-parameter -Wunused-value -Wvariadic-macros"
+          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wvolatile-register-var -Wwrite-strings"
+
+          if test "x$enableglibcxxdebugging" = "xyes"; then :
+  ACSM_CPPFLAGS_DBG="$ACSM_CPPFLAGS_DBG -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
+fi
+
+          # GCC 4.6.3 warns about variadic macros but supports them just
+          # fine, so let's turn off that warning.
+          case "$ACSM_GXX_VERSION" in #(
+  gcc4.6 | gcc5) :
+    ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -Wno-variadic-macros"
+                                    ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -Wno-variadic-macros"
+                                    ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -Wno-variadic-macros" ;; #(
+  *) :
+     ;;
+esac
+
+                                        case "$target" in #(
+  *solaris*) :
+    ACSM_RPATHFLAG="-Wl,-R,"
+                                ACSM_XDR_LIBS="-lrpcsvc" ;; #(
+  *) :
+     ;;
+esac
+
+else
+
+        case "$ACSM_GXX_VERSION" in #(
+  ibm_xlc) :
+
+                          ACSM_CXXFLAGS_OPT="-O3 -qmaxmem=-1 -w -qansialias -Q=10 -qrtti=all -qstaticinline"
+                          ACSM_CXXFLAGS_DBG="-qmaxmem=-1 -qansialias -qrtti=all -g -qstaticinline"
+                          ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DBG"
+                          ACSM_NODEPRECATEDFLAG=""
+                          ACSM_CFLAGS_OPT="-O3 -qmaxmem=-1 -w -qansialias -Q=10"
+                          ACSM_CFLAGS_DBG="-qansialias -g"
+                          ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_DBG"
+                         ;; #(
+              intel_*) :
+
+                                                    ACSM_NODEPRECATEDFLAG="-Wno-deprecated"
+
+                                                    ACSM_PROFILING_FLAGS="-qp"
+
+                                                    ACSM_ASSEMBLY_FLAGS="$ACSM_ASSEMBLY_FLAGS -fverbose-asm -fsource-asm"
+
+                                                    ACSM_OPROFILE_FLAGS="-g"
+
+                                                                              ACSM_PARANOID_FLAGS="-Wall -Wextra -Wdisabled-optimization -Wformat=2"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wformat-security"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Winvalid-pch"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wmissing-include-dirs"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wtrigraphs"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wunused-parameter"
+                          ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wwrite-strings"
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        case "$ACSM_GXX_VERSION" in #(
+  intel_icc_v13.x | intel_icc_v14.x | intel_icc_v15.x | intel_icc_v16.x | intel_icc_v17.x | intel_icc_v18.x | intel_icc_v19.x | intel_icc_v20.x) :
+
+                                    ACSM_PROFILING_FLAGS="-p"
+                                    ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -w1 -g -wd175 -wd1476 -wd1505 -wd1572 -wd488 -wd161"
+                                    ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -O3 -unroll -w0 -ftz"
+                                    ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -w1 -g -wd175 -wd1476 -wd1505 -wd1572 -wd488 -wd161"
+                                    ACSM_CFLAGS_DBG="$ACSM_CFLAGS_DBG -w1 -g -wd266 -wd1572 -wd488 -wd161"
+                                    ACSM_CFLAGS_OPT="$ACSM_CFLAGS_OPT -O3 -unroll -w0 -ftz"
+                                    ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_DBG"
+                                   ;; #(
+  *) :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: Unknown Intel compiler" >&5
+$as_echo "Unknown Intel compiler" >&6; } ;;
+esac
+                        ;; #(
+  nvidia) :
+
+
+                                                                                    ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -O0 --display_error_number -g -pedantic -Wno-long-long -Wunused -Wuninitialized --diag_suppress=11,111,177,445,1676"
+                                ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -O2 --display_error_number -g -pedantic -Wno-long-long -Wunused -Wuninitialized --diag_suppress=11,111,177,445,1676"
+                                ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -O2 --display_error_number --diag_suppress=11,111,177,445,1676"
+
+                                ACSM_NODEPRECATEDFLAG="-Wno-deprecated-declarations"
+
+                                ACSM_CFLAGS_DBG="$ACSM_CFLAGS_DBG -O0 -g"
+                                ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_DEVEL -O2 -g"
+                                ACSM_CFLAGS_OPT="$ACSM_CFLAGS_OPT -O2"
+
+                                                                if test "$enableexceptions" = no; then :
+
+                                        ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG --no_exceptions"
+                                        ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT --no_exceptions"
+
+fi
+                               ;; #(
+  portland_group) :
+
+                                ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -g --no_using_std"
+                                ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -O2 --no_using_std -fast -Minform=severe"
+                                ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DBG"
+
+                                                                ACSM_NODEPRECATEDFLAG=""
+
+                                ACSM_CFLAGS_DBG="$ACSM_CFLAGS_DBG -g"
+                                ACSM_CFLAGS_OPT="$ACSM_CFLAGS_OPT -O2"
+                                ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_DBG"
+
+                                                                if test "$enableexceptions" = no; then :
+
+                                        ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG --no_exceptions"
+                                        ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT --no_exceptions"
+
+fi
+                               ;; #(
+  cray_cc) :
+
+                         ACSM_CXXFLAGS_DBG="-h conform,one_instantiation_per_object,instantiate=used,noimplicitinclude -G n"
+                         ACSM_CXXFLAGS_OPT="-h conform,one_instantiation_per_object,instantiate=used,noimplicitinclude -G n"
+                         ACSM_CXXFLAGS_DEVEL="-h conform,one_instantiation_per_object,instantiate=used,noimplicitinclude -G n"
+                         ACSM_NODEPRECATEDFLAG=""
+                         ACSM_CFLAGS_DBG="-G n"
+                         ACSM_CFLAGS_OPT="-G n"
+                         ACSM_CFLAGS_DEVEL="-G n"
+                        ;; #(
+  clang) :
+
+                       ACSM_CXXFLAGS_OPT="$ACSM_CXXFLAGS_OPT -O2 -felide-constructors -Qunused-arguments -Wunused-parameter -Wunused"
+                                              ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -O2 -felide-constructors -g -pedantic -W -Wall -Wextra -Wno-long-long"
+                       ACSM_CXXFLAGS_DEVEL="$ACSM_CXXFLAGS_DEVEL -Wunused-parameter -Wunused -Wpointer-arith -Wformat -Wparentheses -Wuninitialized -Qunused-arguments -Woverloaded-virtual -fno-limit-debug-info"
+                                              ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -O0 -felide-constructors -g -pedantic -W -Wall -Wextra -Wno-long-long"
+                       ACSM_CXXFLAGS_DBG="$ACSM_CXXFLAGS_DBG -Wunused-parameter -Wunused -Wpointer-arith -Wformat -Wparentheses -Qunused-arguments -Woverloaded-virtual -fno-limit-debug-info"
+                       ACSM_NODEPRECATEDFLAG="-Wno-deprecated"
+
+                                              ACSM_PARANOID_FLAGS="-Wall -Wextra -Wcast-align -Wdisabled-optimization -Wformat=2"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wformat-nonliteral -Wformat-security -Wformat-y2k"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Winvalid-pch -Wmissing-field-initializers"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wmissing-include-dirs -Wpacked"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wstack-protector -Wtrigraphs"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wunreachable-code -Wunused-label"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wunused-parameter -Wunused-value -Wvariadic-macros"
+                       ACSM_PARANOID_FLAGS="$ACSM_PARANOID_FLAGS -Wvolatile-register-var -Wwrite-strings"
+
+                       ACSM_CFLAGS_OPT="-O2 -Qunused-arguments -Wunused"
+                       ACSM_CFLAGS_DEVEL="$ACSM_CFLAGS_OPT -g -Wimplicit -fno-limit-debug-info -Wunused"
+                       ACSM_CFLAGS_DBG="-g -Wimplicit -Qunused-arguments -fno-limit-debug-info -Wunused"
+                      ;; #(
+  *) :
+
+              { $as_echo "$as_me:${as_lineno-$LINENO}: result: No specific options for this C++ compiler known" >&5
+$as_echo "No specific options for this C++ compiler known" >&6; }
+              ACSM_CXXFLAGS_DBG="$CXXFLAGS"
+              ACSM_CXXFLAGS_OPT="$CXXFLAGS"
+              ACSM_CXXFLAGS_DEVEL="$CXXFLAGS"
+              ACSM_NODEPRECATEDFLAG=""
+
+              ACSM_CFLAGS_DBG="$CFLAGS"
+              ACSM_CFLAGS_OPT="$CFLAGS"
+              ACSM_CFLAGS_DEVEL="$CFLAGS"
+             ;;
+esac
+
+fi
+
+
+WERROR_FLAGS="$ACSM_WERROR_FLAGS"
+
 if ${CXXFLAGS+:} false; then :
   case " $CXXFLAGS " in
     *"  "*)
@@ -15819,6 +16462,136 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+
+
+
+
+
+  # By default we merely enable some of the most common compiler
+  # warnings, but we can turn on as many warnings as we avoid triggering
+  # (for library code only, not contrib or external code) by configuring
+  # with --enable-paranoid-warnings
+  # Check whether --enable-paranoid-warnings was given.
+if test "${enable_paranoid_warnings+set}" = set; then :
+  enableval=$enable_paranoid_warnings; case "${enableval}" in #(
+  yes) :
+    acsm_enableparanoid=yes ;; #(
+  no) :
+    acsm_enableparanoid=no ;; #(
+  *) :
+    as_fn_error $? "bad value ${enableval} for --enable-paranoid-warnings" "$LINENO" 5 ;;
+esac
+else
+  acsm_enableparanoid=no
+fi
+
+
+      ACSM_ANY_PARANOID_FLAGS=$ACSM_PARANOID_FLAGS
+  if test "x$acsm_enableparanoid" != "xyes"; then :
+  ACSM_ANY_PARANOID_FLAGS=''
+           { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Disabling extra paranoid compiler warnings >>>" >&5
+$as_echo "<<< Disabling extra paranoid compiler warnings >>>" >&6; }
+else
+  old_CXXFLAGS="$CXXFLAGS"
+           CXXFLAGS="$CXXFLAGS $WERROR_FLAGS $PARANOID_FLAGS"
+           cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Enabled extra paranoid compiler warnings >>>" >&5
+$as_echo "<<< Enabled extra paranoid compiler warnings >>>" >&6; }
+else
+  ACSM_ANY_PARANOID_FLAGS=''
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Compiler may not support all of $PARANOID_FLAGS >>>" >&5
+$as_echo "<<< Compiler may not support all of $PARANOID_FLAGS >>>" >&6; }
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Disabling extra paranoid compiler warnings >>>" >&5
+$as_echo "<<< Disabling extra paranoid compiler warnings >>>" >&6; }
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+           CXXFLAGS="$old_CXXFLAGS"
+fi
+
+
+
+
+
+
+  # By default we merely enable some warnings, but we can turn those
+  # into errors (for library code only, not contrib or external code)
+  # by configuring with --enable-werror
+  # Check whether --enable-werror was given.
+if test "${enable_werror+set}" = set; then :
+  enableval=$enable_werror; case "${enableval}" in #(
+  yes) :
+    acsm_enablewerror=yes ;; #(
+  no) :
+    acsm_enablewerror=no ;; #(
+  *) :
+    as_fn_error $? "bad value ${enableval} for --enable-werror" "$LINENO" 5 ;;
+esac
+else
+  acsm_enablewerror=no
+fi
+
+
+  ACSM_ANY_WERROR_FLAG=$WERROR_FLAGS
+  if test "x$acsm_enablewerror" != "xyes"; then :
+  ACSM_ANY_WERROR_FLAG=''
+           { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Compiler warnings are just warnings >>>" >&5
+$as_echo "<<< Compiler warnings are just warnings >>>" >&6; }
+else
+  as_CACHEVAR=`$as_echo "ax_cv_check_cflags__$WERROR_FLAGS" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts $WERROR_FLAGS" >&5
+$as_echo_n "checking whether C compiler accepts $WERROR_FLAGS... " >&6; }
+if eval \${$as_CACHEVAR+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  $WERROR_FLAGS"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  eval "$as_CACHEVAR=yes"
+else
+  eval "$as_CACHEVAR=no"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+eval ac_res=\$$as_CACHEVAR
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_CACHEVAR"\" = x"yes"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Compiler warnings are now errors >>>" >&5
+$as_echo "<<< Compiler warnings are now errors >>>" >&6; }
+else
+  ACSM_ANY_WERROR_FLAG=''
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Compiler does not support $WERROR_FLAGS >>>" >&5
+$as_echo "<<< Compiler does not support $WERROR_FLAGS >>>" >&6; }
+             { $as_echo "$as_me:${as_lineno-$LINENO}: result: <<< Compiler warnings are just warnings >>>" >&5
+$as_echo "<<< Compiler warnings are just warnings >>>" >&6; }
+fi
+
+fi
 
 
 
@@ -42426,6 +43199,8 @@ echo Package version............... : $PACKAGE-$VERSION
 echo
 echo C++ compiler.................. : $CXX
 echo C++ compiler flags............ : $CXXFLAGS
+$as_echo "Any warnings-to-errors flags....... : $ACSM_ANY_WERROR_FLAG"
+$as_echo "Any extra paranoid warning flags... : $ACSM_ANY_PARANOID_FLAGS"
 echo Install dir................... : $prefix
 echo Build user.................... : $USER
 echo Build host.................... : $BUILD_HOST

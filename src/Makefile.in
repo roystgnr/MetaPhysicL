@@ -107,9 +107,14 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps =  \
 	$(top_srcdir)/m4/autoconf-submodule/acsm_code_coverage.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/acsm_compiler_control_args.m4 \
+	$(top_srcdir)/m4/autoconf-submodule/acsm_compiler_flags.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/acsm_cxx_compiler_standard.m4 \
+	$(top_srcdir)/m4/autoconf-submodule/acsm_enable_paranoid.m4 \
+	$(top_srcdir)/m4/autoconf-submodule/acsm_enable_werror.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/acsm_mpi.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/acsm_scrape_petsc_configure.m4 \
+	$(top_srcdir)/m4/autoconf-submodule/acsm_test_sanitize_flags.m4 \
+	$(top_srcdir)/m4/autoconf-submodule/ax_check_compile_flag.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/ax_cxx_compile_stdcxx.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/ax_prefix_config_h.m4 \
 	$(top_srcdir)/m4/autoconf-submodule/ax_split_version.m4 \
@@ -257,6 +262,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/build-aux/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ACSM_ANY_PARANOID_FLAGS = @ACSM_ANY_PARANOID_FLAGS@
+ACSM_ANY_WERROR_FLAG = @ACSM_ANY_WERROR_FLAG@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
@@ -577,6 +584,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/core/include \
 	-I$(top_srcdir)/src/numerics/include \
 	-I$(top_srcdir)/src/utilities/include \
 	-I$(top_builddir)/src/utilities/include #metaphysicl_version.h
+AM_CXXFLAGS = $(ACSM_ANY_WERROR_FLAG) $(ACSM_ANY_PARANOID_FLAGS)
 CLEANFILES = $(am__append_1) $(am__append_2)
 
 #---------------------------------
