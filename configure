@@ -37702,9 +37702,9 @@ $as_echo "#define HAVE_TIMPI 1" >>confdefs.h
 
 $as_echo "#define HAVE_TIMPI_LIB 1" >>confdefs.h
 
-        TIMPI_CPPFLAGS="-I$TIMPI_PREFIX/include $TIMPI_CPPFLAGS"
+        TIMPI_CPPFLAGS=""
 
-                        TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_$timpi_method $TIMPI_LIBS"
+                        TIMPI_LIBS=""
 
 fi
 
