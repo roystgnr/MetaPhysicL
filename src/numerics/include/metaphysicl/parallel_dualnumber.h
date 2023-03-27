@@ -98,10 +98,8 @@ public:
 #endif // TIMPI_HAVE_MPI
   }
 
-  StandardType(const StandardType<DualNumber<T, D, asd>> & timpi_mpi_var(t))
-  {
-    _datatype = t._datatype;
-  }
+  StandardType(const StandardType<DualNumber<T, D, asd>> & timpi_mpi_var(t)) :
+    DataType(t._datatype) {}
 
   StandardType & operator=(StandardType & t)
   {

@@ -71,11 +71,11 @@ testContainerAllGather(bool fixed_size = false)
 
     if (fixed_size)
       {
-        const unsigned int one_i = std::min(i,maxarraysize-1);
-        METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[one_i], double(1), TOLERANCE);
-        for (unsigned int i = 0; i < maxarraysize; ++i)
-          if (i != one_i)
-            METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(0), TOLERANCE);
+        const unsigned int one_j = std::min(i,maxarraysize-1);
+        METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[one_j], double(1), TOLERANCE);
+        for (unsigned int j = 0; j < maxarraysize; ++j)
+          if (j != one_j)
+            METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[j], double(0), TOLERANCE);
       }
     else
       METAPHYSICL_UNIT_FP_ASSERT(dn.derivatives()[i], double(1), TOLERANCE);
