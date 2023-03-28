@@ -84,10 +84,8 @@ public:
 #endif // TIMPI_HAVE_MPI
   }
 
-  StandardType(const StandardType<MetaPhysicL::DynamicStdArrayWrapper<T, NType>> & timpi_mpi_var(t))
-  {
-    _datatype = t._datatype;
-  }
+  StandardType(const StandardType & t) :
+    DataType(t._datatype) {}
 
   StandardType & operator=(StandardType & t)
   {
