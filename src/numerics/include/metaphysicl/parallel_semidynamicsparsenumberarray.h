@@ -91,11 +91,8 @@ public:
 #endif // TIMPI_HAVE_MPI
   }
 
-  StandardType(
-      const StandardType<MetaPhysicL::SemiDynamicSparseNumberArray<T, I, N>> & timpi_mpi_var(t))
-  {
-    _datatype = t._datatype;
-  }
+  StandardType(const StandardType & t) :
+    DataType(t._datatype) {}
 
   StandardType & operator=(StandardType & t)
   {
@@ -167,7 +164,7 @@ timpi_mpi_metaphysicl_sdsna_##funcname(void * a, void * b, int * len, MPI_Dataty
     // TIMPI_MPI_OPFUNCTION(min_location, metaphysicl_sdsna_min_location)
   };
 # else // TIMPI_HAVE_MPI
-  template<typename T, typename U>
+  template<typename T, typename I, typename N>
   class OpFunction<MetaPhysicL::SemiDynamicSparseNumberArray<T,I,N>> {};
 #endif
 

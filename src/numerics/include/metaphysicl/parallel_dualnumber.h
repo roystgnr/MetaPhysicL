@@ -98,7 +98,7 @@ public:
 #endif // TIMPI_HAVE_MPI
   }
 
-  StandardType(const StandardType<DualNumber<T, D, asd>> & timpi_mpi_var(t)) :
+  StandardType(const StandardType<DualNumber<T, D, asd>> & t) :
     DataType(t._datatype) {}
 
   StandardType & operator=(StandardType & t)
@@ -207,7 +207,7 @@ timpi_mpi_metaphysicl_dualnumber_##funcname(void * a, void * b, int * len, MPI_D
     TIMPI_MPI_OPFUNCTION(min_location, metaphysicl_dualnumber_min_location)
   };
 # else // TIMPI_HAVE_MPI
-  template<typename T, typename U>
+  template<typename T, typename D, bool asd>
   class OpFunction<MetaPhysicL::DualNumber<T,D,asd>> {};
 #endif
 
