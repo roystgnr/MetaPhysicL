@@ -143,11 +143,9 @@ AS_IF([test "$enable_installed_timpi" = yes],
         HAVE_TIMPI_LIB=1
         AC_DEFINE(HAVE_TIMPI,1,[Define if TIMPI headers are available])
         AC_DEFINE(HAVE_TIMPI_LIB,1,[Define if a TIMPI library is available])
-        TIMPI_CPPFLAGS="-I$TIMPI_PREFIX/include $TIMPI_CPPFLAGS"
+        TIMPI_CPPFLAGS=""
 
-        dnl We don't know what METHODS a not-yet-installed TIMPI was
-        dnl built with; let's guess opt?
-        TIMPI_LIBS="-L$TIMPI_PREFIX/lib -ltimpi_$timpi_method $TIMPI_LIBS"
+        TIMPI_LIBS="-ltimpi_$timpi_method"
       ],
       [])
 
