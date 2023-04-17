@@ -84,7 +84,7 @@ struct UnaryPhysics
 {
   template <typename inputtype, typename outputtype>
   struct as_unary_function :
-    public std::unary_function<inputtype, outputtype>
+    public std::function<outputtype(inputtype)>
   {
     outputtype operator() (const inputtype& in)
     {
@@ -101,7 +101,7 @@ struct BinaryPhysics
 {
   template <typename input1type, typename input2type, typename outputtype>
   struct as_binary_function :
-    public std::binary_function<input1type, input2type, outputtype>
+    public std::function<outputtype(input1type, input2type)>
   {
     outputtype operator()
       (const input1type& in1, const input2type& in2) 
